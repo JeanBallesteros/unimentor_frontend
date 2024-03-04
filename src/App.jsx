@@ -1,6 +1,11 @@
+import React from 'react'
+import LoginForm from 'D:/Universidad/Proyecto de Desarrollo de Software/UniMentor/unimentor_frontend/src/Components/LoginForm/LoginForm.jsx'
+
 function App() {
   return (
-    <div className="text-4xl font-bold">Hola, Mundo.</div>
+    <div>
+      <LoginForm />
+    </div>
   )
 }
 
