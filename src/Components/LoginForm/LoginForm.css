@@ -9,6 +9,12 @@
   font-style: normal;
 }
 
+body{
+  background: url(../assets/campus.jpg) no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
 .wrapper {
   width: 420px;
   background: transparent;
