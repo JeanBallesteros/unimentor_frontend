@@ -3,8 +3,7 @@ import { MdEmail } from "react-icons/md";
 import { FaLock } from "react-icons/fa";
 import "./LoginForm.css";
 import { useNavigate } from "react-router-dom";
-
-// import axios from "axios";
+import axios from "axios";
 // import qs from "qs";
 
 const LoginForm = () => {
@@ -13,24 +12,26 @@ const LoginForm = () => {
   const navigate = useNavigate();
 
   async function login() {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
-    const urlencoded = new URLSearchParams();
-    urlencoded.append("email", email);
-    urlencoded.append("current_password", password);
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: urlencoded,
-      redirect: "follow",
-    };
-
-    fetch("http://192.168.1.7:5000/api/v1/auth/login", requestOptions)
-      .then((response) => response.text())
-      .then((result) => console.log(result))
-      .catch((error) => console.error(error));
+    try {
+      const response = await axios.post(
+        'http://192.168.0.25:3000/api/v1/auth/login',
+        new URLSearchParams({
+          email: email,
+          current_password: password
+        }).toString(),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          redirect: 'follow'
+        }
+      );
+  
+      console.log(response.data);
+      navigate('/dashboard');
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
