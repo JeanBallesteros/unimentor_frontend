@@ -1,11 +1,16 @@
 import React from 'react'
-import LoginForm from 'D:/Universidad/Proyecto de Desarrollo de Software/UniMentor/unimentor_frontend/src/Components/LoginForm/LoginForm.jsx'
+import LoginForm from './Components/LoginForm/LoginForm.jsx'
+import MonitorHome from './pages/MonitorHome/MonitorHome.jsx'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 function App() {
   return (
-    <div>
-      <LoginForm />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<LoginForm />}></Route>
+        <Route path="/dashboard" element={<MonitorHome />}></Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
