@@ -1,13 +1,13 @@
-import "./MonitorHome.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react'
+import Navbar from "../../Components/Navbar/Navbar";
+import "./Horas.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
-import Navbar from "../../Components/Navbar/Navbar";
 
-const MonitorHome = () => {
+const Horas = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -91,13 +91,13 @@ const MonitorHome = () => {
   });
 
   return (
-    <div className="monitor">
+    <div className='monitor'>
       <Navbar />
       <div>
-        <h1 className="titulo">Monitor Home</h1>
+        <h1 className="titulo">Registro Horas</h1>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default MonitorHome;
+export default Horas
