@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { jwtDecode } from "jwt-decode";
-// import { Alert } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 
 
@@ -42,40 +41,10 @@ const LoginForm = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const expireToken = async () => {
-  //     try {
-
-  //       const accessToken = await AsyncStorage.getItem("accessToken");
-
-  //       // Decodificar el AccessToken para verificar la fecha de expiración
-  //       const decodedToken = jwtDecode(accessToken);
-  //       console.log(decodedToken)
-  //       const expiracion = decodedToken.exp * 1000; // Convertir a milisegundos
-    
-  //       // Obtener la fecha actual
-  //       const ahora = Date.now();
-    
-  //       // Verificar si el AccessToken ha expirado
-  //       if (ahora >= expiracion) {
-  //         console.log("El AccessToken ha expirado");
-  //       } else {
-  //         console.log("El AccessToken es válido");
-  //       }
-  //     } catch (error) {
-  //       console.error('Error al obtener o decodificar el token:', error);
-  //     }
-  //   };
-
-  //   expireToken();
-  // });
-
   const login = async () => {
     try {
-
-
       const response = await axios.post(
-        'http://192.168.0.25:3000/api/v1/auth/login',
+        'https://unimentor-dev-rfzz.1.us-1.fl0.io/api/v1/auth/login',
         new URLSearchParams({
           email: email,
           current_password: password
@@ -114,7 +83,7 @@ const LoginForm = () => {
   return (
     <div className="wrapper">
       <div className="header">
-        <img src="src\Components\assets\unimentor_icon.png" alt="" />
+        <img src="src\assets\unimentor_icon.png" alt="" />
         <div className="header_titles">
           <h1>UniMentor</h1>
           <p>Llevando la Claridad a Cada Sesión de Estudio</p>
