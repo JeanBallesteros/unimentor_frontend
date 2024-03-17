@@ -89,14 +89,94 @@ const Documentacion = () => {
     // Limpiar el temporizador cuando el componente se desmonte
     return () => clearInterval(intervalId);
   });
+
+
+  // const [selectedFile, setSelectedFile] = useState(null);
+  const [files, setFiles] = useState([null, null, null]); // Arreglo para almacenar los archivos seleccionados
+
+  const handleFileChange = (event, index) => {
+    const newFiles = [...files]; // Copiar el arreglo de archivos seleccionados
+    newFiles[index] = event.target.files[0]; // Actualizar el archivo en la posición index
+    setFiles(newFiles); // Actualizar el estado
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    
+    try {
+      const formData = new FormData(); // Crear un objeto FormData
+      
+      // Cambiar nombres de archivos y agregarlos al FormData
+      files.forEach((file, index) => {
+        if (file) {
+          if(index+1 === 1){
+            const newFileName = `promedio${index + 1}.${file.name.split('.').pop()}`; // Generar nuevo nombre
+            formData.append(`files`, new File([file], newFileName, { type: file.type })); // Agregar archivo con nuevo nombre al FormData
+          }else if(index+1 === 2){
+            const newFileName = `rut${index + 1}.${file.name.split('.').pop()}`; // Generar nuevo nombre
+            formData.append(`files`, new File([file], newFileName, { type: file.type })); // Agregar archivo con nuevo nombre al FormData
+          }else{
+            const newFileName = `certificado${index + 1}.${file.name.split('.').pop()}`; // Generar nuevo nombre
+            formData.append(`files`, new File([file], newFileName, { type: file.type })); // Agregar archivo con nuevo nombre al FormData
+          }
+        }
+      });
+
+      const accessTokenTemp = await AsyncStorage.getItem("accessToken");
+
+      const id = jwtDecode(accessTokenTemp).user._id;
+      // console.log(id);
+      console.log(files);
+      console.log(formData);
+
+      const response = await axios.post(`http://192.168.0.25:3000/api/v1/avales/${id}`, formData);
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error al cargar los archivos:', error);
+    }
+  };
+
   return (
     <div className='monitor'>
       <Navbar />
       <div>
         <h1 className="titulo">Documentación</h1>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="fileInput1">PROMEDIO:</label>
+            <input
+              type="file"
+              id="fileInput1"
+              accept="image/*"
+              required
+              onChange={(event) => handleFileChange(event, 0)}
+            />
+          </div>
+          <div>
+            <label htmlFor="fileInput2">RUT:</label>
+            <input
+              type="file"
+              id="fileInput2"
+              accept=".pdf"
+              required
+              onChange={(event) => handleFileChange(event, 1)}
+            />
+          </div>
+          <div>
+            <label htmlFor="fileInput3">CERTIFICADO:</label>
+            <input
+              type="file"
+              id="fileInput3"
+              accept=".pdf"
+              required
+              onChange={(event) => handleFileChange(event, 2)}
+            />
+          </div>
+          <button type="submit">Enviar</button>
+        </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Documentacion
+export default Documentacion;
