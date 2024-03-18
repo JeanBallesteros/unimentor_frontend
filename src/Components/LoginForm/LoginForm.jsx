@@ -44,7 +44,7 @@ const LoginForm = () => {
   const login = async () => {
     try {
       const response = await axios.post(
-        'https://unimentor-dev-rfzz.1.us-1.fl0.io/api/v1/auth/login',
+        'http://192.168.1.6:3000/api/v1/auth/login',
         new URLSearchParams({
           email: email,
           current_password: password

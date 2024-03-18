@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import Navbar from "../../Components/Navbar/Navbar";
 import "./Documentacion.css";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +26,7 @@ const Documentacion = () => {
   const handleRefreshToken = async (refreshToken) => {
     try {
       const response = await axios.post(
-        "https://unimentor-dev-rfzz.1.us-1.fl0.io/api/v1/auth/refresh-token",
+        "http://192.168.1.6:3000/api/v1/auth/refresh-token",
         { refreshToken }
       );
 
@@ -39,7 +39,6 @@ const Documentacion = () => {
     }
   };
 
-  //Mirar si ya expiró el AccessToken
   useEffect(() => {
     const expireToken = async () => {
       try {
@@ -90,9 +89,7 @@ const Documentacion = () => {
     return () => clearInterval(intervalId);
   });
 
-
-  // const [selectedFile, setSelectedFile] = useState(null);
-  const [files, setFiles] = useState([null, null, null]); // Arreglo para almacenar los archivos seleccionados
+  const [files, setFiles] = useState([null, null, null]);
 
   const handleFileChange = (event, index) => {
     const newFiles = [...files]; // Copiar el arreglo de archivos seleccionados
@@ -102,22 +99,35 @@ const Documentacion = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
+
     try {
       const formData = new FormData(); // Crear un objeto FormData
-      
+
       // Cambiar nombres de archivos y agregarlos al FormData
       files.forEach((file, index) => {
         if (file) {
-          if(index+1 === 1){
-            const newFileName = `promedio${index + 1}.${file.name.split('.').pop()}`; // Generar nuevo nombre
-            formData.append(`files`, new File([file], newFileName, { type: file.type })); // Agregar archivo con nuevo nombre al FormData
-          }else if(index+1 === 2){
-            const newFileName = `rut${index + 1}.${file.name.split('.').pop()}`; // Generar nuevo nombre
-            formData.append(`files`, new File([file], newFileName, { type: file.type })); // Agregar archivo con nuevo nombre al FormData
-          }else{
-            const newFileName = `certificado${index + 1}.${file.name.split('.').pop()}`; // Generar nuevo nombre
-            formData.append(`files`, new File([file], newFileName, { type: file.type })); // Agregar archivo con nuevo nombre al FormData
+          if (index + 1 === 1) {
+            const newFileName = `promedio${index + 1}.${file.name
+              .split(".")
+              .pop()}`; // Generar nuevo nombre
+            formData.append(
+              `files`,
+              new File([file], newFileName, { type: file.type })
+            ); // Agregar archivo con nuevo nombre al FormData
+          } else if (index + 1 === 2) {
+            const newFileName = `rut${index + 1}.${file.name.split(".").pop()}`; // Generar nuevo nombre
+            formData.append(
+              `files`,
+              new File([file], newFileName, { type: file.type })
+            ); // Agregar archivo con nuevo nombre al FormData
+          } else {
+            const newFileName = `certificado${index + 1}.${file.name
+              .split(".")
+              .pop()}`; // Generar nuevo nombre
+            formData.append(
+              `files`,
+              new File([file], newFileName, { type: file.type })
+            ); // Agregar archivo con nuevo nombre al FormData
           }
         }
       });
@@ -129,51 +139,69 @@ const Documentacion = () => {
       console.log(files);
       console.log(formData);
 
-      const response = await axios.post(`http://192.168.0.25:3000/api/v1/avales/${id}`, formData);
+      const response = await axios.post(
+        `http://192.168.1.6:3000/api/v1/avales/${id}`,
+        formData
+      );
       console.log(response.data);
     } catch (error) {
-      console.error('Error al cargar los archivos:', error);
+      console.error("Error al cargar los archivos:", error);
     }
   };
 
   return (
-    <div className='monitor'>
+    <div className="monitor">
       <Navbar />
       <div>
         <h1 className="titulo">Documentación</h1>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="fileInput1">PROMEDIO:</label>
-            <input
-              type="file"
-              id="fileInput1"
-              accept="image/*"
-              required
-              onChange={(event) => handleFileChange(event, 0)}
-            />
-          </div>
-          <div>
-            <label htmlFor="fileInput2">RUT:</label>
-            <input
-              type="file"
-              id="fileInput2"
-              accept=".pdf"
-              required
-              onChange={(event) => handleFileChange(event, 1)}
-            />
-          </div>
-          <div>
-            <label htmlFor="fileInput3">CERTIFICADO:</label>
-            <input
-              type="file"
-              id="fileInput3"
-              accept=".pdf"
-              required
-              onChange={(event) => handleFileChange(event, 2)}
-            />
-          </div>
-          <button type="submit">Enviar</button>
-        </form>
+        <div className="container">
+          <form onSubmit={handleSubmit}>
+            <div className="uploads">
+              <label htmlFor="fileInput2" className="labelsUploads">
+                RUT:
+              </label>
+              <input
+                type="file"
+                id="fileInput2"
+                accept=".pdf"
+                required
+                onChange={(event) => handleFileChange(event, 1)}
+              />
+            </div>
+
+            <div className="uploads">
+              <label htmlFor="fileInput1" className="labelsUploads">
+                Promedio:{" "}
+              </label>
+              <input
+                type="file"
+                id="fileInput1"
+                accept="image/*"
+                required
+                onChange={(event) => handleFileChange(event, 0)}
+              />
+            </div>
+
+            <div className="uploads">
+              <label htmlFor="fileInput3" className="labelsUploads">
+                Certificado Bancario:
+              </label>
+              <input
+                type="file"
+                id="fileInput3"
+                accept=".pdf"
+                required
+                onChange={(event) => handleFileChange(event, 2)}
+              />
+            </div>
+
+            <div className="btn-uploads">
+              <button type="submit" className="btn">
+                Subir Documentos
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
