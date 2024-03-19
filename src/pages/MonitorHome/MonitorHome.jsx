@@ -8,14 +8,13 @@ import Swal from "sweetalert2";
 import Navbar from "../../Components/Navbar/Navbar";
 
 const MonitorHome = () => {
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Verificar si el usuario está autenticado al cargar el componente
     const checkAuthentication = async () => {
       const accessToken = await AsyncStorage.getItem("accessToken");
       if (!accessToken) {
-        // Si no hay un token de acceso, redirigir al usuario al componente al login
         navigate("/");
       }
     };
@@ -30,31 +29,30 @@ const MonitorHome = () => {
         { refreshToken }
       );
 
-      // Almacena el nuevo accessToken en el estado de la aplicación
       const newAccessToken = response.data.accessToken;
       await AsyncStorage.setItem("accessToken", newAccessToken);
     } catch (error) {
-      // Manejar el error de renovación de tokens
+    
       console.error("Error al renovar el accessToken:", error);
     }
   };
 
-  //Mirar si ya expiró el AccessToken
+  const logout = async () => {
+    await AsyncStorage.removeItem("accessToken");
+    await AsyncStorage.removeItem("refreshToken");
+    navigate("/");
+  };
+
   useEffect(() => {
     const expireToken = async () => {
       try {
         const accessToken = await AsyncStorage.getItem("accessToken");
         const refreshToken = await AsyncStorage.getItem("refreshToken");
 
-        // Decodificar el AccessToken para verificar la fecha de expiración
         const decodedToken = jwtDecode(accessToken);
-        // console.log(decodedToken)
-        const expiracion = decodedToken.exp * 1000; // Convertir a milisegundos
-
-        // Obtener la fecha actual
+        const expiracion = decodedToken.exp * 1000;
         const ahora = Date.now();
 
-        // Verificar si el AccessToken ha expirado
         if (ahora >= expiracion) {
           console.log("El AccessToken ha expirado");
           Swal.fire({
@@ -65,13 +63,10 @@ const MonitorHome = () => {
             confirmButtonText: "OK",
           }).then((result) => {
             if (result.isConfirmed) {
-              // El usuario hizo clic en "OK"
               console.log("El usuario hizo clic en OK");
               handleRefreshToken(refreshToken);
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-              // El usuario hizo clic en "Cancelar" o cerró la alerta
               console.log("El usuario hizo clic en Cancelar o cerró la alerta");
-
               logout();
             }
           });
@@ -83,10 +78,8 @@ const MonitorHome = () => {
       }
     };
 
-    // Configurar un temporizador para verificar periódicamente si el AccessToken ha expirado
-    const intervalId = setInterval(expireToken, 20000); // Verificar cada 20 segundos
+    const intervalId = setInterval(expireToken, 20000);
 
-    // Limpiar el temporizador cuando el componente se desmonte
     return () => clearInterval(intervalId);
   });
 
