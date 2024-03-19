@@ -18,11 +18,9 @@ const LoginForm = () => {
 
 
   useEffect(() => {
-    // Verificar si el usuario está autenticado al cargar el componente
     const checkAuthentication = async () => {
       const accessToken = await AsyncStorage.getItem('accessToken');
       if (accessToken) {
-        // Si hay un token de acceso, redirigir al usuario al componente "dashboard"
         navigate('/dashboard');
       }
     };
@@ -31,8 +29,6 @@ const LoginForm = () => {
   }, []);
 
   const handleSaveCredentials = () => {
-    // Aquí puedes usar la API del navegador para guardar las credenciales
-    // Por ejemplo, puedes usar la API Credential Management:
     if ('credentials' in navigator) {
       navigator.credentials.store(new PasswordCredential({
         id: email,
@@ -44,7 +40,7 @@ const LoginForm = () => {
   const login = async () => {
     try {
       const response = await axios.post(
-        'http://192.168.1.6:3000/api/v1/auth/login',
+        'https://unimentor-dev-rfzz.1.us-1.fl0.io/api/v1/auth/login',
         new URLSearchParams({
           email: email,
           current_password: password
@@ -61,14 +57,13 @@ const LoginForm = () => {
   
       const { message, accessToken, refreshToken } = response.data;
   
-      // Almacena los tokens de acceso y refresco
       await AsyncStorage.setItem("accessToken", accessToken);
       await AsyncStorage.setItem("refreshToken", refreshToken);
   
   
       navigate('/dashboard');
   
-      handleSaveCredentials(); // Guardar las credenciales cuando se haya iniciado sesión con éxito
+      handleSaveCredentials();
     } catch (error) {
       console.error(error.response.data.message);
       Swal.fire({
