@@ -12,7 +12,9 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.22.3",
     "axios": "^1.6.7",
+    "gridfs-stream": "^1.1.1",
     "jwt-decode": "^4.0.0",
+    "multer-gridfs-storage": "^5.0.2",
     "qs": "^6.11.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.1",
