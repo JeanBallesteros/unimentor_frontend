@@ -5,9 +5,11 @@ import { jwtDecode } from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Swal from "sweetalert2";
+import "./Avales.css";
 
 const Avales = () => {
   const navigate = useNavigate();
+  const [userss, setUserss] = useState([]);
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -83,11 +85,72 @@ const Avales = () => {
   });
 
 
+  useEffect(() => {
+    const handleShowUsers = async () => {
+      const response = await axios.get(
+        "http://192.168.0.25:3000/api/v1/avales"
+      );
+  
+      setUserss(response.data);
+
+      console.log(response.data);
+    };
+
+    handleShowUsers();
+  }, []);
+
+
   return (
     <div className="monitor">
       <Navbar />
       <div>
         <h1 className="titulo">Avales</h1>
+        <table className="tabla">
+          <thead>
+            <tr>
+              <th>Número de documento</th>
+              <th>Nombre completo</th>
+              <th>Promedio</th>
+              <th>RUT</th>
+              <th>Certificado</th>
+              <th>Asignatura</th>
+              <th>Grupo</th>
+              <th>Opciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {userss.map((usuario, index) => (
+              <tr key={index}>
+                <td>{usuario.documentNumber}</td>
+                <td>{usuario.fullname}</td>
+                <td>
+                  {usuario.avalsData.map((aval, idx) => (
+                    <div key={idx}>
+                      <p>{aval.promedio}</p>
+                    </div>
+                  ))}
+                </td>
+                <td>
+                  {usuario.avalsData.map((aval, idx) => (
+                    <div key={idx}>
+                      <p>{aval.rut}</p>
+                    </div>
+                  ))}
+                </td>
+                <td>
+                  {usuario.avalsData.map((aval, idx) => (
+                    <div key={idx}>
+                      <p>{aval.certificado}</p>
+                    </div>
+                  ))}
+                </td>
+                <td>LISTA DESPLEGABLE</td>
+                <td>{usuario.fecha}</td>
+                <td>{usuario.fecha}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
