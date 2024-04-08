@@ -40,7 +40,7 @@ const LoginForm = () => {
   const login = async () => {
     try {
       const response = await axios.post(
-        'https://unimentor-dev-rfzz.1.us-1.fl0.io/api/v1/auth/login',
+        'https://unimentor-fqz8.onrender.com/api/v1/auth/login',
         new URLSearchParams({
           email: email,
           current_password: password

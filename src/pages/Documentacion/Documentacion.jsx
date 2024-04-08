@@ -24,7 +24,7 @@ const Documentacion = () => {
   const handleRefreshToken = async (refreshToken) => {
     try {
       const response = await axios.post(
-        "https://unimentor-dev-rfzz.1.us-1.fl0.io/api/v1/auth/refresh-token",
+        "https://unimentor-fqz8.onrender.com/api/v1/auth/refresh-token",
         { refreshToken }
       );
 
@@ -125,7 +125,7 @@ const Documentacion = () => {
       const id = jwtDecode(accessTokenTemp).user._id;
 
       const response = await axios.post(
-        `http://192.168.118.188:3000/api/v1/avales/${id}`,
+        `http://192.168.0.25:3000/api/v1/avales/${id}`,
         formData
       );
 
@@ -143,15 +143,14 @@ const Documentacion = () => {
 
         const button = document.querySelector("button[type='submit']");
         button.disabled = true;
-      } else {
-        Swal.fire({
-          title: "¡Error al subir los documentos!",
-          text: "Inténtalo de nuevo.",
-          icon: "error",
-        });
+
       }
     } catch (error) {
-      console.error("Error al cargar los archivos:", error);
+      Swal.fire({
+        title: "¡Error al subir los documentos!",
+        text: "Espera la autorización de tu aval",
+        icon: "error",
+      });
     }
   };
 
