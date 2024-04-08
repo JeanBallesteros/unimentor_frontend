@@ -24,7 +24,7 @@ const Documentacion = () => {
   const handleRefreshToken = async (refreshToken) => {
     try {
       const response = await axios.post(
-        "https://unimentor-dev-rfzz.1.us-1.fl0.io/api/v1/auth/refresh-token",
+        "https://unimentor-fqz8.onrender.com/api/v1/auth/refresh-token",
         { refreshToken }
       );
 
@@ -125,7 +125,7 @@ const Documentacion = () => {
       const id = jwtDecode(accessTokenTemp).user._id;
 
       const response = await axios.post(
-        `http://192.168.116.34:3000/api/v1/avales/${id}`,
+        `http://192.168.0.25:3000/api/v1/avales/${id}`,
         formData
       );
 
