@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 
-
 const Navbar = () => {
   const navigate = useNavigate();
   const [master, setMaster] = useState(false);
@@ -13,8 +12,6 @@ const Navbar = () => {
   useEffect(() => {
     const checkRole = async () => {
       const accessToken = await AsyncStorage.getItem("accessToken");
-      // const decodedToken = jwtDecode(accessToken);
-
       const role = jwtDecode(accessToken).user.role;
 
       if(role === "master"){
@@ -27,20 +24,15 @@ const Navbar = () => {
 
   const logout = async () => {
     try {
-      // Eliminar el AccessToken y el RefreshToken de AsyncStorage
       await AsyncStorage.removeItem("accessToken");
       await AsyncStorage.removeItem("refreshToken");
-
-      // Redirigir al usuario a la página de inicio de sesión o a cualquier otra página deseada
       navigate("/");
     } catch (error) {
       console.error("Error al realizar el logout:", error);
     }
   };
 
-
   return (
-    
     <nav>
       <Link className="title" to="/dashboard">UniMentor</Link>
       {!master && (
@@ -60,13 +52,13 @@ const Navbar = () => {
       {master && (
         <ul>
           <li>
-            <NavLink to="">Avales</NavLink>
+            <NavLink to="/Avales">Avales</NavLink>
           </li>
           <li>
-            <NavLink to="">Monitores</NavLink>
+            <NavLink to="/Monitores">Monitores</NavLink>
           </li>
           <li>
-            <NavLink to="">Reporte de Horas</NavLink>
+            <NavLink to="/Reportes">Reporte de Horas</NavLink>
           </li>
           <li>
             <button onClick={logout} className="button">Cerrar sesión</button>
