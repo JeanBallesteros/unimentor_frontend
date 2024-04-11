@@ -10,6 +10,9 @@ import "./Avales.css";
 const Avales = () => {
   const navigate = useNavigate();
   const [userss, setUserss] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState('');
+  const [selectedSubjects, setSelectedSubjects] = useState({});
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -88,7 +91,7 @@ const Avales = () => {
   useEffect(() => {
     const handleShowUsers = async () => {
       const response = await axios.get(
-        "http://192.168.0.25:3000/api/v1/avales"
+        "http://192.168.115.216:3000/api/v1/avales"
       );
   
       setUserss(response.data);
@@ -98,6 +101,40 @@ const Avales = () => {
 
     handleShowUsers();
   }, []);
+
+  useEffect(() => {
+    const handleShowSubjects = async () => {
+      const response = await axios.get(
+        "http://192.168.115.216:3000/api/v1/asignaturas"
+      );
+  
+      setSubjects(response.data);
+
+      // console.log(response.data);
+    };
+
+    handleShowSubjects();
+  }, []);
+
+
+  const handleButtonAceptar = (index) => {
+    // Aquí puedes acceder al _id de la asignatura seleccionada desde el estado selectedSubject
+    console.log("ID de la asignatura seleccionada para la fila", index, ":", selectedSubjects[index]);
+
+  };
+
+  const handleButtonDenegar = (index) => {
+    // Aquí puedes acceder al _id de la asignatura seleccionada desde el estado selectedSubject
+    console.log("ID de la asignatura seleccionada para la fila", index, ":", selectedSubjects[index]);
+    
+  };
+
+  const handleSubjectChange = (index, value) => {
+    setSelectedSubjects(prevState => ({
+      ...prevState,
+      [index]: value
+    }));
+  };
 
 
   return (
@@ -114,7 +151,7 @@ const Avales = () => {
               <th>RUT</th>
               <th>Certificado</th>
               <th>Asignatura</th>
-              <th>Grupo</th>
+              {/* <th>Grupo</th> */}
               <th>Opciones</th>
             </tr>
           </thead>
@@ -144,9 +181,20 @@ const Avales = () => {
                     </div>
                   ))}
                 </td>
-                <td>LISTA DESPLEGABLE</td>
-                <td>{usuario.fecha}</td>
-                <td>{usuario.fecha}</td>
+                <td>
+                  <select value={selectedSubjects[index] || ""} onChange={(e) => handleSubjectChange(index, e.target.value)}>
+                    <option value="">Selecciona una asignatura</option>
+                    {subjects.map((subject) => (
+                      <option key={subject._id} value={subject._id}>{subject.name}</option>
+                    ))}
+                  </select>
+                </td>
+                {/* <td>{usuario.fecha}</td> */}
+                <td>
+                  <button className="btn-aceptar" onClick={() => handleButtonAceptar(index)}>ACEPTAR</button>
+                  <span style={{ marginLeft: '10px' }} />
+                  <button className="btn-denegar" onClick={() => handleButtonDenegar(index)}>DENEGAR</button>
+                </td>
               </tr>
             ))}
           </tbody>
