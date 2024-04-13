@@ -15,6 +15,7 @@
     "gridfs-stream": "^1.1.1",
     "jwt-decode": "^4.0.0",
     "multer-gridfs-storage": "^5.0.2",
+    "nodemailer": "^6.9.13",
     "qs": "^6.11.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.1",
