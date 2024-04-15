@@ -118,6 +118,7 @@ const Avales = () => {
     const subjectId = selectedSubjects[index];
     const userId = userss[index]._id;
 
+
     if (!subjectId) {
       Swal.fire({
         title: "Error",
@@ -127,6 +128,13 @@ const Avales = () => {
       });
       return;
     }
+
+    const responsee = await axios.patch(
+      'http://192.168.0.17:3000/api/v1/asignaturas/update/' + subjectId,
+      { monitor: userId }
+    );
+
+    console.log(responsee.data);
 
     const sendEmail = async () => {
       const emailData = {
