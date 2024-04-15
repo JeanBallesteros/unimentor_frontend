@@ -94,7 +94,7 @@ const Avales = () => {
 
   useEffect(() => {
     const handleShowUsers = async () => {
-      const response = await axios.get("http://192.168.1.1:3000/api/v1/avales");
+      const response = await axios.get("http://192.168.0.17:3000/api/v1/avales");
 
       setUserss(response.data);
     };
@@ -105,7 +105,7 @@ const Avales = () => {
   useEffect(() => {
     const handleShowSubjects = async () => {
       const response = await axios.get(
-        "http://192.168.1.1:3000/api/v1/asignaturas"
+        "http://192.168.0.17:3000/api/v1/asignaturas"
       );
 
       setSubjects(response.data);
@@ -137,7 +137,7 @@ const Avales = () => {
 
       try {
         const response = await axios.post(
-          "http://192.168.1.1:3000/send-email-approved",
+          "http://192.168.0.17:3000/send-email-approved",
           emailData
         );
         console.log(response.data);
@@ -148,7 +148,7 @@ const Avales = () => {
     };
 
     const response = await axios.patch(
-      'http://192.168.1.1:3000/api/v1/users/update/' + userId,
+      'http://192.168.0.17:3000/api/v1/users/update/' + userId,
       { role: "monitor" }
     );
 
@@ -184,7 +184,7 @@ const Avales = () => {
 
         try {
           const response = await axios.post(
-            "http://192.168.1.1:3000/send-email-denied",
+            "http://192.168.0.17:3000/send-email-denied",
             emailData
           );
           console.log(response.data);
@@ -196,7 +196,7 @@ const Avales = () => {
       if (result.isConfirmed) {
         const aval = userss[index].avalsData[0]._id;
         const response = await axios.delete(
-          "http://192.168.1.1:3000/api/v1/avales/delete/" + aval
+          "http://192.168.0.17:3000/api/v1/avales/delete/" + aval
         );
         if (response.status === 200) {
           sendEmail();
@@ -320,23 +320,29 @@ const Avales = () => {
                   <td>{usuario.documentNumber}</td>
                   <td>{usuario.fullname}</td>
                   <td>
+                      {usuario.avalsData.map((aval, idx) => (
+                        <div key={idx}>
+                          <a href={`http://192.168.0.17:3000/api/v1/uploads/${aval.promedio}`} target="_blank">
+                            <p>{aval.promedio}</p>
+                          </a>
+                        </div>
+                      ))}
+                  </td>
+                  <td>
                     {usuario.avalsData.map((aval, idx) => (
                       <div key={idx}>
-                        <p>{aval.promedio}</p>
+                        <a href={`http://192.168.0.17:3000/api/v1/uploads/${aval.rut}`} target="_blank">
+                          <p>{aval.rut}</p>
+                        </a>
                       </div>
                     ))}
                   </td>
                   <td>
                     {usuario.avalsData.map((aval, idx) => (
                       <div key={idx}>
-                        <p>{aval.rut}</p>
-                      </div>
-                    ))}
-                  </td>
-                  <td>
-                    {usuario.avalsData.map((aval, idx) => (
-                      <div key={idx}>
-                        <p>{aval.certificado}</p>
+                        <a href={`http://192.168.0.17:3000/api/v1/uploads/${aval.certificado}`} target="_blank">
+                          <p>{aval.certificado}</p>
+                        </a>
                       </div>
                     ))}
                   </td>
