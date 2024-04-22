@@ -145,6 +145,8 @@ const Documentacion = () => {
         button.disabled = true;
 
       }
+
+      navigate("/");
     } catch (error) {
       Swal.fire({
         title: "¡Error al subir los documentos!",
