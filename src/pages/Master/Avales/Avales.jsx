@@ -11,8 +11,10 @@ const Avales = () => {
   const navigate = useNavigate();
   const [userss, setUserss] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedSubjects, setSelectedSubjects] = useState({});
+  const [selectedGroups, setSelectedGroups] = useState({});
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -94,7 +96,7 @@ const Avales = () => {
 
   useEffect(() => {
     const handleShowUsers = async () => {
-      const response = await axios.get("http://192.168.0.17:3000/api/v1/avales");
+      const response = await axios.get("https://unimentor-fqz8.onrender.com/api/v1/avales");
 
       setUserss(response.data);
     };
@@ -105,7 +107,7 @@ const Avales = () => {
   useEffect(() => {
     const handleShowSubjects = async () => {
       const response = await axios.get(
-        "http://192.168.0.17:3000/api/v1/asignaturas"
+        "https://unimentor-fqz8.onrender.com/api/v1/asignaturas"
       );
 
       setSubjects(response.data);
@@ -114,12 +116,27 @@ const Avales = () => {
     handleShowSubjects();
   }, []);
 
+  useEffect(() => {
+    const handleShowGroups = async () => {
+      const response = await axios.get(
+        "https://unimentor-fqz8.onrender.com/api/v1/grupos"
+      );
+
+      setGroups(response.data);
+    };
+
+    handleShowGroups();
+  }, []);
+
   const handleButtonAceptar = async (index) => {
-    const subjectId = selectedSubjects[index];
+    const groupIdWithObject = selectedGroups[index];
+    const groupId = groupIdWithObject.split("-")[0];
     const userId = userss[index]._id;
 
+    console.log(groupId)
 
-    if (!subjectId) {
+
+    if (!groupId) {
       Swal.fire({
         title: "Error",
         text: "Debes seleccionar una asignatura para aceptar el aval.",
@@ -130,7 +147,7 @@ const Avales = () => {
     }
 
     const responsee = await axios.patch(
-      'http://192.168.0.17:3000/api/v1/asignaturas/update/' + subjectId,
+      'https://unimentor-fqz8.onrender.com/api/v1/grupos/update/' + groupId,
       { monitor: userId }
     );
 
@@ -145,7 +162,7 @@ const Avales = () => {
 
       try {
         const response = await axios.post(
-          "http://192.168.0.17:3000/send-email-approved",
+          "https://unimentor-fqz8.onrender.com/send-email-approved",
           emailData
         );
         console.log(response.data);
@@ -156,7 +173,7 @@ const Avales = () => {
     };
 
     const response = await axios.patch(
-      'http://192.168.0.17:3000/api/v1/users/update/' + userId,
+      'https://unimentor-fqz8.onrender.com/api/v1/users/update/' + userId,
       { role: "monitor" }
     );
 
@@ -192,7 +209,7 @@ const Avales = () => {
 
         try {
           const response = await axios.post(
-            "http://192.168.0.17:3000/send-email-denied",
+            "https://unimentor-fqz8.onrender.com/send-email-denied",
             emailData
           );
           console.log(response.data);
@@ -204,7 +221,7 @@ const Avales = () => {
       if (result.isConfirmed) {
         const aval = userss[index].avalsData[0]._id;
         const response = await axios.delete(
-          "http://192.168.0.17:3000/api/v1/avales/delete/" + aval
+          "https://unimentor-fqz8.onrender.com/api/v1/avales/delete/" + aval
         );
         if (response.status === 200) {
           sendEmail();
@@ -231,6 +248,13 @@ const Avales = () => {
 
   const handleSubjectChange = (index, value) => {
     setSelectedSubjects((prevState) => ({
+      ...prevState,
+      [index]: value,
+    }));
+  };
+
+  const handleGroupChange = (index, value) => {
+    setSelectedGroups((prevState) => ({
       ...prevState,
       [index]: value,
     }));
@@ -276,7 +300,7 @@ const Avales = () => {
       <h1 className="tituloAval">Avales</h1>
       <div className="filtro">
         <div className="inputFileAval">
-          <h2 className="subtitulo">Busqueda Filtrada</h2>
+          <h2 className="subtitulo">Búsqueda Filtrada</h2>
           <input
             type="number"
             name="monitorId"
@@ -356,16 +380,18 @@ const Avales = () => {
                   </td>
                   <td>
                     <select
-                      value={selectedSubjects[index] || ""}
+                      value={selectedGroups[index] || ""}
                       onChange={(e) =>
-                        handleSubjectChange(index, e.target.value)
+                        handleGroupChange(index, e.target.value)
                       }
                     >
                       <option value="">Selecciona una asignatura</option>
-                      {subjects.map((subject) => (
-                        <option key={subject._id} value={subject._id}>
-                          {subject.name}
-                        </option>
+                      {groups.map((group) => (
+                        group.subject.map((subject) => (
+                          <option key={`${group._id}-${subject}`} value={`${group._id}-${subject}`}>
+                            {`${subject.name} - ${group.name}`}
+                          </option>
+                        ))
                       ))}
                     </select>
                   </td>
