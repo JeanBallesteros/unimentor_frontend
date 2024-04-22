@@ -11,7 +11,7 @@ const Avales = () => {
   const navigate = useNavigate();
   const [userss, setUserss] = useState([]);
   const [subjects, setSubjects] = useState([]);
-  const [groups, setGroups] = useState([]);
+  const [groupsMonitorEmpty, setGroupsMonitorEmpty] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedSubjects, setSelectedSubjects] = useState({});
   const [selectedGroups, setSelectedGroups] = useState({});
@@ -119,10 +119,10 @@ const Avales = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        "https://unimentor-fqz8.onrender.com/api/v1/grupos"
+        "http://192.168.118.231:3000/api/v1/grupos/monitor"
       );
 
-      setGroups(response.data);
+      setGroupsMonitorEmpty(response.data);
     };
 
     handleShowGroups();
@@ -162,7 +162,7 @@ const Avales = () => {
 
       try {
         const response = await axios.post(
-          "https://unimentor-fqz8.onrender.com/send-email-approved",
+          "http://192.168.118.231:3000/send-email-approved",
           emailData
         );
         console.log(response.data);
@@ -354,7 +354,7 @@ const Avales = () => {
                   <td>
                       {usuario.avalsData.map((aval, idx) => (
                         <div key={idx}>
-                          <a href={`http://192.168.0.17:3000/api/v1/uploads/${aval.promedio}`} target="_blank">
+                          <a href={`http://192.168.118.231:3000/api/v1/uploads/${aval.promedio}`} target="_blank">
                             <p>{aval.promedio}</p>
                           </a>
                         </div>
@@ -363,7 +363,7 @@ const Avales = () => {
                   <td>
                     {usuario.avalsData.map((aval, idx) => (
                       <div key={idx}>
-                        <a href={`http://192.168.0.17:3000/api/v1/uploads/${aval.rut}`} target="_blank">
+                        <a href={`http://192.168.118.231:3000/api/v1/uploads/${aval.rut}`} target="_blank">
                           <p>{aval.rut}</p>
                         </a>
                       </div>
@@ -372,7 +372,7 @@ const Avales = () => {
                   <td>
                     {usuario.avalsData.map((aval, idx) => (
                       <div key={idx}>
-                        <a href={`http://192.168.0.17:3000/api/v1/uploads/${aval.certificado}`} target="_blank">
+                        <a href={`http://192.168.118.231:3000/api/v1/uploads/${aval.certificado}`} target="_blank">
                           <p>{aval.certificado}</p>
                         </a>
                       </div>
@@ -386,7 +386,7 @@ const Avales = () => {
                       }
                     >
                       <option value="">Selecciona una asignatura</option>
-                      {groups.map((group) => (
+                      {groupsMonitorEmpty.map((group) => (
                         group.subject.map((subject) => (
                           <option key={`${group._id}-${subject}`} value={`${group._id}-${subject}`}>
                             {`${subject.name} - ${group.name}`}

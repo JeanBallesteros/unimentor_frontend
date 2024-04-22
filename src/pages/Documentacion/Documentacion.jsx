@@ -125,7 +125,7 @@ const Documentacion = () => {
       const id = jwtDecode(accessTokenTemp).user._id;
 
       const response = await axios.post(
-        `http://192.168.0.17:3000/api/v1/avales/${id}`,
+        `http://192.168.118.231:3000/api/v1/avales/${id}`,
         formData
       );
 

@@ -12,6 +12,7 @@ const Monitores = () => {
   const [userss, setUserss] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [groups, setGroups] = useState([]);
+  const [groupsMonitorEmpty, setGroupsMonitorEmpty] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedSubjects, setSelectedSubjects] = useState({});
   const [selectedGroups, setSelectedGroups] = useState({});
@@ -96,7 +97,9 @@ const Monitores = () => {
 
   useEffect(() => {
     const handleShowUsers = async () => {
-      const response = await axios.get("http://192.168.0.17:3000/api/v1/avales/monitor");
+      const response = await axios.get(
+        "http://192.168.118.231:3000/api/v1/avales/monitor"
+      );
 
       setUserss(response.data);
     };
@@ -107,7 +110,19 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        "https://unimentor-fqz8.onrender.com/api/v1/grupos"
+        "http://192.168.118.231:3000/api/v1/grupos/monitor"
+      );
+
+      setGroupsMonitorEmpty(response.data);
+    };
+
+    handleShowGroups();
+  }, []);
+
+  useEffect(() => {
+    const handleShowGroups = async () => {
+      const response = await axios.get(
+        "http://192.168.118.231:3000/api/v1/grupos"
       );
 
       setGroups(response.data);
@@ -134,7 +149,7 @@ const Monitores = () => {
 
         try {
           const response = await axios.post(
-            "https://unimentor-fqz8.onrender.com/send-email-denied",
+            "http://192.168.118.231:3000/send-email-denied",
             emailData
           );
           console.log(response.data);
@@ -146,28 +161,57 @@ const Monitores = () => {
       if (result.isConfirmed) {
         const avalId = userss[index].avalsData[0]._id;
         const userId = userss[index]._id;
+        let groupId = "";
+        let contadorGruposMonitor = 0;
 
-        const response = await axios.delete(
-          "https://unimentor-fqz8.onrender.com/api/v1/avales/delete/" + avalId
-        );
-
-        const response2 = await axios.patch(
-          'https://unimentor-fqz8.onrender.com/api/v1/users/update/' + userId,
-          { role: "user" }
-        );
-
-        if (response.status === 200 && response2.status === 200) {
-          sendEmail();
-          Swal.fire({
-            title: "Monitor Eliminado",
-            text: "El monitor ha sido eliminado de la lista",
-            icon: "success",
-            confirmButtonText: "Aceptar",
-          })
-          .then(() => {
-            window.location.reload();
-          });
+        for (let i = 0; i < groups.length; i++) {
+          if(groups[i].monitor ==  userId){
+            groupId = groups[i]._id
+            contadorGruposMonitor++;
+          }
         }
+
+
+        // const groupId = groups[index]._id;
+        // console.log(groupId,'---------');
+
+
+
+        //ESTOS ENDPOINTS SE DEBEN CORRER CUANDO EL MONITOR HAGA PARTE DE SOLO UN GRUPO
+
+        if(contadorGruposMonitor === 1){
+          const response = await axios.delete(
+            "https://unimentor-fqz8.onrender.com/api/v1/avales/delete/" + avalId
+          );
+
+          const response2 = await axios.patch(
+            'https://unimentor-fqz8.onrender.com/api/v1/users/update/' + userId,
+            { role: "user" }
+          );
+
+          const response3 = await axios.patch(
+            'https://unimentor-fqz8.onrender.com/api/v1/grupos/update/' + groupId,
+            { monitor: "" }
+          );
+
+          if (response.status === 200 && response2.status === 200 && response3.status === 200) {
+            sendEmail();
+            Swal.fire({
+              title: "Monitor Eliminado",
+              text: "El monitor ha sido eliminado de la lista",
+              icon: "success",
+              confirmButtonText: "Aceptar",
+            })
+            .then(() => {
+              window.location.reload();
+            });
+          }
+        }else if(contadorGruposMonitor > 1){
+          // EN CASO DE QUE EL MONITOR ESTÉ EN MUCHOS GRUPOS
+
+          
+        }
+
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
           title: "Cancelado",
@@ -286,7 +330,7 @@ const Monitores = () => {
                   <td>
                       {usuario.avalsData.map((aval, idx) => (
                         <div key={idx}>
-                          <a href={`http://192.168.0.17:3000/api/v1/uploads/${aval.promedio}`} target="_blank">
+                          <a href={`http://192.168.118.231:3000/api/v1/uploads/${aval.promedio}`} target="_blank">
                             <p>{aval.promedio}</p>
                           </a>
                         </div>
@@ -295,7 +339,7 @@ const Monitores = () => {
                   <td>
                     {usuario.avalsData.map((aval, idx) => (
                       <div key={idx}>
-                        <a href={`http://192.168.0.17:3000/api/v1/uploads/${aval.rut}`} target="_blank">
+                        <a href={`http://192.168.118.231:3000/api/v1/uploads/${aval.rut}`} target="_blank">
                           <p>{aval.rut}</p>
                         </a>
                       </div>
@@ -304,7 +348,7 @@ const Monitores = () => {
                   <td>
                     {usuario.avalsData.map((aval, idx) => (
                       <div key={idx}>
-                        <a href={`http://192.168.0.17:3000/api/v1/uploads/${aval.certificado}`} target="_blank">
+                        <a href={`http://192.168.118.231:3000/api/v1/uploads/${aval.certificado}`} target="_blank">
                           <p>{aval.certificado}</p>
                         </a>
                       </div>
@@ -328,3 +372,4 @@ const Monitores = () => {
 };
 
 export default Monitores;
+
