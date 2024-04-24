@@ -6,6 +6,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Swal from "sweetalert2";
 import "./Monitores.css";
+import { MdDelete } from "react-icons/md";
+import { FaLock } from "react-icons/fa";
 
 const Monitores = () => {
   const navigate = useNavigate();
@@ -13,10 +15,12 @@ const Monitores = () => {
   const [subjects, setSubjects] = useState([]);
   const [groups, setGroups] = useState([]);
   const [groupsMonitorEmpty, setGroupsMonitorEmpty] = useState([]);
+  const [groupsMonitorNotEmpty, setGroupsMonitorNotEmpty] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedSubjects, setSelectedSubjects] = useState({});
   const [selectedGroups, setSelectedGroups] = useState({});
   const [search, setSearch] = useState("");
+
 
   useEffect(() => {
     // Verificar si el usuario está autenticado y si es master
@@ -98,7 +102,7 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowUsers = async () => {
       const response = await axios.get(
-        "http://192.168.118.231:3000/api/v1/avales/monitor"
+        "http://192.168.0.17:3000/api/v1/avales/monitor"
       );
 
       setUserss(response.data);
@@ -110,7 +114,7 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        "http://192.168.118.231:3000/api/v1/grupos/monitor"
+        "http://192.168.0.17:3000/api/v1/grupos/monitor"
       );
 
       setGroupsMonitorEmpty(response.data);
@@ -122,7 +126,19 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        "http://192.168.118.231:3000/api/v1/grupos"
+        "http://192.168.0.17:3000/api/v1/grupos/monitornotempty"
+      );
+
+      setGroupsMonitorNotEmpty(response.data);
+    };
+
+    handleShowGroups();
+  }, []);
+
+  useEffect(() => {
+    const handleShowGroups = async () => {
+      const response = await axios.get(
+        "http://192.168.0.17:3000/api/v1/grupos"
       );
 
       setGroups(response.data);
@@ -149,7 +165,7 @@ const Monitores = () => {
 
         try {
           const response = await axios.post(
-            "http://192.168.118.231:3000/send-email-denied",
+            "http://192.168.0.17:3000/send-email-denied",
             emailData
           );
           console.log(response.data);
@@ -191,7 +207,7 @@ const Monitores = () => {
 
           const response3 = await axios.patch(
             'https://unimentor-fqz8.onrender.com/api/v1/grupos/update/' + groupId,
-            { monitor: "" }
+            { monitor: null }
           );
 
           if (response.status === 200 && response2.status === 200 && response3.status === 200) {
@@ -209,6 +225,26 @@ const Monitores = () => {
         }else if(contadorGruposMonitor > 1){
           // EN CASO DE QUE EL MONITOR ESTÉ EN MUCHOS GRUPOS
 
+          
+
+          const response3 = await axios.patch(
+            'https://unimentor-fqz8.onrender.com/api/v1/grupos/update/' + groupId,
+            { monitor: null }
+          );
+
+
+          if (response3.status === 200) {
+            sendEmail();
+            Swal.fire({
+              title: "Monitor Eliminado",
+              text: "El monitor ha sido eliminado de la lista",
+              icon: "success",
+              confirmButtonText: "Aceptar",
+            })
+            .then(() => {
+              window.location.reload();
+            });
+          }
           
         }
 
@@ -247,18 +283,23 @@ const Monitores = () => {
       setSearch("");
       document.querySelector('input[name="monitorId"]').value = "";
       document.querySelector('input[name="monitorName"]').value = "";
+      document.querySelector('input[name="monitorEmail"]').value = "";
+      document.querySelector('input[name="subjectName"]').value = "";
+      document.querySelector('input[name="teacherName"]').value = "";
     });
   };
 
-  const filteredUsers = userss.filter((usuario) => {
-    const documentNumber = (usuario.documentNumber || "").toString();
+  const filteredUsers = groupsMonitorNotEmpty.filter((group) => {
+    const documentNumber = (group.monitor[0].documentNumber || "").toString();
     if (search === "") {
       return true;
     } else if (
       documentNumber.toLowerCase().includes(search.toLowerCase()) ||
-      usuario.fullname.toLowerCase().includes(search.toLowerCase())
-    ) {
-      return true;
+      group.monitor[0].fullname.toLowerCase().includes(search.toLowerCase()) ||
+      group.monitor[0].email.toLowerCase().includes(search.toLowerCase()) ||
+      group.subject[0].name.toLowerCase().includes(search.toLowerCase()) ||
+      group.teacher[0].fullname.toLowerCase().includes(search.toLowerCase())) {
+        return true;
     } else {
       return false;
     }
@@ -276,20 +317,41 @@ const Monitores = () => {
       <Navbar />
       <h1 className="tituloAval">Monitores</h1>
       <div className="filtro">
+        <h2 className="subtitulo">Búsqueda Filtrada de Monitores</h2>
         <div className="inputFileAval">
-          <h2 className="subtitulo">Búsqueda Filtrada</h2>
           <input
             type="number"
             name="monitorId"
             id=""
-            placeholder="Buscar por documento"
+            placeholder="Por Documento"
             onChange={(e) => setSearch(e.target.value)}
           />
           <input
             type="text"
             name="monitorName"
             id=""
-            placeholder="Buscar por nombre"
+            placeholder="Por Nombre Monitor"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <input
+            type="text"
+            name="monitorEmail"
+            id=""
+            placeholder="Por Correo"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <input
+            type="text"
+            name="subjectName"
+            id=""
+            placeholder="Por Asignatura"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <input
+            type="text"
+            name="teacherName"
+            id=""
+            placeholder="Por Docente"
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
@@ -300,67 +362,50 @@ const Monitores = () => {
             <tr>
               <th>Número de documento</th>
               <th>Nombre completo</th>
-              <th>Promedio</th>
-              <th>RUT</th>
-              <th>Certificado</th>
+              <th>Correo Institucional</th>
+              <th>Asignatura</th>
+              <th>Grupo</th>
+              <th>Docente</th>
               <th>Opciones</th>
             </tr>
           </thead>
           <tbody>
-            {userss
-              .filter((usuario) => {
-                const documentNumber = (
-                  usuario.documentNumber || ""
-                ).toString();
+            {groupsMonitorNotEmpty
+              .filter((group) => {
+
+                const documentNumber = (group.monitor[0].documentNumber || "").toString();
+
                 if (search === "") {
                   return true;
                 } else if (
                   documentNumber.toLowerCase().includes(search.toLowerCase()) ||
-                  usuario.fullname.toLowerCase().includes(search.toLowerCase())
-                ) {
-                  return true;
+                  group.monitor[0].fullname.toLowerCase().includes(search.toLowerCase()) ||
+                  group.monitor[0].email.toLowerCase().includes(search.toLowerCase()) ||
+                  group.subject[0].name.toLowerCase().includes(search.toLowerCase()) ||
+                  group.teacher[0].fullname.toLowerCase().includes(search.toLowerCase())) {
+                    return true;
                 } else {
                   return false;
                 }
+
               })
-              .map((usuario, index) => (
+              .map((groupsMonitor, index) => (
                 <tr key={index}>
-                  <td>{usuario.documentNumber}</td>
-                  <td>{usuario.fullname}</td>
+                  <td>{groupsMonitor.monitor[0].documentNumber}</td>
+                  <td>{groupsMonitor.monitor[0].fullname}</td>
+                  <td>{groupsMonitor.monitor[0].email}</td>
+                  <td>{groupsMonitor.subject[0].name}</td>
+                  <td>{groupsMonitor.name}</td>
+                  <td>{groupsMonitor.teacher[0].fullname}</td>
                   <td>
-                      {usuario.avalsData.map((aval, idx) => (
-                        <div key={idx}>
-                          <a href={`http://192.168.118.231:3000/api/v1/uploads/${aval.promedio}`} target="_blank">
-                            <p>{aval.promedio}</p>
-                          </a>
-                        </div>
-                      ))}
-                  </td>
-                  <td>
-                    {usuario.avalsData.map((aval, idx) => (
-                      <div key={idx}>
-                        <a href={`http://192.168.118.231:3000/api/v1/uploads/${aval.rut}`} target="_blank">
-                          <p>{aval.rut}</p>
-                        </a>
-                      </div>
-                    ))}
-                  </td>
-                  <td>
-                    {usuario.avalsData.map((aval, idx) => (
-                      <div key={idx}>
-                        <a href={`http://192.168.118.231:3000/api/v1/uploads/${aval.certificado}`} target="_blank">
-                          <p>{aval.certificado}</p>
-                        </a>
-                      </div>
-                    ))}
-                  </td>
-                  <td>
-                    <button
-                      className="btn-denegar"
-                      onClick={() => handleButtonDenegar(index)}
-                    >
-                      ELIMINAR
-                    </button>
+                    <div className="btn-monitores">
+                      <button
+                        className="btn-denegar"
+                        onClick={() => handleButtonDenegar(index)}
+                      >
+                        <MdDelete className="icon" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
