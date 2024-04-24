@@ -225,10 +225,10 @@ const Monitores = () => {
         }else if(contadorGruposMonitor > 1){
           // EN CASO DE QUE EL MONITOR ESTÉ EN MUCHOS GRUPOS
 
-          
+
 
           const response3 = await axios.patch(
-            'https://unimentor-fqz8.onrender.com/api/v1/grupos/update/' + groupId,
+            'http://192.168.0.17:3000/api/v1/grupos/updatetonull/' + groupId,
             { monitor: null }
           );
 
@@ -236,8 +236,8 @@ const Monitores = () => {
           if (response3.status === 200) {
             sendEmail();
             Swal.fire({
-              title: "Monitor Eliminado",
-              text: "El monitor ha sido eliminado de la lista",
+              title: "Monitor Eliminado del Grupo",
+              text: "El monitor ha sido eliminado de este grupo",
               icon: "success",
               confirmButtonText: "Aceptar",
             })
@@ -251,7 +251,7 @@ const Monitores = () => {
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
           title: "Cancelado",
-          text: "El monitor no ha sido eliminado de la lista.",
+          text: "El monitor no ha sido eliminado del grupo.",
           icon: "info",
           confirmButtonText: "Aceptar",
         });
