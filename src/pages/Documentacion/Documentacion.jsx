@@ -7,8 +7,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
 
+
 const Documentacion = () => {
   const navigate = useNavigate();
+  let urlPath = "192.168.1.9:3000";
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -125,7 +127,7 @@ const Documentacion = () => {
       const id = jwtDecode(accessTokenTemp).user._id;
 
       const response = await axios.post(
-        `http://192.168.0.17:3000/api/v1/avales/${id}`,
+        `http://${urlPath}/api/v1/avales/${id}`,
         formData
       );
 

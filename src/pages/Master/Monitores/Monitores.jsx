@@ -20,6 +20,7 @@ const Monitores = () => {
   const [selectedSubjects, setSelectedSubjects] = useState({});
   const [selectedGroups, setSelectedGroups] = useState({});
   const [search, setSearch] = useState("");
+  let urlPath = "192.168.1.9:3000";
 
 
   useEffect(() => {
@@ -102,7 +103,7 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowUsers = async () => {
       const response = await axios.get(
-        "http://192.168.0.17:3000/api/v1/avales/monitor"
+        `http://${urlPath}/api/v1/avales/monitor`
       );
 
       setUserss(response.data);
@@ -114,7 +115,7 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        "http://192.168.0.17:3000/api/v1/grupos/monitor"
+        `http://${urlPath}/api/v1/grupos/monitor`
       );
 
       setGroupsMonitorEmpty(response.data);
@@ -126,7 +127,7 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        "http://192.168.0.17:3000/api/v1/grupos/monitornotempty"
+        `http://${urlPath}/api/v1/grupos/monitornotempty`
       );
 
       setGroupsMonitorNotEmpty(response.data);
@@ -138,7 +139,7 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        "http://192.168.0.17:3000/api/v1/grupos"
+        `http://${urlPath}/api/v1/grupos`
       );
 
       setGroups(response.data);
@@ -165,7 +166,7 @@ const Monitores = () => {
 
         try {
           const response = await axios.post(
-            "http://192.168.0.17:3000/send-email-denied",
+            `http://${urlPath}/send-email-denied`,
             emailData
           );
           console.log(response.data);
@@ -228,7 +229,7 @@ const Monitores = () => {
 
 
           const response3 = await axios.patch(
-            'http://192.168.0.17:3000/api/v1/grupos/updatetonull/' + groupId,
+            `http://${urlPath}/api/v1/grupos/updatetonull/` + groupId,
             { monitor: null }
           );
 
