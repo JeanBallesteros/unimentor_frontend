@@ -18,6 +18,7 @@ const Avales = () => {
   const [selectedSubjects, setSelectedSubjects] = useState({});
   const [selectedGroups, setSelectedGroups] = useState({});
   const [search, setSearch] = useState("");
+  let urlPath = "192.168.1.9:3000";
 
   useEffect(() => {
     // Verificar si el usuario está autenticado y si es master
@@ -98,7 +99,7 @@ const Avales = () => {
 
   useEffect(() => {
     const handleShowUsers = async () => {
-      const response = await axios.get("http://192.168.0.17:3000/api/v1/avales");
+      const response = await axios.get(`http://${urlPath}/api/v1/avales`);
 
       setUserss(response.data);
     };
@@ -121,7 +122,7 @@ const Avales = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        "http://192.168.0.17:3000/api/v1/grupos/monitor"
+        `http://${urlPath}/api/v1/grupos/monitor`
       );
 
       setGroupsMonitorEmpty(response.data);
@@ -153,7 +154,7 @@ const Avales = () => {
     // const userIdObjectId = new mongoose.Types.ObjectId(userId);
 
     const responsee = await axios.patch(
-      'http://192.168.0.17:3000/api/v1/grupos/update/' + groupId,
+      `http://${urlPath}/api/v1/grupos/update/` + groupId,
       { monitor: userId }
     );
 
@@ -168,7 +169,7 @@ const Avales = () => {
 
       try {
         const response = await axios.post(
-          "http://192.168.0.17:3000/send-email-approved",
+          `http://${urlPath}/send-email-approved`,
           emailData
         );
         console.log(response.data);
@@ -215,7 +216,7 @@ const Avales = () => {
 
         try {
           const response = await axios.post(
-            "https://unimentor-fqz8.onrender.com/send-email-denied",
+            `https://${urlPath}/send-email-denied`,
             emailData
           );
           console.log(response.data);
@@ -360,7 +361,7 @@ const Avales = () => {
                   <td>
                       {usuario.avalsData.map((aval, idx) => (
                         <div key={idx}>
-                          <a href={`http://192.168.0.17:3000/api/v1/uploads/${aval.promedio}`} target="_blank">
+                          <a href={`http://${urlPath}/api/v1/uploads/${aval.promedio}`} target="_blank">
                             <p>{aval.promedio}</p>
                           </a>
                         </div>
@@ -369,7 +370,7 @@ const Avales = () => {
                   <td>
                     {usuario.avalsData.map((aval, idx) => (
                       <div key={idx}>
-                        <a href={`http://192.168.0.17:3000/api/v1/uploads/${aval.rut}`} target="_blank">
+                        <a href={`http://${urlPath}/api/v1/uploads/${aval.rut}`} target="_blank">
                           <p>{aval.rut}</p>
                         </a>
                       </div>
@@ -378,7 +379,7 @@ const Avales = () => {
                   <td>
                     {usuario.avalsData.map((aval, idx) => (
                       <div key={idx}>
-                        <a href={`http://192.168.0.17:3000/api/v1/uploads/${aval.certificado}`} target="_blank">
+                        <a href={`http://${urlPath}/api/v1/uploads/${aval.certificado}`} target="_blank">
                           <p>{aval.certificado}</p>
                         </a>
                       </div>
