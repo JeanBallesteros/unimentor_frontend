@@ -6,12 +6,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Swal from "sweetalert2";
 import "./Avales.css";
+import { MdCheckCircle } from "react-icons/md";
+import { MdCancel } from "react-icons/md";
 
 const Avales = () => {
   const navigate = useNavigate();
   const [userss, setUserss] = useState([]);
   const [subjects, setSubjects] = useState([]);
-  const [groups, setGroups] = useState([]);
+  const [groupsMonitorEmpty, setGroupsMonitorEmpty] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedSubjects, setSelectedSubjects] = useState({});
   const [selectedGroups, setSelectedGroups] = useState({});
@@ -96,7 +98,7 @@ const Avales = () => {
 
   useEffect(() => {
     const handleShowUsers = async () => {
-      const response = await axios.get("https://unimentor-fqz8.onrender.com/api/v1/avales");
+      const response = await axios.get("http://192.168.0.17:3000/api/v1/avales");
 
       setUserss(response.data);
     };
@@ -119,24 +121,19 @@ const Avales = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        "https://unimentor-fqz8.onrender.com/api/v1/grupos"
+        "http://192.168.0.17:3000/api/v1/grupos/monitor"
       );
 
-      setGroups(response.data);
+      setGroupsMonitorEmpty(response.data);
     };
 
     handleShowGroups();
   }, []);
 
   const handleButtonAceptar = async (index) => {
-    const groupIdWithObject = selectedGroups[index];
-    const groupId = groupIdWithObject.split("-")[0];
-    const userId = userss[index]._id;
-
-    console.log(groupId)
 
 
-    if (!groupId) {
+    if (!selectedGroups[index]) {
       Swal.fire({
         title: "Error",
         text: "Debes seleccionar una asignatura para aceptar el aval.",
@@ -146,8 +143,17 @@ const Avales = () => {
       return;
     }
 
+
+    const groupIdWithObject = selectedGroups[index];
+    const groupId = groupIdWithObject.split("-")[0];
+    const userId = userss[index]._id;
+
+    console.log(groupId)
+
+    // const userIdObjectId = new mongoose.Types.ObjectId(userId);
+
     const responsee = await axios.patch(
-      'https://unimentor-fqz8.onrender.com/api/v1/grupos/update/' + groupId,
+      'http://192.168.0.17:3000/api/v1/grupos/update/' + groupId,
       { monitor: userId }
     );
 
@@ -156,13 +162,13 @@ const Avales = () => {
     const sendEmail = async () => {
       const emailData = {
         to: userss[index].email,
-        subject: "Aval Aceptado",
+        subject: "¡Su aval ha sido aceptado!",
         text: `Hola ${userss[index].fullname},\n\nTu aval ha sido aceptado. ¡Bienvenido a UniMentor!\n\nSaludos,\nEquipo de Unimentor`,
       };
 
       try {
         const response = await axios.post(
-          "https://unimentor-fqz8.onrender.com/send-email-approved",
+          "http://192.168.0.17:3000/send-email-approved",
           emailData
         );
         console.log(response.data);
@@ -299,8 +305,8 @@ const Avales = () => {
       <Navbar />
       <h1 className="tituloAval">Avales</h1>
       <div className="filtro">
-        <div className="inputFileAval">
-          <h2 className="subtitulo">Búsqueda Filtrada</h2>
+        <h2 className="subtitulo">Búsqueda Filtrada de Avales</h2>
+        <div className="inputFileAvales">
           <input
             type="number"
             name="monitorId"
@@ -384,9 +390,10 @@ const Avales = () => {
                       onChange={(e) =>
                         handleGroupChange(index, e.target.value)
                       }
+                      required
                     >
                       <option value="">Selecciona una asignatura</option>
-                      {groups.map((group) => (
+                      {groupsMonitorEmpty.map((group) => (
                         group.subject.map((subject) => (
                           <option key={`${group._id}-${subject}`} value={`${group._id}-${subject}`}>
                             {`${subject.name} - ${group.name}`}
@@ -396,18 +403,20 @@ const Avales = () => {
                     </select>
                   </td>
                   <td>
-                    <button
-                      className="btn-aceptar"
-                      onClick={() => handleButtonAceptar(index)}
-                    >
-                      ACEPTAR
-                    </button>
-                    <button
-                      className="btn-denegar"
-                      onClick={() => handleButtonDenegar(index)}
-                    >
-                      DENEGAR
-                    </button>
+                    <div className="btn-avales">
+                      <button
+                        className="btn-aceptar-m"
+                        onClick={() => handleButtonAceptar(index)}
+                      >
+                        <MdCheckCircle className="icon" />
+                      </button>
+                      <button
+                        className="btn-denegar-m"
+                        onClick={() => handleButtonDenegar(index)}
+                      >
+                        <MdCancel className="icon" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
