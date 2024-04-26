@@ -7,6 +7,7 @@ import Horas from './pages/Horas/Horas.jsx'
 import Avales from './pages/Master/Avales/Avales.jsx'
 import Monitores from './pages/Master/Monitores/Monitores.jsx'
 import Reportes from './pages/Master/Reportes/Reportes.jsx'
+import RegistroHorasMonitores from './pages/RegistroHorasMonitores/RegistroHorasMonitores.jsx'
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
@@ -21,6 +22,7 @@ function App() {
         <Route path="/avales" element={<Avales />}></Route>
         <Route path="/monitores" element={<Monitores />}></Route>
         <Route path="/reportes" element={<Reportes />}></Route>
+        <Route path="/registrohorasmonitores" element={<RegistroHorasMonitores />}></Route>
       </Routes>
     </BrowserRouter>
   )

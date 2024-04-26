@@ -8,6 +8,9 @@ import { jwtDecode } from "jwt-decode";
 const Navbar = () => {
   const navigate = useNavigate();
   const [master, setMaster] = useState(false);
+  const [user, setUser] = useState(false);
+  const [teacher, setTeacher] = useState(false);
+  const [monitor, setMonitor] = useState(false);
 
   useEffect(() => {
     const checkRole = async () => {
@@ -16,6 +19,12 @@ const Navbar = () => {
 
       if(role === "master"){
         setMaster(true);
+      }else if(role === "user"){
+        setUser(true);
+      }else if(role === "teacher"){
+        setTeacher(true);
+      }else if(role === "monitor"){
+        setMonitor(true);
       }
     };
 
@@ -35,7 +44,49 @@ const Navbar = () => {
   return (
     <nav>
       <Link className="title" to="/dashboard">UniMentor</Link>
-      {!master && (
+      {/* {!master && (
+        <ul>
+          <li>
+            <NavLink to="/Documentacion">Documentación</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Horas">Registro Horas</NavLink>
+          </li>
+          <li>
+            <button onClick={logout} className="button">Cerrar sesión</button>
+          </li>
+        </ul>
+      )} */}
+
+      {master && (
+        <ul>
+          <li>
+            <NavLink to="/Avales">Avales</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Monitores">Monitores</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Reportes">Reporte de Horas</NavLink>
+          </li>
+          <li>
+            <button onClick={logout} className="button">Cerrar sesión</button>
+          </li>
+        </ul>
+      )}
+
+      {user && (
+        <ul>
+          <li>
+            <NavLink to="/Avales">Avales</NavLink>
+          </li>
+          <li>
+            <button onClick={logout} className="button">Cerrar sesión</button>
+          </li>
+        </ul>
+      )}
+
+      {monitor && (
         <ul>
           <li>
             <NavLink to="/Documentacion">Documentación</NavLink>
@@ -49,16 +100,10 @@ const Navbar = () => {
         </ul>
       )}
 
-      {master && (
+      {teacher && (
         <ul>
           <li>
-            <NavLink to="/Avales">Avales</NavLink>
-          </li>
-          <li>
-            <NavLink to="/Monitores">Monitores</NavLink>
-          </li>
-          <li>
-            <NavLink to="/Reportes">Reporte de Horas</NavLink>
+            <NavLink to="/RegistroHorasMonitores">Registro Horas Monitores</NavLink>
           </li>
           <li>
             <button onClick={logout} className="button">Cerrar sesión</button>
