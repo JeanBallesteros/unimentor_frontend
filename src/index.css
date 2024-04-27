@@ -26,3 +26,45 @@ body{
   margin: 0;
   padding: 0;
 }
+
+.avales {
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.monitores {
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.reportes {
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.registroHorasMonitor {
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.horas {
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.documentacion {
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}

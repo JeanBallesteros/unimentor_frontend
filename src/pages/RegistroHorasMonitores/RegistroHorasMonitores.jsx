@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Swal from "sweetalert2";
+import axios from "axios";
 
 
 const RegistroHorasMonitores = () => {
@@ -32,54 +34,54 @@ const RegistroHorasMonitores = () => {
         } catch (error) {
           console.error("Error al renovar el accessToken:", error);
         }
-      };
+    };
     
-      const logout = async () => {
+    const logout = async () => {
         await AsyncStorage.removeItem("accessToken");
         await AsyncStorage.removeItem("refreshToken");
         navigate("/");
-      };
+    };
     
-      useEffect(() => {
+    useEffect(() => {
         const expireToken = async () => {
-          try {
+            try {
             const accessToken = await AsyncStorage.getItem("accessToken");
             const refreshToken = await AsyncStorage.getItem("refreshToken");
-    
+
             const decodedToken = jwtDecode(accessToken);
             const expiracion = decodedToken.exp * 1000;
-    
+
             const ahora = Date.now();
-    
+
             if (ahora >= expiracion) {
-              console.log("El AccessToken ha expirado");
-              Swal.fire({
+                console.log("El AccessToken ha expirado");
+                Swal.fire({
                 title: "¡Tu sesión está a punto de caducar!",
                 text: "¿Quieres extender la sesión?",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: "OK",
-              }).then((result) => {
+                }).then((result) => {
                 if (result.isConfirmed) {
-                  console.log("El usuario hizo clic en OK");
-                  handleRefreshToken(refreshToken);
+                    console.log("El usuario hizo clic en OK");
+                    handleRefreshToken(refreshToken);
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
-                  console.log("El usuario hizo clic en Cancelar o cerró la alerta");
-                  logout();
+                    console.log("El usuario hizo clic en Cancelar o cerró la alerta");
+                    logout();
                 }
-              });
+                });
             } else {
-              console.log("El AccessToken es válido");
+                console.log("El AccessToken es válido");
             }
-          } catch (error) {
-            console.error("Error al obtener o decodificar el token:", error);
-          }
+            } catch (error) {
+                console.error("Error al obtener o decodificar el token:", error);
+            }
         };
     
         const intervalId = setInterval(expireToken, 20000);
     
         return () => clearInterval(intervalId);
-      });
+    });
     
   
     return (
