@@ -116,7 +116,7 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        `http://${urlPath}/api/v1/grupos/monitor`
+        `http://${urlPath}/api/v1/grupos/monitorget/65e39b9b95ee4fee8eab378b`
       );
 
       setGroupsMonitorEmpty(response.data);
@@ -128,7 +128,7 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        `http://${urlPath}/api/v1/grupos/monitornotempty`
+        `http://${urlPath}/api/v1/grupos/monitornotempty/65e39b9b95ee4fee8eab378b`
       );
 
       setGroupsMonitorNotEmpty(response.data);
