@@ -123,9 +123,10 @@ const Avales = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        `http://${urlPath}/api/v1/grupos/monitor`
+        `http://${urlPath}/api/v1/grupos/monitorempty/c0d1g0`
       );
 
+      
       setGroupsMonitorEmpty(response.data);
     };
 

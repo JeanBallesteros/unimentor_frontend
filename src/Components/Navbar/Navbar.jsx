@@ -75,17 +75,6 @@ const Navbar = () => {
         </ul>
       )}
 
-      {user && (
-        <ul>
-          <li>
-            <NavLink to="/Avales">Avales</NavLink>
-          </li>
-          <li>
-            <button onClick={logout} className="button">Cerrar sesión</button>
-          </li>
-        </ul>
-      )}
-
       {monitor && (
         <ul>
           <li>
@@ -93,6 +82,17 @@ const Navbar = () => {
           </li>
           <li>
             <NavLink to="/Horas">Registro Horas</NavLink>
+          </li>
+          <li>
+            <button onClick={logout} className="button">Cerrar sesión</button>
+          </li>
+        </ul>
+      )}
+
+      {user && (
+        <ul>
+          <li>
+            <NavLink to="/Documentacion">Documentación</NavLink>
           </li>
           <li>
             <button onClick={logout} className="button">Cerrar sesión</button>
