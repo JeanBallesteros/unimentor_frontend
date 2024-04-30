@@ -116,7 +116,7 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        `http://${urlPath}/api/v1/grupos/monitorget/65e39b9b95ee4fee8eab378b`
+        `http://${urlPath}/api/v1/grupos/monitorempty/c0d1g0`
       );
 
       setGroupsMonitorEmpty(response.data);
@@ -128,7 +128,7 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        `http://${urlPath}/api/v1/grupos/monitornotempty/65e39b9b95ee4fee8eab378b`
+        `http://${urlPath}/api/v1/grupos/monitornotempty/c0d1g0`
       );
 
       setGroupsMonitorNotEmpty(response.data);
@@ -178,6 +178,7 @@ const Monitores = () => {
       };
       if (result.isConfirmed) {
         const avalId = userss[index].avalsData[0]._id;
+        // console.log(avalId);
         const userId = userss[index]._id;
         let groupId = "";
         let contadorGruposMonitor = 0;
@@ -189,6 +190,8 @@ const Monitores = () => {
           }
         }
 
+        // console.log(userId);
+
 
         // const groupId = groups[index]._id;
         // console.log(groupId,'---------');
@@ -199,16 +202,16 @@ const Monitores = () => {
 
         if(contadorGruposMonitor === 1){
           const response = await axios.delete(
-            "https://unimentor-fqz8.onrender.com/api/v1/avales/delete/" + avalId
+            `http://${urlPath}/api/v1/avales/delete/`+ avalId
           );
 
           const response2 = await axios.patch(
-            'https://unimentor-fqz8.onrender.com/api/v1/users/update/' + userId,
+            `http://${urlPath}/api/v1/users/update/` + userId,
             { role: "user" }
           );
 
           const response3 = await axios.patch(
-            'https://unimentor-fqz8.onrender.com/api/v1/grupos/update/' + groupId,
+            `http://${urlPath}/api/v1/grupos/updatetonull/` + groupId,
             { monitor: null }
           );
 

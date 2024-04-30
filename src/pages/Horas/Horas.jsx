@@ -275,7 +275,7 @@ const handleGroupChange = (index, value) => {
           </div>
           <div className='inputs'>
             <div className='labelsUploads'>
-              <label>Certificado:</label>
+              <label>Horas:</label>
             </div>
             <input
               type="number"
