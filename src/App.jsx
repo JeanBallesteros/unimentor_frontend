@@ -23,6 +23,7 @@ function App() {
         <Route path="/monitores" element={<Monitores />}></Route>
         <Route path="/reportes" element={<Reportes />}></Route>
         <Route path="/registrohorasmonitores" element={<RegistroHorasMonitores />}></Route>
+        {/* <Route path="/registrohorasmonitores" element={<RegistroHorasMonitores />}></Route> */}
       </Routes>
     </BrowserRouter>
   )
