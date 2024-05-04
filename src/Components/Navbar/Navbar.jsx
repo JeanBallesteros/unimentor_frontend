@@ -11,6 +11,7 @@ const Navbar = () => {
   const [user, setUser] = useState(false);
   const [teacher, setTeacher] = useState(false);
   const [monitor, setMonitor] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const checkRole = async () => {
@@ -41,75 +42,129 @@ const Navbar = () => {
     }
   };
 
+  // return (
+  //   <nav>
+  //     <Link className="title" to="/dashboard">UniMentor</Link>
+  //     {master && (
+  //       <ul>
+  //         <li>
+  //           <NavLink to="/Avales">Avales</NavLink>
+  //         </li>
+  //         <li>
+  //           <NavLink to="/Monitores">Monitores</NavLink>
+  //         </li>
+  //         <li>
+  //           <NavLink to="/Reportes">Reporte de Horas</NavLink>
+  //         </li>
+  //         <li>
+  //           <button onClick={logout} className="button">Cerrar sesión</button>
+  //         </li>
+  //       </ul>
+  //     )}
+
+  //     {monitor && (
+  //       <ul>
+  //         <li>
+  //           <NavLink to="/Documentacion">Documentación</NavLink>
+  //         </li>
+  //         <li>
+  //           <NavLink to="/Horas">Registro Horas</NavLink>
+  //         </li>
+  //         <li>
+  //           <button onClick={logout} className="button">Cerrar sesión</button>
+  //         </li>
+  //       </ul>
+  //     )}
+
+  //     {user && (
+  //       <ul>
+  //         <li>
+  //           <NavLink to="/Documentacion">Documentación</NavLink>
+  //         </li>
+  //         <li>
+  //           <button onClick={logout} className="button">Cerrar sesión</button>
+  //         </li>
+  //       </ul>
+  //     )}
+
+  //     {teacher && (
+  //       <ul>
+  //         <li>
+  //           <NavLink to="/RegistroHorasMonitores">Registro Horas Monitores</NavLink>
+  //         </li>
+  //         <li>
+  //           <button onClick={logout} className="button">Cerrar sesión</button>
+  //         </li>
+  //       </ul>
+  //     )}
+  //   </nav>
+  // );
+
   return (
     <nav>
-      <Link className="title" to="/dashboard">UniMentor</Link>
-      {/* {!master && (
-        <ul>
-          <li>
-            <NavLink to="/Documentacion">Documentación</NavLink>
-          </li>
-          <li>
-            <NavLink to="/Horas">Registro Horas</NavLink>
-          </li>
-          <li>
-            <button onClick={logout} className="button">Cerrar sesión</button>
-          </li>
-        </ul>
-      )} */}
+      <div className="top-bar">
+        <img src="src\assets\unimentor_icon.png" alt="" />
+        <Link className="title" to="/dashboard">UniMentor</Link>
+      </div>
+      <div className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>
+        <div className={menuOpen ? 'menu-icon-line open' : 'menu-icon-line'}></div>
+        <div className={menuOpen ? 'menu-icon-line open' : 'menu-icon-line'}></div>
+        <div className={menuOpen ? 'menu-icon-line open' : 'menu-icon-line'}></div>
+      </div>
+      <ul className={menuOpen ? 'nav-links openn' : 'nav-links'}>
+        {master && (
+          <>
+            <li>
+              <NavLink to="/Avales">Avales</NavLink>
+            </li>
+            <li>
+              <NavLink to="/Monitores">Monitores</NavLink>
+            </li>
+            <li>
+              <NavLink to="/Reportes">Reporte de Horas</NavLink>
+            </li>
+            <li>
+              <button onClick={logout} className="button">Cerrar sesión</button>
+            </li>
+          </>
+        )}
 
-      {master && (
-        <ul>
-          <li>
-            <NavLink to="/Avales">Avales</NavLink>
-          </li>
-          <li>
-            <NavLink to="/Monitores">Monitores</NavLink>
-          </li>
-          <li>
-            <NavLink to="/Reportes">Reporte de Horas</NavLink>
-          </li>
-          <li>
-            <button onClick={logout} className="button">Cerrar sesión</button>
-          </li>
-        </ul>
-      )}
+        {monitor && (
+          <>
+            <li>
+              <NavLink to="/Documentacion">Documentación</NavLink>
+            </li>
+            <li>
+              <NavLink to="/Horas">Registro Horas</NavLink>
+            </li>
+            <li>
+              <button onClick={logout} className="button">Cerrar sesión</button>
+            </li>
+          </>
+        )}
 
-      {monitor && (
-        <ul>
-          <li>
-            <NavLink to="/Documentacion">Documentación</NavLink>
-          </li>
-          <li>
-            <NavLink to="/Horas">Registro Horas</NavLink>
-          </li>
-          <li>
-            <button onClick={logout} className="button">Cerrar sesión</button>
-          </li>
-        </ul>
-      )}
+        {user && (
+          <>
+            <li>
+              <NavLink to="/Documentacion">Documentación</NavLink>
+            </li>
+            <li>
+              <button onClick={logout} className="button">Cerrar sesión</button>
+            </li>
+          </>
+        )}
 
-      {user && (
-        <ul>
-          <li>
-            <NavLink to="/Documentacion">Documentación</NavLink>
-          </li>
-          <li>
-            <button onClick={logout} className="button">Cerrar sesión</button>
-          </li>
-        </ul>
-      )}
-
-      {teacher && (
-        <ul>
-          <li>
-            <NavLink to="/RegistroHorasMonitores">Registro Horas Monitores</NavLink>
-          </li>
-          <li>
-            <button onClick={logout} className="button">Cerrar sesión</button>
-          </li>
-        </ul>
-      )}
+        {teacher && (
+          <>
+            <li>
+              <NavLink to="/RegistroHorasMonitores">Registro Horas Monitores</NavLink>
+            </li>
+            <li>
+              <button onClick={logout} className="button">Cerrar sesión</button>
+            </li>
+          </>
+        )}
+      </ul>
     </nav>
   );
 };
