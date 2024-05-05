@@ -177,9 +177,31 @@ const Monitores = () => {
         }
       };
       if (result.isConfirmed) {
-        const avalId = userss[index].avalsData[0]._id;
-        // console.log(avalId);
-        const userId = userss[index]._id;
+        // const avalId = userss[index].avalsData[0]._id;
+
+        const avalId = userss.map((user) => {
+          // return user.avalsData[0]._id
+          if(user._id == groupsMonitorNotEmpty[index].monitor[0]._id){
+            console.log("JAJAJA",user.avalsData[0]._id);
+            return user.avalsData[0]._id;
+            // return;
+          }
+        });
+
+        const filteredArray = avalId.filter((element) => {
+          return element !== undefined;
+        });
+
+        console.log("ffgh", filteredArray[0])
+
+        const userId = groupsMonitorNotEmpty[index].monitor[0]._id;
+
+        console.log("dfgdfg2",userId)
+
+
+        console.log(groupsMonitorNotEmpty[index]);
+        // const userId = userss[index]._id;
+        // console.log(userId);
         let groupId = "";
         let contadorGruposMonitor = 0;
 
@@ -202,7 +224,7 @@ const Monitores = () => {
 
         if(contadorGruposMonitor === 1){
           const response = await axios.delete(
-            `http://${urlPath}/api/v1/avales/delete/`+ avalId
+            `http://${urlPath}/api/v1/avales/delete/`+ filteredArray[0]
           );
 
           const response2 = await axios.patch(
@@ -318,104 +340,136 @@ const Monitores = () => {
   }, [search, filteredUsers]);
 
   return (
-    <div className="monitor">
+    <div className="fondoMonitor">
       <Navbar />
-      <h1 className="tituloAval">Monitores</h1>
-      <div className="filtro">
-        <h2 className="subtitulo">Búsqueda Filtrada de Monitores</h2>
-        <div className="inputFileAval">
-          <input
-            type="number"
-            name="monitorId"
-            id=""
-            placeholder="Por Documento"
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <input
-            type="text"
-            name="monitorName"
-            id=""
-            placeholder="Por Nombre Monitor"
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <input
-            type="text"
-            name="monitorEmail"
-            id=""
-            placeholder="Por Correo"
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <input
-            type="text"
-            name="subjectName"
-            id=""
-            placeholder="Por Asignatura"
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <input
-            type="text"
-            name="teacherName"
-            id=""
-            placeholder="Por Docente"
-            onChange={(e) => setSearch(e.target.value)}
-          />
+      <div className="monitor">
+        <h1 className="tituloMonitor">Monitores</h1>
+        <div className="filtroMonitor">
+          <h2 className="subtituloMonitor">Búsqueda Filtrada de Monitores</h2>
+          <div className="inputFileMonitor">
+            <div className="inputsMonitor">
+              <div className="labelsMonitor">
+                <p>Documento:</p>
+              </div>
+              <input
+                type="number"
+                name="monitorId"
+                id=""
+                placeholder="Por Documento"
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <div className="inputsMonitor">
+              <div className="labelsMonitor">
+                <p>Nombre:</p>
+              </div>
+              <input
+                type="text"
+                name="monitorName"
+                id=""
+                placeholder="Por Nombre Monitor"
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <div className="inputsMonitor">
+              <div className="labelsMonitor">
+                <p>Correo:</p>
+              </div>
+              <input
+                type="text"
+                name="monitorEmail"
+                id=""
+                placeholder="Por Correo"
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <div className="inputsMonitor">
+              <div className="labelsMonitor">
+                <p>Asignatura:</p>
+              </div>
+              <input
+                type="text"
+                name="subjectName"
+                id=""
+                placeholder="Por Asignatura"
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <div className="inputsMonitor">
+              <div className="labelsMonitor">
+                <p>Docente:</p>
+              </div>
+              <input
+                type="text"
+                name="teacherName"
+                id=""
+                placeholder="Por Docente"
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            
+            
+            
+            
+            
+          </div>
         </div>
-      </div>
-      <div>
-        <table className="tabla">
-          <thead>
-            <tr>
-              <th>Número de documento</th>
-              <th>Nombre completo</th>
-              <th>Correo Institucional</th>
-              <th>Asignatura</th>
-              <th>Grupo</th>
-              <th>Docente</th>
-              <th>Opciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {groupsMonitorNotEmpty
-              .filter((group) => {
+        <div className="table-container-monitor">
+          <table className="tablaMonitor">
+            <thead>
+              <tr>
+                <th>Número de documento</th>
+                <th>Nombre completo</th>
+                <th>Correo Institucional</th>
+                <th>Asignatura</th>
+                <th>Grupo</th>
+                <th>Docente</th>
+                <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {groupsMonitorNotEmpty
+                .filter((group) => {
 
-                const documentNumber = (group.monitor[0].documentNumber || "").toString();
+                  const documentNumber = (group.monitor[0].documentNumber || "").toString();
 
-                if (search === "") {
-                  return true;
-                } else if (
-                  documentNumber.toLowerCase().includes(search.toLowerCase()) ||
-                  group.monitor[0].fullname.toLowerCase().includes(search.toLowerCase()) ||
-                  group.monitor[0].email.toLowerCase().includes(search.toLowerCase()) ||
-                  group.subject[0].name.toLowerCase().includes(search.toLowerCase()) ||
-                  group.teacher[0].fullname.toLowerCase().includes(search.toLowerCase())) {
+                  if (search === "") {
                     return true;
-                } else {
-                  return false;
-                }
+                  } else if (
+                    documentNumber.toLowerCase().includes(search.toLowerCase()) ||
+                    group.monitor[0].fullname.toLowerCase().includes(search.toLowerCase()) ||
+                    group.monitor[0].email.toLowerCase().includes(search.toLowerCase()) ||
+                    group.subject[0].name.toLowerCase().includes(search.toLowerCase()) ||
+                    group.teacher[0].fullname.toLowerCase().includes(search.toLowerCase())) {
+                      return true;
+                  } else {
+                    return false;
+                  }
 
-              })
-              .map((groupsMonitor, index) => (
-                <tr key={index}>
-                  <td>{groupsMonitor.monitor[0].documentNumber}</td>
-                  <td>{groupsMonitor.monitor[0].fullname}</td>
-                  <td>{groupsMonitor.monitor[0].email}</td>
-                  <td>{groupsMonitor.subject[0].name}</td>
-                  <td>{groupsMonitor.name}</td>
-                  <td>{groupsMonitor.teacher[0].fullname}</td>
-                  <td>
-                    <div className="btn-monitores">
-                      <button
-                        className="btn-denegar"
-                        onClick={() => handleButtonDenegar(index)}
-                      >
-                        <MdDelete className="icon" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+                })
+                .map((groupsMonitor, index) => (
+                  <tr key={index}>
+                    <td>{groupsMonitor.monitor[0].documentNumber}</td>
+                    <td>{groupsMonitor.monitor[0].fullname}</td>
+                    <td>{groupsMonitor.monitor[0].email}</td>
+                    <td>{groupsMonitor.subject[0].name}</td>
+                    <td>{groupsMonitor.name}</td>
+                    <td>{groupsMonitor.teacher[0].fullname}</td>
+                    <td>
+                      <div className="btn-monitores">
+                        <button
+                          className="btn-denegar-m"
+                          onClick={() => handleButtonDenegar(index)}
+                        >
+                          <MdDelete className="icon" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

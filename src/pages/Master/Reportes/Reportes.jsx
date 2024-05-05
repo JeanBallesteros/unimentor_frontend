@@ -1,4 +1,5 @@
 import Navbar from "../../../Components/Navbar/Navbar";
+import "./Reportes.css";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -83,10 +84,12 @@ const Reportes = () => {
     
   
     return (
-      <div className="monitor">
+      <div className="fondoReportes">
         <Navbar />
-        <div>
-          <h1 className="titulo">Reportes</h1>
+        <div className="reportes">
+          <div>
+            <h1 className="titulo">Reporte de Horas</h1>
+          </div>
         </div>
       </div>
     );

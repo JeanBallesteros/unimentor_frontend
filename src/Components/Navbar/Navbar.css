@@ -15,6 +15,7 @@ nav {
     top: 0;
     left: 0;
     z-index: 1000;
+    /* height: 10vh; */
     /* left: 0; */
 
 
@@ -94,6 +95,7 @@ nav ul li a:hover {
   color: rgb(255, 10, 10);
   padding: 0.5rem;
   border-radius: 0.5rem;
+  margin-right: 20px;
 }
 
 .button:hover{
@@ -106,48 +108,49 @@ nav ul li a:hover {
 
 
 @media screen and (max-width: 900px) {
-    nav .menu-icon {
-      display: block;
-      cursor: pointer;
-    }
-  
-    nav .menu-icon-line {
-      width: 25px;
-      height: 3px;
-      background-color: white;
-      margin: 5px;
-      transition: all 0.3s ease;
-    }
-  
-    nav .open:nth-child(1) {
-      transform: rotate(-45deg) translate(-5px, 6px);
-    }
-  
-    nav .open:nth-child(2) {
-      opacity: 0;
-    }
-  
-    nav .open:nth-child(3) {
-      transform: rotate(45deg) translate(-5px, -6px);
-    }
-  
-    nav .nav-links {
-        display: none;
-    }
-  
-    nav .nav-links.openn {
-      display: flex;
-      flex-direction: column;
-      position: absolute;
-      top: 75px;
-      right: 0;
-      width: 100%;
-      background-color: #0069a3;
-      z-index: 1;
-      width: 200px;
-    }
-  
-    nav .nav-links.openn li {
-      margin: 1rem;
-    }
+  nav .menu-icon {
+    display: block;
+    cursor: pointer;
+    margin-right: 20px;
   }
+
+  nav .menu-icon-line {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 5px;
+    transition: all 0.3s ease;
+  }
+
+  nav .open:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+  }
+
+  nav .open:nth-child(2) {
+    opacity: 0;
+  }
+
+  nav .open:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+  }
+
+  nav .nav-links {
+      display: none;
+  }
+
+  nav .nav-links.openn {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 75px;
+    right: 0;
+    width: 100%;
+    background-color: #0069a3;
+    z-index: 1;
+    width: 200px;
+  }
+
+  nav .nav-links.openn li {
+    margin: 1rem;
+  }
+}

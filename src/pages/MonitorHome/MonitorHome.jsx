@@ -84,10 +84,12 @@ const MonitorHome = () => {
   });
 
   return (
-    <div className="monitor">
+    <div className="fondoHome">
       <Navbar />
-      <div>
-        <h1 className="titulo">Home</h1>
+      <div className="home">
+        <div>
+          <h1 className="titulo">Home</h1>
+        </div>
       </div>
     </div>
   );

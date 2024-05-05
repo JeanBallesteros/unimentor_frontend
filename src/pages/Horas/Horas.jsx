@@ -410,6 +410,7 @@ const Horas = () => {
                   <th>Docente a Cargo</th>
                   <th>Fecha</th>
                   <th>Cantidad de Horas</th>
+                  <th>¿Aceptado?</th>
                   <th>Opciones</th>
                 </tr>
               </thead>
@@ -423,6 +424,7 @@ const Horas = () => {
                       <td>{hourlog.teacher[0].fullname}</td>
                       <td>{hourlog.date.slice(0, 10)}</td>
                       <td>{hourlog.hours}</td>
+                      <td>{hourlog.active ? "Sí" : "No"}</td>
                       <td>
                         <div className="btn-avales">
                           <button

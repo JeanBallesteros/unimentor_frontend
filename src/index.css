@@ -24,6 +24,7 @@ body{
   justify-content: center;
   align-items: center;
   height: 100vh;
+  width: 100vw;
 }
 
 .monitor {
@@ -69,6 +70,13 @@ body{
 }
 
 .documentacion {
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.home {
   height: 100vh;
   width: 100%;
   margin: 0;
