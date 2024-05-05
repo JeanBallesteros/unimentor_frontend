@@ -304,127 +304,142 @@ const Avales = () => {
   }, [search, filteredUsers]);
 
   return (
-    <div className="monitor">
+    <div className="fondoAvales">
       <Navbar />
-      <h1 className="tituloAval">Avales</h1>
-      <div className="filtro">
-        <h2 className="subtitulo">Búsqueda Filtrada de Avales</h2>
-        <div className="inputFileAvales">
-          <input
-            type="number"
-            name="monitorId"
-            id=""
-            placeholder="Buscar por documento"
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <input
-            type="text"
-            name="monitorName"
-            id=""
-            placeholder="Buscar por nombre"
-            onChange={(e) => setSearch(e.target.value)}
-          />
+      <div className="avales">
+        <div className="containerAvales">
+          <h1 className="tituloAvales">Avales</h1>
+          <div className="filtroAvales">
+            <h2 className="subtituloAvales">Búsqueda Filtrada de Avales</h2>
+            <div className="inputFileAvales">
+              <div className="inputsAvales">
+                <div className="labelsAvales">
+                  <p>Documento:</p>
+                </div>
+                <input
+                  type="number"
+                  name="monitorId"
+                  id=""
+                  placeholder="Buscar por documento"
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+
+              <div className="inputsAvales">
+                <div className="labelsAvales">
+                  <p>Nombre:</p>
+                </div>
+                <input
+                  type="text"
+                  name="monitorName"
+                  id=""
+                  placeholder="Buscar por nombre"
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div>
-        <table className="tabla">
-          <thead>
-            <tr>
-              <th>Número de documento</th>
-              <th>Nombre completo</th>
-              <th>Promedio</th>
-              <th>RUT</th>
-              <th>Certificado</th>
-              <th>Asignatura</th>
-              <th>Opciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {userss
-              .filter((usuario) => {
-                const documentNumber = (
-                  usuario.documentNumber || ""
-                ).toString();
-                if (search === "") {
-                  return true;
-                } else if (
-                  documentNumber.toLowerCase().includes(search.toLowerCase()) ||
-                  usuario.fullname.toLowerCase().includes(search.toLowerCase())
-                ) {
-                  return true;
-                } else {
-                  return false;
-                }
-              })
-              .map((usuario, index) => (
-                <tr key={index}>
-                  <td>{usuario.documentNumber}</td>
-                  <td>{usuario.fullname}</td>
-                  <td>
-                      {usuario.avalsData.map((aval, idx) => (
-                        <div key={idx}>
-                          <a href={`http://${urlPath}/api/v1/uploads/${aval.promedio}`} target="_blank">
-                            <p>{aval.promedio}</p>
-                          </a>
-                        </div>
-                      ))}
-                  </td>
-                  <td>
-                    {usuario.avalsData.map((aval, idx) => (
-                      <div key={idx}>
-                        <a href={`http://${urlPath}/api/v1/uploads/${aval.rut}`} target="_blank">
-                          <p>{aval.rut}</p>
-                        </a>
-                      </div>
-                    ))}
-                  </td>
-                  <td>
-                    {usuario.avalsData.map((aval, idx) => (
-                      <div key={idx}>
-                        <a href={`http://${urlPath}/api/v1/uploads/${aval.certificado}`} target="_blank">
-                          <p>{aval.certificado}</p>
-                        </a>
-                      </div>
-                    ))}
-                  </td>
-                  <td>
-                    <select
-                      value={selectedGroups[index] || ""}
-                      onChange={(e) =>
-                        handleGroupChange(index, e.target.value)
-                      }
-                      required
-                    >
-                      <option value="">Selecciona una asignatura</option>
-                      {groupsMonitorEmpty.map((group) => (
-                        group.subject.map((subject) => (
-                          <option key={`${group._id}-${subject}`} value={`${group._id}-${subject}`}>
-                            {`${subject.name} - ${group.name}`}
-                          </option>
-                        ))
-                      ))}
-                    </select>
-                  </td>
-                  <td>
-                    <div className="btn-avales">
-                      <button
-                        className="btn-aceptar-m"
-                        onClick={() => handleButtonAceptar(index)}
-                      >
-                        <MdCheckCircle className="icon" />
-                      </button>
-                      <button
-                        className="btn-denegar-m"
-                        onClick={() => handleButtonDenegar(index)}
-                      >
-                        <MdCancel className="icon" />
-                      </button>
-                    </div>
-                  </td>
+        <div className="table-container-avales">
+            <table className="tablaAvales">
+              <thead>
+                <tr>
+                  <th>Número de documento</th>
+                  <th>Nombre completo</th>
+                  <th>Promedio</th>
+                  <th>RUT</th>
+                  <th>Certificado</th>
+                  <th>Asignatura</th>
+                  <th>Opciones</th>
                 </tr>
-              ))}
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {userss
+                  .filter((usuario) => {
+                    const documentNumber = (
+                      usuario.documentNumber || ""
+                    ).toString();
+                    if (search === "") {
+                      return true;
+                    } else if (
+                      documentNumber.toLowerCase().includes(search.toLowerCase()) ||
+                      usuario.fullname.toLowerCase().includes(search.toLowerCase())
+                    ) {
+                      return true;
+                    } else {
+                      return false;
+                    }
+                  })
+                  .map((usuario, index) => (
+                    <tr key={index}>
+                      <td>{usuario.documentNumber}</td>
+                      <td>{usuario.fullname}</td>
+                      <td>
+                          {usuario.avalsData.map((aval, idx) => (
+                            <div key={idx}>
+                              <a href={`http://${urlPath}/api/v1/uploads/${aval.promedio}`} target="_blank">
+                                <p>{aval.promedio}</p>
+                              </a>
+                            </div>
+                          ))}
+                      </td>
+                      <td>
+                        {usuario.avalsData.map((aval, idx) => (
+                          <div key={idx}>
+                            <a href={`http://${urlPath}/api/v1/uploads/${aval.rut}`} target="_blank">
+                              <p>{aval.rut}</p>
+                            </a>
+                          </div>
+                        ))}
+                      </td>
+                      <td>
+                        {usuario.avalsData.map((aval, idx) => (
+                          <div key={idx}>
+                            <a href={`http://${urlPath}/api/v1/uploads/${aval.certificado}`} target="_blank">
+                              <p>{aval.certificado}</p>
+                            </a>
+                          </div>
+                        ))}
+                      </td>
+                      <td>
+                        <select
+                          value={selectedGroups[index] || ""}
+                          onChange={(e) =>
+                            handleGroupChange(index, e.target.value)
+                          }
+                          required
+                        >
+                          <option value="">Selecciona una asignatura</option>
+                          {groupsMonitorEmpty.map((group) => (
+                            group.subject.map((subject) => (
+                              <option key={`${group._id}-${subject}`} value={`${group._id}-${subject}`}>
+                                {`${subject.name} - ${group.name}`}
+                              </option>
+                            ))
+                          ))}
+                        </select>
+                      </td>
+                      <td>
+                        <div className="btn-avales">
+                          <button
+                            className="btn-aceptar-m"
+                            onClick={() => handleButtonAceptar(index)}
+                          >
+                            <MdCheckCircle className="icon" />
+                          </button>
+                          <button
+                            className="btn-denegar-m"
+                            onClick={() => handleButtonDenegar(index)}
+                          >
+                            <MdCancel className="icon" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
       </div>
     </div>
   );

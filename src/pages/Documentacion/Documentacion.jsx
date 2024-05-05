@@ -214,133 +214,136 @@ const Documentacion = () => {
   }, []);
 
   return (
-    <div className="documentacion">
+    <div className='fondoDocumentacion'>
       <Navbar />
-      {checkDoc && (
-        // <div>
-          <div className="container">
-            <h1 className="titulo">Tus documentos:</h1>
-            <hr />
-            {/* <h3 className="subtitulo">Tus documentos:</h3> */}
-              {userss.map((usuario, index) => (
-                // <tr key={index}>
-                //   <td>{usuario.documentNumber}</td>
-                <div key={index}>
-                  {usuario.avalsData.map((aval, idx) => (
-                    <div>
-                      {usuario._id === userId && (
-                        <ul key={idx} className="listaAval">
-                          <li>
-                            <div className="uploads">
-                              <div className="labelsUploads">
-                                <p>RUT:</p>
-                              </div>
-                              <div className="docdiv">
-                                <div className="doc">
-                                  <a href={`http://${urlPath}/api/v1/uploads/${aval.rut}`} target="_blank">Ver</a>
+      <div className="documentacion">
+        {checkDoc && (
+          // <div>
+            <div className="containerDocumentacion">
+              <h1 className="tituloDocumentacion">Mis documentos</h1>
+              <hr />
+              {/* <h3 className="subtitulo">Tus documentos:</h3> */}
+                {userss.map((usuario, index) => (
+                  // <tr key={index}>
+                  //   <td>{usuario.documentNumber}</td>
+                  <div key={index}>
+                    {usuario.avalsData.map((aval, idx) => (
+                      <div>
+                        {usuario._id === userId && (
+                          <ul key={idx} className="listaAval">
+                            <li>
+                              <div className="uploads">
+                                <div className="labelsUploads">
+                                  <p>RUT:</p>
                                 </div>
+                                <div className="docdivDoc">
+                                  <div className="doc">
+                                    <a href={`http://${urlPath}/api/v1/uploads/${aval.rut}`} target="_blank">Ver</a>
+                                  </div>
+                                </div>
+                                
                               </div>
+                            </li>
+                            <li>
+                              <div className="uploads">
+                                <div className="labelsUploads">
+                                  <p>Certificado Bancario:</p>
+                                </div>
+                                <div className="docdivDoc">
+                                  <div className="doc">
+                                    <a href={`http://${urlPath}/api/v1/uploads/${aval.certificado}`} target="_blank">Ver</a>
+                                  </div>
+                                </div>
                               
-                            </div>
-                          </li>
-                          <li>
-                            <div className="uploads">
-                              <div className="labelsUploads">
-                                <p>CERTIFICADO:</p>
                               </div>
-                              <div className="docdiv">
-                                <div className="doc">
-                                  <a href={`http://${urlPath}/api/v1/uploads/${aval.certificado}`} target="_blank">Ver</a>
+                            </li>
+                            <li>
+                              <div className="uploads">
+                                <div className="labelsUploads">
+                                  <p>Promedio:</p>
                                 </div>
-                              </div>
-                            
-                            </div>
-                          </li>
-                          <li>
-                            <div className="uploads">
-                              <div className="labelsUploads">
-                                <p>PROMEDIO:</p>
-                              </div>
-                              <div className="docdiv">
-                                <div className="doc">
-                                  <a href={`http://${urlPath}/api/v1/uploads/${aval.promedio}`} target="_blank">Ver</a>
+                                <div className="docdivDoc">
+                                  <div className="doc">
+                                    <a href={`http://${urlPath}/api/v1/uploads/${aval.promedio}`} target="_blank">Ver</a>
+                                  </div>
                                 </div>
+                          
                               </div>
-                        
-                            </div>
-                          </li>
-                        </ul>
-                      )}
-                    </div>
-                  ))}
+                            </li>
+                          </ul>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+            </div>
+          // </div>
+        )}
+
+
+        {!checkDoc && (
+          <div>
+            <div className="containerDocumentacion">
+              <h1 className="tituloDocumentacion">Subir documentos</h1>
+              <hr />
+              <form onSubmit={handleSubmit}>
+                <div className="uploads">
+                  <label htmlFor="fileInput2" className="labelsUploads">
+                    RUT:
+                  </label>
+                  <div className="inputFile">
+                    <input
+                      type="file"
+                      id="fileInput2"
+                      accept=".pdf"
+                      required
+                      onChange={(event) => handleFileChange(event, 1)}
+                    />
+                  </div>
                 </div>
-              ))}
+
+                <div className="uploads">
+                  <label htmlFor="fileInput1" className="labelsUploads">
+                    Promedio:{" "}
+                  </label>
+                  <div className="inputFile">
+                    <input
+                      type="file"
+                      id="fileInput1"
+                      accept="image/*"
+                      required
+                      onChange={(event) => handleFileChange(event, 0)}
+                    />
+                  </div>
+                </div>
+
+                <div className="uploads">
+                  <label htmlFor="fileInput3" className="labelsUploads">
+                    Certificado Bancario:
+                  </label>
+                  <div className="inputFile">
+                    <input
+                      type="file"
+                      id="fileInput3"
+                      accept=".pdf"
+                      required
+                      onChange={(event) => handleFileChange(event, 2)}
+                    />
+                  </div>
+                </div>
+
+                <div className="btn-uploads">
+                  <button type="submit" className="btn">
+                    Subir Documentos
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        // </div>
-      )}
-
-
-      {!checkDoc && (
-        <div>
-          <div className="container">
-            <h1 className="titulo">Documentación</h1>
-            <hr />
-            <form onSubmit={handleSubmit}>
-              <div className="uploads">
-                <label htmlFor="fileInput2" className="labelsUploads">
-                  RUT:
-                </label>
-                <div className="inputFile">
-                  <input
-                    type="file"
-                    id="fileInput2"
-                    accept=".pdf"
-                    required
-                    onChange={(event) => handleFileChange(event, 1)}
-                  />
-                </div>
-              </div>
-
-              <div className="uploads">
-                <label htmlFor="fileInput1" className="labelsUploads">
-                  Promedio:{" "}
-                </label>
-                <div className="inputFile">
-                  <input
-                    type="file"
-                    id="fileInput1"
-                    accept="image/*"
-                    required
-                    onChange={(event) => handleFileChange(event, 0)}
-                  />
-                </div>
-              </div>
-
-              <div className="uploads">
-                <label htmlFor="fileInput3" className="labelsUploads">
-                  Certificado Bancario:
-                </label>
-                <div className="inputFile">
-                  <input
-                    type="file"
-                    id="fileInput3"
-                    accept=".pdf"
-                    required
-                    onChange={(event) => handleFileChange(event, 2)}
-                  />
-                </div>
-              </div>
-
-              <div className="btn-uploads">
-                <button type="submit" className="btn">
-                  Subir Documentos
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
+    
   );
 };
 
