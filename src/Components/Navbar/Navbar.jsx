@@ -4,6 +4,7 @@ import "./Navbar.css";
 import { useNavigate } from "react-router-dom";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -32,73 +33,33 @@ const Navbar = () => {
     checkRole();
   }, []);
 
-  const logout = async () => {
+  const removeTokens = async () => {
     try {
       await AsyncStorage.removeItem("accessToken");
       await AsyncStorage.removeItem("refreshToken");
-      navigate("/");
+    } catch (error) {
+      console.error("Error al eliminar los tokens:", error);
+    }
+  };
+
+  const logout = () => {
+    try {
+      Swal.fire({
+        icon: "question",
+        title: "¿Desea cerrar sesión?",
+        showCancelButton: true,
+        confirmButtonText: "Sí",
+        cancelButtonText: "No",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          removeTokens();
+          navigate("/");
+        }
+      });
     } catch (error) {
       console.error("Error al realizar el logout:", error);
     }
   };
-
-  // return (
-  //   <nav>
-  //     <Link className="title" to="/dashboard">UniMentor</Link>
-  //     {master && (
-  //       <ul>
-  //         <li>
-  //           <NavLink to="/Avales">Avales</NavLink>
-  //         </li>
-  //         <li>
-  //           <NavLink to="/Monitores">Monitores</NavLink>
-  //         </li>
-  //         <li>
-  //           <NavLink to="/Reportes">Reporte de Horas</NavLink>
-  //         </li>
-  //         <li>
-  //           <button onClick={logout} className="button">Cerrar sesión</button>
-  //         </li>
-  //       </ul>
-  //     )}
-
-  //     {monitor && (
-  //       <ul>
-  //         <li>
-  //           <NavLink to="/Documentacion">Documentación</NavLink>
-  //         </li>
-  //         <li>
-  //           <NavLink to="/Horas">Registro Horas</NavLink>
-  //         </li>
-  //         <li>
-  //           <button onClick={logout} className="button">Cerrar sesión</button>
-  //         </li>
-  //       </ul>
-  //     )}
-
-  //     {user && (
-  //       <ul>
-  //         <li>
-  //           <NavLink to="/Documentacion">Documentación</NavLink>
-  //         </li>
-  //         <li>
-  //           <button onClick={logout} className="button">Cerrar sesión</button>
-  //         </li>
-  //       </ul>
-  //     )}
-
-  //     {teacher && (
-  //       <ul>
-  //         <li>
-  //           <NavLink to="/RegistroHorasMonitores">Registro Horas Monitores</NavLink>
-  //         </li>
-  //         <li>
-  //           <button onClick={logout} className="button">Cerrar sesión</button>
-  //         </li>
-  //       </ul>
-  //     )}
-  //   </nav>
-  // );
 
   return (
     <nav>

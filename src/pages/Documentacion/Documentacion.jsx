@@ -14,7 +14,7 @@ const Documentacion = () => {
   const [hasCheckedDoc, setHasCheckedDoc] = useState(false);
   const [userss, setUserss] = useState([]);
   const [userId, setUserId] = useState();
-  let urlPath = "192.168.0.15:3000";
+  let urlPath = "192.168.112.61:3000";
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -46,9 +46,6 @@ const Documentacion = () => {
 
         if(response.data.aval){
           setCheckDoc(true)
-          // console.log(response.data.aval)
-
-          // console.log("dfdgh")
         }else{
           setCheckDoc(false)
         }
