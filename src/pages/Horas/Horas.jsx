@@ -14,9 +14,6 @@ import { MdDelete } from "react-icons/md";
 import moment from 'moment';
 import Loader from '../../Components/Loader/Loader';
 
-// import es from './es.json';
-
-
 const Horas = () => {
   const navigate = useNavigate();
   const [asignatura, setAsignatura] = useState('');
@@ -27,10 +24,9 @@ const Horas = () => {
   const [hoursLogMonitor, setHoursLogMonitor] = useState([]);
   const [userss, setUserss] = useState([]);
   const [loading, setLoading] = useState(true);
-  let urlPath = "192.168.0.15:3000";
+  let urlPath = "192.168.112.61:3000";
 
-
-  
+  const primerDiaMes = new Date(fecha.getFullYear(), fecha.getMonth(), 1);
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -63,6 +59,7 @@ const Horas = () => {
     navigate("/");
   };
 
+
   useEffect(() => {
     const expireToken = async () => {
       try {
@@ -88,7 +85,6 @@ const Horas = () => {
               handleRefreshToken(refreshToken);
             } else if (result.dismiss === Swal.DismissReason.cancel) {
               console.log("El usuario hizo clic en Cancelar o cerró la alerta");
-
               logout();
             }
           });
@@ -106,26 +102,8 @@ const Horas = () => {
   });
 
 
-  // useEffect(() => {
-  //   const loggedUser = async () => {
-
-  //     const accessTokenTemp = await AsyncStorage.getItem("accessToken");
-  //     const us = jwtDecode(accessTokenTemp).user;
-
-  //     // console.log(user)
-
-  //     setUserss(us);
-
-  //     // console.log(userss);
-  //   };
-
-  //   loggedUser();
-  // }, []);
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
 
     const response = await axios.get(
       `http://${urlPath}/api/v1/grupos/${selectedGroups.name.split("-")[0]}`
@@ -156,7 +134,6 @@ const Horas = () => {
     console.log(formattedDate.toString());
 
     if(formattedDates.includes(formattedDate.toString())){
-      // console.error("Error. No se creó el registro. La fecha coincide con una fecha anterior.");
       Swal.fire({
         title: "¡No se creó el registro!",
         text: "La fecha del registro ya está registrada.",
@@ -257,13 +234,6 @@ const Horas = () => {
 
     handleShowHoursLog();
   }, []);
-
-  // const handleGroupChange = (index, value) => {
-  //   setSelectedGroups((prevState) => ({
-  //     ...prevState,
-  //     [index]: value,
-  //   }));
-  // };
 
   const handleGroupChange = (index, value) => {
     setSelectedGroups(() => {
@@ -375,9 +345,9 @@ const Horas = () => {
                   selected={fecha}
                   onChange={date => setFecha(date)}
                   dateFormat="dd/MM/yyyy"
-                  // locale={es}
+                  minDate={primerDiaMes}
                   maxDate={new Date()}
-                  // disabled="2023-04-28"
+                  
                 />
               </div>
               <div className='inputsHoras'>

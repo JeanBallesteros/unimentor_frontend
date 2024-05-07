@@ -21,7 +21,7 @@ const Monitores = () => {
   const [selectedGroups, setSelectedGroups] = useState({});
   const [search, setSearch] = useState("");
 
-  let urlPath = "192.168.0.15:3000";
+  let urlPath = "192.168.112.61:3000";
 
 
   useEffect(() => {
