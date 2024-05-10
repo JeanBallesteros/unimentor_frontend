@@ -21,6 +21,7 @@ const RegistroHorasMonitores = () => {
   const [hoursLogMonitor, setHoursLogMonitor] = useState([]);
   const [hoursLogProfessor, setHoursLogProfessor] = useState([]);
   const [userss, setUserss] = useState([]);
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   let urlPath = "192.168.0.15:3000";
 
@@ -170,11 +171,78 @@ const RegistroHorasMonitores = () => {
     }
   };
 
+
+  const showNoResultsAlert = () => {
+    Swal.fire({
+      title: "No se encontraron resultados",
+      text: "Por favor, intenta con otros criterios de búsqueda.",
+      icon: "info",
+      confirmButtonText: "Aceptar",
+    }).then(() => {
+      setSearch("");
+      document.querySelector('input[name="monitorDate"]').value = "";
+      document.querySelector('input[name="monitorName"]').value = "";
+    });
+  };
+
+  const filteredUsers = hoursLogProfessor.filter((hourlog) => {
+    const date = (hourlog.date.slice(0, 10) || "").toString();
+    if (search === "") {
+      return true;
+    } else if (
+      date.toLowerCase().includes(search.toLowerCase()) ||
+      hourlog.monitor[0].fullname.toLowerCase().includes(search.toLowerCase())
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+
+  // Mostrar la alerta si no hay resultados
+  useEffect(() => {
+    if (search !== "" && filteredUsers.length === 0) {
+      showNoResultsAlert();
+    }
+  }, [search, filteredUsers]);
+
   return (
     <div className="fondoTeacher">
       <Navbar />
       <div className="teacher">
-        <h1 className="tituloRegistro">Verificar Registros de Horas</h1>
+        <div className="containerTeacher">
+          <h1 className="tituloTeacher">Verificar Registro de Horas</h1>
+          <div className="filtroTeacher">
+            <h2 className="subtituloTeacher">Búsqueda Filtrada de Registro de Horas</h2>
+            <div className="inputFileTeacher">
+              <div className="inputsTeacher">
+                <div className="labelsTeacher">
+                  <p>Fecha:</p>
+                </div>
+                <input
+                  type="text"
+                  name="monitorDate"
+                  id=""
+                  placeholder="Buscar por fecha"
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+
+              <div className="inputsTeacher">
+                <div className="labelsTeacher">
+                  <p>Nombre:</p>
+                </div>
+                <input
+                  type="text"
+                  name="monitorName"
+                  id=""
+                  placeholder="Buscar por nombre"
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="table-container-teacher">
           <table className="tablaHoras">
             <thead>
@@ -190,7 +258,21 @@ const RegistroHorasMonitores = () => {
               </tr>
             </thead>
             <tbody>
-              {hoursLogProfessor.map((hourlog, index) => (
+              {hoursLogProfessor.filter((hourlog) => {
+                    const date = (
+                      hourlog.date.slice(0, 10) || ""
+                    ).toString();
+                    if (search === "") {
+                      return true;
+                    } else if (
+                      date.toLowerCase().includes(search.toLowerCase()) ||
+                      hourlog.monitor[0].fullname.toLowerCase().includes(search.toLowerCase())
+                    ) {
+                      return true;
+                    } else {
+                      return false;
+                    }
+                  }).map((hourlog, index) => (
                 <tr key={index}>
                   <td>{hourlog.program[0].name}</td>
                   <td>{hourlog.subject[0].name}</td>
