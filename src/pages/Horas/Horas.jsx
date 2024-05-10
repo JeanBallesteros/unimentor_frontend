@@ -24,7 +24,7 @@ const Horas = () => {
   const [hoursLogMonitor, setHoursLogMonitor] = useState([]);
   const [userss, setUserss] = useState([]);
   const [loading, setLoading] = useState(true);
-  let urlPath = "192.168.112.61:3000";
+  let urlPath = "192.168.0.15:3000";
 
   const primerDiaMes = new Date(fecha.getFullYear(), fecha.getMonth(), 1);
 
@@ -106,14 +106,14 @@ const Horas = () => {
     e.preventDefault();
 
     const response = await axios.get(
-      `http://${urlPath}/api/v1/grupos/${selectedGroups.name.split("-")[0]}`
+      `https://unimentor-fqz8.onrender.com/api/v1/grupos/${selectedGroups.name.split("-")[0]}`
     );
 
     console.log(response.data)
 
 
     const response2 = await axios.get(
-      `http://${urlPath}/api/v1/programas/asignatura/${response.data[0].subject[0]._id}`
+      `https://unimentor-fqz8.onrender.com/api/v1/programas/asignatura/${response.data[0].subject[0]._id}`
     );
 
     console.log(response2.data.program._id)
@@ -122,7 +122,7 @@ const Horas = () => {
 
 
     const response4 = await axios.get(
-      `http://${urlPath}/api/v1/hourlog/group/${response.data[0]._id}`
+      `https://unimentor-fqz8.onrender.com/api/v1/hourlog/group/${response.data[0]._id}`
     );
 
     // console.log(response4.data.dates);
@@ -143,7 +143,7 @@ const Horas = () => {
       return;
     }else{
       const response3 = await axios.post(
-        `http://${urlPath}/api/v1/hourlog/new-hourslog`, 
+        `https://unimentor-fqz8.onrender.com/api/v1/hourlog/new-hourslog`, 
         { 
           program: response2.data.program._id, 
           subject: response.data[0].subject[0]._id, 
@@ -194,7 +194,7 @@ const Horas = () => {
 
 
       const response = await axios.get(
-        `http://${urlPath}/api/v1/grupos/monitor/${userId}`
+        `https://unimentor-fqz8.onrender.com/api/v1/grupos/monitor/${userId}`
       );
 
       setGroupsMonitor(response.data);
@@ -220,7 +220,7 @@ const Horas = () => {
 
 
       const response = await axios.get(
-        `http://${urlPath}/api/v1/hourlog/monitor/${userId}`
+        `https://unimentor-fqz8.onrender.com/api/v1/hourlog/monitor/${userId}`
       );
 
       setHoursLogMonitor(response.data);
@@ -264,7 +264,7 @@ const Horas = () => {
         // console.log(hourLogId);
 
         const response = await axios.delete(
-          `http://${urlPath}/api/v1/hourlog/delete/`+ hourLogId
+          `https://unimentor-fqz8.onrender.com/api/v1/hourlog/delete/`+ hourLogId
         );
 
         if (response.status) {

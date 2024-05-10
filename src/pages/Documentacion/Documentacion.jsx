@@ -6,6 +6,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
+import { Link } from 'react-router-dom';
 
 
 const Documentacion = () => {
@@ -14,7 +15,7 @@ const Documentacion = () => {
   const [hasCheckedDoc, setHasCheckedDoc] = useState(false);
   const [userss, setUserss] = useState([]);
   const [userId, setUserId] = useState();
-  let urlPath = "192.168.112.61:3000";
+  let urlPath = "192.168.0.15:3000";
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -39,7 +40,7 @@ const Documentacion = () => {
         console.log(userId);
 
         const response = await axios.get(
-          `http://${urlPath}/api/v1/avales/user/${userId}`, 
+          `https://unimentor-fqz8.onrender.com/api/v1/avales/user/${userId}`, 
         );
 
         console.log(response.data.message)
@@ -132,71 +133,77 @@ const Documentacion = () => {
     event.preventDefault();
 
     try {
-      const formData = new FormData();
+        const formData = new FormData();
 
-      files.forEach((file, index) => {
-        if (file) {
-          if (index + 1 === 1) {
-            const newFileName = `promedio.${file.name.split(".").pop()}`;
-            formData.append(
-              `files`,
-              new File([file], newFileName, { type: file.type })
-            );
-          } else if (index + 1 === 2) {
-            const newFileName = `rut.${file.name.split(".").pop()}`;
-            formData.append(
-              `files`,
-              new File([file], newFileName, { type: file.type })
-            );
-          } else {
-            const newFileName = `certificado.${file.name.split(".").pop()}`;
-            formData.append(
-              `files`,
-              new File([file], newFileName, { type: file.type })
-            );
-          }
+        const accessToken = await AsyncStorage.getItem("accessToken");
+
+        const decodedToken = jwtDecode(accessToken);
+        const userId = decodedToken.user._id;
+        const document = decodedToken.user.documentNumber;
+
+        let base64Promedio;
+        let base64Rut;
+        let base64Certificado;
+
+        // Iterar sobre cada archivo
+        for (let index = 0; index < files.length; index++) {
+            const file = files[index];
+
+            // Verificar si el archivo existe
+            if (file) {
+                // Crear un FileReader para leer el contenido del archivo como base64
+                const reader = new FileReader();
+
+                // Crear una promesa para leer el contenido del archivo
+                const readPromise = new Promise((resolve, reject) => {
+                    reader.onload = () => {
+                        resolve(reader.result);
+                    };
+                    reader.onerror = reject;
+                });
+
+                // Leer el contenido del archivo
+                reader.readAsBinaryString(file);
+                const base64Data = await readPromise; // Esperar a que se complete la lectura del archivo
+
+                // Determinar el nuevo nombre del archivo
+                if (index === 0) {
+                  base64Promedio = btoa(base64Data)
+                } else if (index === 1) {
+                  base64Rut = btoa(base64Data)
+                } else {
+                  base64Certificado = btoa(base64Data)
+                }
+            }
+
         }
-      });
 
-      const accessTokenTemp = await AsyncStorage.getItem("accessToken");
-
-      const id = jwtDecode(accessTokenTemp).user._id;
-
-      const response = await axios.post(
-        `http://${urlPath}/api/v1/avales/${id}`,
-        formData
-      );
-
-      if (response.data.message === "Files uploaded successfully") {
-        Swal.fire({
-          title: "¡Documentos subidos con éxito!",
-          text: "Espera a que sean revisados por el administrador.",
-          icon: "success",
+        const response = await axios.post(`https://unimentor-fqz8.onrender.com/api/v1/avales/new-aval`, {
+          idUsuario: userId, 
+          promedio: base64Promedio,
+          rut: base64Rut,
+          certificado: base64Certificado 
         });
 
-        const inputs = document.querySelectorAll("input[type='file']");
-        inputs.forEach((input) => {
-          input.disabled = true;
-        });
+        console.log(response.data);
 
-        const button = document.querySelector("button[type='submit']");
-        button.disabled = true;
-
-      }
-
-      navigate("/");
+        // Navegar a la página de inicio después de enviar todos los archivos
+        navigate("/");
     } catch (error) {
-      Swal.fire({
-        title: "¡Error al subir los documentos!",
-        text: "Espera la autorización de tu aval",
-        icon: "error",
-      });
+        console.error("Error al subir los documentos:", error);
+        Swal.fire({
+            title: "¡Error al subir los documentos!",
+            text: "Espera la autorización de tu aval",
+            icon: "error",
+        });
     }
-  };
+};
+
+
 
   useEffect(() => {
     const handleShowUsers = async () => {
-      const response = await axios.get(`http://${urlPath}/api/v1/avales`);
+      const response = await axios.get(`https://unimentor-fqz8.onrender.com/api/v1/avales`);
 
       setUserss(response.data);
       console.log(response.data)
@@ -209,6 +216,46 @@ const Documentacion = () => {
 
     handleShowUsers();
   }, []);
+
+  const mostrarImagen = (imagenBase64) => {
+    Swal.fire({
+      title: `<img width="300px" src="data:image;base64,${imagenBase64}" />`,
+      showClass: {
+        popup: `
+          animate__animated
+          animate__fadeInUp
+          animate__faster
+        `
+      },
+      hideClass: {
+        popup: `
+          animate__animated
+          animate__fadeOutDown
+          animate__faster
+        `
+      }
+    });
+  };
+
+  const mostrarPdf = (pdfBase64) => {
+    Swal.fire({
+      title: `<embed src="data:application/pdf;base64,${pdfBase64}" type="application/pdf" width="100%" height="500px"/>`,
+      showClass: {
+        popup: `
+          animate__animated
+          animate__fadeInUp
+          animate__faster
+        `
+      },
+      hideClass: {
+        popup: `
+          animate__animated
+          animate__fadeOutDown
+          animate__faster
+        `
+      }
+    });
+  };
 
   return (
     <div className='fondoDocumentacion'>
@@ -235,7 +282,15 @@ const Documentacion = () => {
                                 </div>
                                 <div className="docdivDoc">
                                   <div className="doc">
-                                    <a href={`http://${urlPath}/api/v1/uploads/${aval.rut}`} target="_blank">Ver</a>
+                                    <a  
+                                      style={{ cursor: 'pointer'}}
+                                      onClick={(e) => {
+                                        e.preventDefault(); // Evitar que el enlace redireccione
+                                        mostrarPdf(aval.rut);
+                                      }}
+                                    >
+                                      <p>Ver </p>
+                                    </a>
                                   </div>
                                 </div>
                                 
@@ -248,7 +303,15 @@ const Documentacion = () => {
                                 </div>
                                 <div className="docdivDoc">
                                   <div className="doc">
-                                    <a href={`http://${urlPath}/api/v1/uploads/${aval.certificado}`} target="_blank">Ver</a>
+                                    <a 
+                                      style={{ cursor: 'pointer' }}
+                                      onClick={(e) => {
+                                        e.preventDefault(); // Evitar que el enlace redireccione
+                                        mostrarPdf(aval.certificado);
+                                      }}
+                                    >
+                                      <p>Ver </p>
+                                    </a>
                                   </div>
                                 </div>
                               
@@ -261,7 +324,15 @@ const Documentacion = () => {
                                 </div>
                                 <div className="docdivDoc">
                                   <div className="doc">
-                                    <a href={`http://${urlPath}/api/v1/uploads/${aval.promedio}`} target="_blank">Ver</a>
+                                    <a  
+                                      style={{ cursor: 'pointer'}}
+                                      onClick={(e) => {
+                                        e.preventDefault(); // Evitar que el enlace redireccione
+                                        mostrarImagen(aval.promedio);
+                                      }}
+                                    >
+                                      <p>Ver </p>
+                                    </a>
                                   </div>
                                 </div>
                           

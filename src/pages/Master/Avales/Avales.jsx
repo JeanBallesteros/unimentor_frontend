@@ -18,7 +18,7 @@ const Avales = () => {
   const [selectedSubjects, setSelectedSubjects] = useState({});
   const [selectedGroups, setSelectedGroups] = useState({});
   const [search, setSearch] = useState("");
-  let urlPath = "192.168.112.61:3000";
+  let urlPath = "192.168.0.15:3000";
 
   useEffect(() => {
     // Verificar si el usuario está autenticado y si es master
@@ -100,7 +100,7 @@ const Avales = () => {
 
   useEffect(() => {
     const handleShowUsers = async () => {
-      const response = await axios.get(`http://${urlPath}/api/v1/avales`);
+      const response = await axios.get(`https://unimentor-fqz8.onrender.com/api/v1/avales`);
 
       setUserss(response.data);
     };
@@ -123,7 +123,7 @@ const Avales = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        `http://${urlPath}/api/v1/grupos/monitorempty/c0d1g0`
+        `https://unimentor-fqz8.onrender.com/api/v1/grupos/monitorempty/c0d1g0`
       );
 
       
@@ -156,7 +156,7 @@ const Avales = () => {
     // const userIdObjectId = new mongoose.Types.ObjectId(userId);
 
     const responsee = await axios.patch(
-      `http://${urlPath}/api/v1/grupos/update/` + groupId,
+      `https://unimentor-fqz8.onrender.com/api/v1/grupos/update/` + groupId,
       { monitor: userId }
     );
 
@@ -171,7 +171,7 @@ const Avales = () => {
 
       try {
         const response = await axios.post(
-          `http://${urlPath}/send-email-approved`,
+          `https://unimentor-fqz8.onrender.com/send-email-approved`,
           emailData
         );
         console.log(response.data);
@@ -303,6 +303,46 @@ const Avales = () => {
     }
   }, [search, filteredUsers]);
 
+  const mostrarImagen = (imagenBase64) => {
+    Swal.fire({
+      title: `<img width="300px" src="data:image;base64,${imagenBase64}" />`,
+      showClass: {
+        popup: `
+          animate__animated
+          animate__fadeInUp
+          animate__faster
+        `
+      },
+      hideClass: {
+        popup: `
+          animate__animated
+          animate__fadeOutDown
+          animate__faster
+        `
+      }
+    });
+  };
+
+  const mostrarPdf = (pdfBase64) => {
+    Swal.fire({
+      title: `<embed src="data:application/pdf;base64,${pdfBase64}" type="application/pdf" width="100%" height="500px"/>`,
+      showClass: {
+        popup: `
+          animate__animated
+          animate__fadeInUp
+          animate__faster
+        `
+      },
+      hideClass: {
+        popup: `
+          animate__animated
+          animate__fadeOutDown
+          animate__faster
+        `
+      }
+    });
+  };
+
   return (
     <div className="fondoAvales">
       <Navbar />
@@ -377,8 +417,14 @@ const Avales = () => {
                       <td>
                           {usuario.avalsData.map((aval, idx) => (
                             <div key={idx}>
-                              <a href={`http://${urlPath}/api/v1/uploads/${aval.promedio}`} target="_blank">
-                                <p>{aval.promedio}</p>
+                              <a  
+                                style={{ cursor: 'pointer', color: 'blue' }}
+                                onClick={(e) => {
+                                  e.preventDefault(); // Evitar que el enlace redireccione
+                                  mostrarImagen(aval.promedio);
+                                }}
+                              >
+                                <p>Ver </p>
                               </a>
                             </div>
                           ))}
@@ -386,8 +432,14 @@ const Avales = () => {
                       <td>
                         {usuario.avalsData.map((aval, idx) => (
                           <div key={idx}>
-                            <a href={`http://${urlPath}/api/v1/uploads/${aval.rut}`} target="_blank">
-                              <p>{aval.rut}</p>
+                            <a  
+                              style={{ cursor: 'pointer', color: 'blue' }}
+                              onClick={(e) => {
+                                e.preventDefault(); // Evitar que el enlace redireccione
+                                mostrarPdf(aval.rut);
+                              }}
+                            >
+                              <p>Ver </p>
                             </a>
                           </div>
                         ))}
@@ -395,8 +447,14 @@ const Avales = () => {
                       <td>
                         {usuario.avalsData.map((aval, idx) => (
                           <div key={idx}>
-                            <a href={`http://${urlPath}/api/v1/uploads/${aval.certificado}`} target="_blank">
-                              <p>{aval.certificado}</p>
+                            <a  
+                              style={{ cursor: 'pointer', color: 'blue' }}
+                              onClick={(e) => {
+                                e.preventDefault(); // Evitar que el enlace redireccione
+                                mostrarPdf(aval.certificado);
+                              }}
+                            >
+                              <p>Ver </p>
                             </a>
                           </div>
                         ))}

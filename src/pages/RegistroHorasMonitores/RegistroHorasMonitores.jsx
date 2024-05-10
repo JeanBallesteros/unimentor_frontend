@@ -22,7 +22,7 @@ const RegistroHorasMonitores = () => {
   const [hoursLogProfessor, setHoursLogProfessor] = useState([]);
   const [userss, setUserss] = useState([]);
   const [loading, setLoading] = useState(true);
-  let urlPath = "192.168.112.61:3000";
+  let urlPath = "192.168.0.15:3000";
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -105,7 +105,7 @@ const RegistroHorasMonitores = () => {
       const userId = decodedToken.user._id;
 
       const response = await axios.get(
-        `http://${urlPath}/api/v1/hourlog/teacher/${userId}`
+        `https://unimentor-fqz8.onrender.com/api/v1/hourlog/teacher/${userId}`
       );
       setHoursLogProfessor(response.data);
     };
@@ -123,7 +123,7 @@ const RegistroHorasMonitores = () => {
     const hlog = hoursLogProfessor[index]._id;
 
     const response = await axios.patch(
-      `http://${urlPath}/api/v1/hourlog/update/` + hlog,
+      `https://unimentor-fqz8.onrender.com/api/v1/hourlog/update/` + hlog,
       { active: true }
     );
 
@@ -149,7 +149,7 @@ const RegistroHorasMonitores = () => {
 
     const hlog = hoursLogProfessor[index]._id;
     const response = await axios.patch(
-      `http://${urlPath}/api/v1/hourlog/update/` + hlog,
+      `https://unimentor-fqz8.onrender.com/api/v1/hourlog/update/` + hlog,
       { active: false }
     );
 

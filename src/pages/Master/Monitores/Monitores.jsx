@@ -21,7 +21,7 @@ const Monitores = () => {
   const [selectedGroups, setSelectedGroups] = useState({});
   const [search, setSearch] = useState("");
 
-  let urlPath = "192.168.112.61:3000";
+  let urlPath = "192.168.0.15:3000";
 
 
   useEffect(() => {
@@ -104,7 +104,7 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowUsers = async () => {
       const response = await axios.get(
-        `http://${urlPath}/api/v1/avales/monitor`
+        `https://unimentor-fqz8.onrender.com/api/v1/avales/monitor`
       );
 
       setUserss(response.data);
@@ -116,7 +116,7 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        `http://${urlPath}/api/v1/grupos/monitorempty/c0d1g0`
+        `https://unimentor-fqz8.onrender.com/api/v1/grupos/monitorempty/c0d1g0`
       );
 
       setGroupsMonitorEmpty(response.data);
@@ -128,7 +128,7 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        `http://${urlPath}/api/v1/grupos/monitornotempty/c0d1g0`
+        `https://unimentor-fqz8.onrender.com/api/v1/grupos/monitornotempty/c0d1g0`
       );
 
       setGroupsMonitorNotEmpty(response.data);
@@ -140,7 +140,7 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        `http://${urlPath}/api/v1/grupos`
+        `https://unimentor-fqz8.onrender.com/api/v1/grupos`
       );
 
       setGroups(response.data);
@@ -167,7 +167,7 @@ const Monitores = () => {
 
         try {
           const response = await axios.post(
-            `http://${urlPath}/send-email-denied`,
+            `https://unimentor-fqz8.onrender.com/send-email-denied`,
             emailData
           );
           console.log(response.data);
@@ -224,16 +224,16 @@ const Monitores = () => {
 
         if(contadorGruposMonitor === 1){
           const response = await axios.delete(
-            `http://${urlPath}/api/v1/avales/delete/`+ filteredArray[0]
+            `https://unimentor-fqz8.onrender.com/api/v1/avales/delete/`+ filteredArray[0]
           );
 
           const response2 = await axios.patch(
-            `http://${urlPath}/api/v1/users/update/` + userId,
+            `https://unimentor-fqz8.onrender.com/api/v1/users/update/` + userId,
             { role: "user" }
           );
 
           const response3 = await axios.patch(
-            `http://${urlPath}/api/v1/grupos/updatetonull/` + groupId,
+            `https://unimentor-fqz8.onrender.com/api/v1/grupos/updatetonull/` + groupId,
             { monitor: null }
           );
 
@@ -255,7 +255,7 @@ const Monitores = () => {
 
 
           const response3 = await axios.patch(
-            `http://${urlPath}/api/v1/grupos/updatetonull/` + groupId,
+            `https://unimentor-fqz8.onrender.com/api/v1/grupos/updatetonull/` + groupId,
             { monitor: null }
           );
 
