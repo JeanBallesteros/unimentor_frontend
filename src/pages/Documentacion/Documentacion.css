@@ -192,6 +192,14 @@ input::file-selector-button:hover {
   /* position: relative; */
   /* top:0; */
   /* overflow-y: auto; */
+  
+}
+
+.listaAval ul{
+  display:flex;
+  flex-direction:row;
+  justify-content: center;
+  align-items: center;
 }
 
 @media screen and (max-width: 600px) {

@@ -226,7 +226,20 @@
 } */
 
 
+.swal2-popup img {
+  width: auto !important; /* Ancho personalizado */
+  height: 600px !important;
+}
 
+.swal2-popup embed {
+  width: 600px !important; /* Ancho personalizado */
+  height: 600px !important;
+}
+
+.swal2-popup {
+  width: auto !important; /* Ancho personalizado */
+  height: auto !important;
+}
 
 
 @media screen and (max-width: 900px) {
