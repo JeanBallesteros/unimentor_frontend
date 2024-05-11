@@ -35,7 +35,6 @@ const Avales = () => {
 
 
   const handleRefreshToken = async (refreshToken) => {
-    // Renovar el accessToken
     try {
       const response = await axios.post(
         "https://unimentor-fqz8.onrender.com/api/v1/auth/refresh-token",
@@ -50,14 +49,12 @@ const Avales = () => {
   };
 
   const logout = async () => {
-    // Cerrar sesión
     await AsyncStorage.removeItem("accessToken");
     await AsyncStorage.removeItem("refreshToken");
     navigate("/");
   };
 
   useEffect(() => {
-    // Verificar si el accessToken ha expirado
     const expireToken = async () => {
       try {
         const accessToken = await AsyncStorage.getItem("accessToken");
@@ -152,8 +149,6 @@ const Avales = () => {
     const userId = userss[index]._id;
 
     console.log(groupId)
-
-    // const userIdObjectId = new mongoose.Types.ObjectId(userId);
 
     const responsee = await axios.patch(
       `https://unimentor-fqz8.onrender.com/api/v1/grupos/update/` + groupId,
@@ -350,11 +345,11 @@ const Avales = () => {
         <div className="containerAvales">
           <h1 className="tituloAvales">Avales</h1>
           <div className="filtroAvales">
-            <h2 className="subtituloAvales">Búsqueda Filtrada de Avales</h2>
+            <h2 className="subtituloAvales">Búsqueda Filtrada</h2>
             <div className="inputFileAvales">
               <div className="inputsAvales">
                 <div className="labelsAvales">
-                  <p>Documento:</p>
+                  <p>Documento</p>
                 </div>
                 <input
                   type="number"
@@ -367,7 +362,7 @@ const Avales = () => {
 
               <div className="inputsAvales">
                 <div className="labelsAvales">
-                  <p>Nombre:</p>
+                  <p>Nombre</p>
                 </div>
                 <input
                   type="text"
@@ -420,7 +415,7 @@ const Avales = () => {
                               <a  
                                 style={{ cursor: 'pointer', color: 'blue' }}
                                 onClick={(e) => {
-                                  e.preventDefault(); // Evitar que el enlace redireccione
+                                  e.preventDefault();
                                   mostrarImagen(aval.promedio);
                                 }}
                               >
@@ -435,7 +430,7 @@ const Avales = () => {
                             <a  
                               style={{ cursor: 'pointer', color: 'blue' }}
                               onClick={(e) => {
-                                e.preventDefault(); // Evitar que el enlace redireccione
+                                e.preventDefault();
                                 mostrarPdf(aval.rut);
                               }}
                             >
@@ -450,7 +445,7 @@ const Avales = () => {
                             <a  
                               style={{ cursor: 'pointer', color: 'blue' }}
                               onClick={(e) => {
-                                e.preventDefault(); // Evitar que el enlace redireccione
+                                e.preventDefault();
                                 mostrarPdf(aval.certificado);
                               }}
                             >
