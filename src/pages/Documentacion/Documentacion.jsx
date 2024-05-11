@@ -264,10 +264,10 @@ const Documentacion = () => {
                         {usuario._id === userId && (
                           <ul key={idx} className="listaAval">
                             <li>
+                              <div className="labelsUploads">
+                                <p>RUT:</p>
+                              </div>
                               <div className="uploads">
-                                <div className="labelsUploads">
-                                  <p>RUT</p>
-                                </div>
                                 <div className="docdivDoc">
                                   <div className="doc">
                                     <a className="docLink" 
@@ -285,10 +285,10 @@ const Documentacion = () => {
                               </div>
                             </li>
                             <li>
+                              <div className="labelsUploads">
+                                <p>Certificado Bancario:</p>
+                              </div>
                               <div className="uploads">
-                                <div className="labelsUploads">
-                                  <p>Certificado Bancario</p>
-                                </div>
                                 <div className="docdivDoc">
                                   <div className="doc">
                                     <a className="docLink" 
@@ -306,10 +306,10 @@ const Documentacion = () => {
                               </div>
                             </li>
                             <li>
+                              <div className="labelsUploads">
+                                <p>Promedio:</p>
+                              </div>
                               <div className="uploads">
-                                <div className="labelsUploads">
-                                  <p>Promedio</p>
-                                </div>
                                 <div className="docdivDoc">
                                   <div className="doc">
                                     <a  className="docLink" 
@@ -342,53 +342,59 @@ const Documentacion = () => {
               <h1 className="tituloDocumentacion">Subir documentos</h1>
               <hr />
               <form onSubmit={handleSubmit}>
-                <div className="uploads">
+                <div className="style1">
                   <label htmlFor="fileInput2" className="labelsUploads">
-                    RUT
+                    RUT:
                   </label>
-                  <div className="inputFile">
-                    <input
-                      type="file"
-                      id="fileInput2"
-                      accept=".pdf"
-                      required
-                      onChange={(event) => handleFileChange(event, 1)}
-                    />
+                  <div className="uploads">
+                    <div className="inputFile">
+                      <input
+                        type="file"
+                        id="fileInput2"
+                        accept=".pdf"
+                        required
+                        onChange={(event) => handleFileChange(event, 1)}
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <div className="uploads">
+                <div className="style1">
                   <label htmlFor="fileInput1" className="labelsUploads">
-                    Promedio
+                    Promedio:
                   </label>
-                  <div className="inputFile">
-                    <input
-                      type="file"
-                      id="fileInput1"
-                      accept="image/*"
-                      required
-                      onChange={(event) => handleFileChange(event, 0)}
-                    />
+                  <div className="uploads">
+                    <div className="inputFile">
+                      <input
+                        type="file"
+                        id="fileInput1"
+                        accept="image/*"
+                        required
+                        onChange={(event) => handleFileChange(event, 0)}
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <div className="uploads">
+                <div className="style1">
                   <label htmlFor="fileInput3" className="labelsUploads">
-                    Certificado Bancario
+                    Certificado Bancario:
                   </label>
-                  <div className="inputFile">
-                    <input
-                      type="file"
-                      id="fileInput3"
-                      accept=".pdf"
-                      required
-                      onChange={(event) => handleFileChange(event, 2)}
-                    />
+                  <div className="uploads">
+                    <div className="inputFile">
+                      <input
+                        type="file"
+                        id="fileInput3"
+                        accept=".pdf"
+                        required
+                        onChange={(event) => handleFileChange(event, 2)}
+                      />
+                    </div>
                   </div>
                 </div>
 
                 <div className="btn-uploads">
-                  <button type="submit" className="btnSubmit">
+                  <button type="submit" className="btnSubmitDocs">
                     Subir Documentos
                   </button>
                 </div>
