@@ -133,6 +133,33 @@
   font-size: '24px';
 }
 
+
+.btn-aceptar:hover {
+  background: #00508f;
+  font-weight: 700;
+}
+
+.btn-denegar-m {
+  width: 40%;
+  height: 40%;
+  background: #ff1919;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+  font-size: 1em;
+  font-weight: 500;
+  padding: 5px 10px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.btn-denegar:hover {
+  background: #e60000;
+  font-weight: 700;
+}
+
 .fondoAvales{
   background-color: #ffffff;
   width: 100vw;

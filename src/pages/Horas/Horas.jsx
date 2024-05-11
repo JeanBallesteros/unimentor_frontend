@@ -183,7 +183,7 @@ const Horas = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
 
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 100));
 
 
       const accessToken = await AsyncStorage.getItem("accessToken");
@@ -200,7 +200,7 @@ const Horas = () => {
       setGroupsMonitor(response.data);
       setTimeout(() => {
         setLoading(false);
-      }, 3000);
+      }, 100);
     };
 
     handleShowGroups();
@@ -209,7 +209,7 @@ const Horas = () => {
   useEffect(() => {
     const handleShowHoursLog = async () => {
 
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 100));
 
 
       const accessToken = await AsyncStorage.getItem("accessToken");
@@ -227,7 +227,7 @@ const Horas = () => {
 
       setTimeout(() => {
         setLoading(false);
-      }, 3000);
+      }, 100);
       // console.log(response.data[0].program[0].name);
       
     };
@@ -360,6 +360,7 @@ const Horas = () => {
                   value={horas}
                   onChange={(e) => setHoras(e.target.value)}
                   min={0}
+                  max={20}
                 />
               </div>
               <div className="btn-submit">
@@ -397,12 +398,22 @@ const Horas = () => {
                       <td>{hourlog.active ? "Sí" : "No"}</td>
                       <td>
                         <div className="btn-avales">
-                          <button
-                            className="btn-denegar-m"
-                            onClick={() => handleButtonDenegar(index)}
-                          >
-                            <MdDelete className="icon" />
-                          </button>
+                          {hourlog.active ? (
+                            <button
+                              disabled
+                              className="btn-denegar-hh"
+                              onClick={() => handleButtonDenegar(index)}
+                            >
+                              <MdDelete className="icon" />
+                            </button>
+                          ):(
+                            <button
+                              className="btn-denegar-h"
+                              onClick={() => handleButtonDenegar(index)}
+                            >
+                              <MdDelete className="icon" />
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>
