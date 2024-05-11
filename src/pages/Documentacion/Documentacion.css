@@ -26,24 +26,29 @@ hr{
   height: 100vh;
 }
 
-.btnSubmit {
+.style1{
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.btnSubmitDocs {
   padding: 10px;
   font-size: 20px;
   border-radius: 10px;
-  background-color: #1d4ed8;
+  background-color: #0069a3;
   color: #ffffff;
   cursor: pointer;
   transition: 0.3s;
-  width: 250px;
+  width: 70%;
   margin-bottom: 40px;
   border: 2px solid rgba(0, 0, 0, 0.973);
 }
 
-.btnSubmit:focus {
+.btnSubmitDocs:focus {
   outline: none;
 }
 
-.btnSubmit:active {
+.btnSubmitDocs:active {
   transform: scale(0.9);
 }
 
@@ -59,15 +64,36 @@ hr{
   padding-top: 10px;
   padding-bottom: 10px;
   background-color: #ffffff;
+  width: 100%;
 }
+
+#fileInput1{
+  margin-left: -20px;
+  margin-right: 0px;
+  width: 100%;
+}
+
+#fileInput2{
+  margin-left: -20px;
+  margin-right: 0px;
+  width: 100%;
+}
+
+#fileInput3{
+  margin-left: -20px;
+  margin-right: 0px;
+  width: 100%;
+}
+
+
 
 .labelsUploads {
   color: #0069a3;
-  width: 250px;
-  font-weight: bold;
+  width: 100%;
+  /* font-weight: bold; */
   font-size: 1.071em;
   display: flex;
-  justify-content: center;
+  justify-content:flex-start;
   align-items: center;
 }
 
@@ -96,6 +122,7 @@ hr{
   justify-content: center;
   margin-top: 10px;
   font-weight: bold;
+  width: 100%;
 }
 
 .listaAval{
@@ -105,6 +132,12 @@ hr{
   align-items: center;
 }
 
+.listaAval li{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 100%;
+}
+
 .containerDocumentacion {
   background-color: #f4d73b;
   border-radius: 15px;
@@ -112,6 +145,7 @@ hr{
   padding-left: 50px;
   padding-right: 50px;
   border:2px solid rgba(0, 0, 0, 0.973);
+  width: 70vw;
 }
 
 .containerDocumentacionOk{
@@ -121,7 +155,9 @@ hr{
   padding-left: 50px;
   padding-right: 50px;
   border:2px solid rgba(0, 0, 0, 0.973);
-  height: 60vh;
+  height: auto;
+  padding-bottom: 30px;
+  width: 70vw;
 }
 
 .documentacion{
@@ -187,6 +223,14 @@ hr{
     border-radius: 15px;
     box-shadow: 0 3px 6px #0000004d;
   }
+
+  /* .containerDocumentacion {
+    background-color: #f4d73b;
+    border-radius: 15px;
+    box-shadow: 0 3px 6px #0000004d;
+    border:2px solid rgba(0, 0, 0, 0.973);
+    width: 70vw;
+  } */
   
   .documentacion{
     width: 100vw;
@@ -194,7 +238,23 @@ hr{
     display: grid;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 100px;
+    padding-top: 50px;
+  }
+
+  .labelsUploads {
+    color: #0069a3;
+    width: 100%;
+    /* font-weight: bold; */
+    font-size: 1.071em;
+    display: flex;
+    justify-content:flex-start;
+    align-items: center;
+  }
+
+  .style1{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 100%;
   }
 
   .fondoDocumentacion{
@@ -204,41 +264,37 @@ hr{
     background-attachment: fixed;
   }
   
-  .btn {
+  .btnSubmitDocs {
     padding: 10px;
     font-size: 20px;
-    font-weight: 500;
     border-radius: 10px;
-    background-color: #1d4ed8;
+    background-color: #0069a3;
     color: #ffffff;
     cursor: pointer;
     transition: 0.3s;
-    width: 250px;
+    width: 70%;
     margin-bottom: 40px;
     border: 2px solid rgba(0, 0, 0, 0.973);
   }
   
-  .btn:focus {
+  .btnSubmitDocs:focus {
     outline: none;
   }
   
-  .btn:active {
+  .btnSubmitDocs:active {
     transform: scale(0.9);
-  }
-  .btn:hover{
-    background-color: #172554;
   }
   
   .uploads {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-left: auto;
-    margin-right: auto;
-    justify-content: center;
+    /* margin-left: auto;
+    margin-right: auto; */
+    justify-content:flex-start;
     border:2px solid rgba(0, 0, 0, 0.973);
     border-radius: 10px;
-    width: 95%;
+    width: 100%;
     padding-top: 10px;
     padding-bottom: 10px;
   }
@@ -257,7 +313,7 @@ hr{
     font-weight: 500;
     font-size: 1.071em;
     display: flex;
-    justify-content: center;
+    justify-content:flex-start;
     align-items: center;
   }
   
@@ -283,6 +339,7 @@ hr{
     align-items: center;
     justify-content: center;
     margin-top: 10px;
+    width: 100%;
   }
   
   input::file-selector-button {
@@ -297,10 +354,24 @@ hr{
     border: 2px solid #00cec9;
   }
   
-  .listaAval{
+  /* .listaAval{
     display:flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  } */
+
+  .containerDocumentacionOk{
+    background-color: #f4d73b;
+    border-radius: 15px;
+    box-shadow: 0 3px 6px #0000004d;
+    /* padding-left: 50px;
+    padding-right: 50px; */
+    border:2px solid rgba(0, 0, 0, 0.973);
+    height: auto;
+    padding-bottom: 30px;
+    width: 70vw;
   }
+
+  
 }

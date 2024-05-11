@@ -119,7 +119,7 @@
     background-color: #44276f;
   }
   
-  .uploads {
+  /* .uploads {
     display: flex;
     align-items: center;
     margin: 10px 10px 10px 10px;
@@ -127,7 +127,7 @@
     border:2px solid rgba(0, 0, 0, 0.973);
     border-radius: 10px;
     width: 95%;
-  }
+  } */
   
   .inputsTeacher {
     width: 200px;
@@ -521,7 +521,7 @@
       background-color: #44276f;
     }
     
-    .uploads {
+    /* .uploads {
       display: flex;
       align-items: center;
       margin: 10px 10px 10px 10px;
@@ -529,7 +529,7 @@
       border:2px solid rgba(0, 0, 0, 0.973);
       border-radius: 10px;
       width: 95%;
-    }
+    } */
     
     .inputsTeacher {
       display: grid;
