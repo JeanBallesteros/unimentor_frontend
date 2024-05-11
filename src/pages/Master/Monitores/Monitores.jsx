@@ -7,7 +7,6 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import "./Monitores.css";
 import { MdDelete } from "react-icons/md";
-import { FaLock } from "react-icons/fa";
 
 const Monitores = () => {
   const navigate = useNavigate();
@@ -21,11 +20,7 @@ const Monitores = () => {
   const [selectedGroups, setSelectedGroups] = useState({});
   const [search, setSearch] = useState("");
 
-  let urlPath = "192.168.0.15:3000";
-
-
   useEffect(() => {
-    // Verificar si el usuario está autenticado y si es master
     const checkAuthentication = async () => {
       const accessToken = await AsyncStorage.getItem("accessToken");
       const role = jwtDecode(accessToken).user.role;
@@ -38,7 +33,6 @@ const Monitores = () => {
   }, []);
 
   const handleRefreshToken = async (refreshToken) => {
-    // Renovar el accessToken
     try {
       const response = await axios.post(
         "https://unimentor-fqz8.onrender.com/api/v1/auth/refresh-token",
@@ -53,14 +47,12 @@ const Monitores = () => {
   };
 
   const logout = async () => {
-    // Cerrar sesión
     await AsyncStorage.removeItem("accessToken");
     await AsyncStorage.removeItem("refreshToken");
     navigate("/");
   };
 
   useEffect(() => {
-    // Verificar si el accessToken ha expirado
     const expireToken = async () => {
       try {
         const accessToken = await AsyncStorage.getItem("accessToken");
@@ -332,7 +324,6 @@ const Monitores = () => {
     }
   });
 
-  // Mostrar la alerta si no hay resultados
   useEffect(() => {
     if (search !== "" && filteredUsers.length === 0) {
       showNoResultsAlert();
@@ -345,11 +336,11 @@ const Monitores = () => {
       <div className="monitor">
         <h1 className="tituloMonitor">Monitores</h1>
         <div className="filtroMonitor">
-          <h2 className="subtituloMonitor">Búsqueda Filtrada de Monitores</h2>
+          <h2 className="subtituloMonitor">Búsqueda Filtrada</h2>
           <div className="inputFileMonitor">
             <div className="inputsMonitor">
               <div className="labelsMonitor">
-                <p>Documento:</p>
+                <p>Documento</p>
               </div>
               <input
                 type="number"
@@ -361,7 +352,7 @@ const Monitores = () => {
             </div>
             <div className="inputsMonitor">
               <div className="labelsMonitor">
-                <p>Nombre:</p>
+                <p>Nombre</p>
               </div>
               <input
                 type="text"
@@ -371,9 +362,9 @@ const Monitores = () => {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            <div className="inputsMonitor">
+            {/* <div className="inputsMonitor">
               <div className="labelsMonitor">
-                <p>Correo:</p>
+                <p>Correo</p>
               </div>
               <input
                 type="text"
@@ -382,10 +373,10 @@ const Monitores = () => {
                 placeholder="Por Correo"
                 onChange={(e) => setSearch(e.target.value)}
               />
-            </div>
+            </div> */}
             <div className="inputsMonitor">
               <div className="labelsMonitor">
-                <p>Asignatura:</p>
+                <p>Asignatura</p>
               </div>
               <input
                 type="text"
@@ -397,7 +388,7 @@ const Monitores = () => {
             </div>
             <div className="inputsMonitor">
               <div className="labelsMonitor">
-                <p>Docente:</p>
+                <p>Docente</p>
               </div>
               <input
                 type="text"
@@ -407,11 +398,6 @@ const Monitores = () => {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            
-            
-            
-            
-            
           </div>
         </div>
         <div className="table-container-monitor">

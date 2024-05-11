@@ -6,8 +6,6 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
-import { Link } from 'react-router-dom';
-
 
 const Documentacion = () => {
   const navigate = useNavigate();
@@ -15,7 +13,6 @@ const Documentacion = () => {
   const [hasCheckedDoc, setHasCheckedDoc] = useState(false);
   const [userss, setUserss] = useState([]);
   const [userId, setUserId] = useState();
-  let urlPath = "192.168.0.15:3000";
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -37,7 +34,6 @@ const Documentacion = () => {
 
         const decodedToken = jwtDecode(accessToken);
         const userId = decodedToken.user._id;
-        console.log(userId);
 
         const response = await axios.get(
           `https://unimentor-fqz8.onrender.com/api/v1/avales/user/${userId}`, 
@@ -45,7 +41,7 @@ const Documentacion = () => {
 
         console.log(response.data.message)
 
-        if(response.data.aval){
+        if(response.data.message === "userId presente"){
           setCheckDoc(true)
         }else{
           setCheckDoc(false)
@@ -145,16 +141,11 @@ const Documentacion = () => {
         let base64Rut;
         let base64Certificado;
 
-        // Iterar sobre cada archivo
         for (let index = 0; index < files.length; index++) {
             const file = files[index];
 
-            // Verificar si el archivo existe
             if (file) {
-                // Crear un FileReader para leer el contenido del archivo como base64
                 const reader = new FileReader();
-
-                // Crear una promesa para leer el contenido del archivo
                 const readPromise = new Promise((resolve, reject) => {
                     reader.onload = () => {
                         resolve(reader.result);
@@ -162,11 +153,9 @@ const Documentacion = () => {
                     reader.onerror = reject;
                 });
 
-                // Leer el contenido del archivo
                 reader.readAsBinaryString(file);
-                const base64Data = await readPromise; // Esperar a que se complete la lectura del archivo
+                const base64Data = await readPromise;
 
-                // Determinar el nuevo nombre del archivo
                 if (index === 0) {
                   base64Promedio = btoa(base64Data)
                 } else if (index === 1) {
@@ -185,10 +174,15 @@ const Documentacion = () => {
           certificado: base64Certificado 
         });
 
-        console.log(response.data);
-
-        // Navegar a la página de inicio después de enviar todos los archivos
-        navigate("/");
+        if (response.data.message === "Aval creado") {
+            Swal.fire({
+                title: "¡Documentos subidos con éxito!",
+                text: "Espera la autorización de tu aval",
+                icon: "success",
+            }).then(() => {
+              navigate("/");
+            });
+        }
     } catch (error) {
         console.error("Error al subir los documentos:", error);
         Swal.fire({
@@ -198,8 +192,6 @@ const Documentacion = () => {
         });
     }
 };
-
-
 
   useEffect(() => {
     const handleShowUsers = async () => {
@@ -262,14 +254,10 @@ const Documentacion = () => {
       <Navbar />
       <div className="documentacion">
         {checkDoc && (
-          // <div>
-            <div className="containerDocumentacion">
+            <div className="containerDocumentacionOk">
               <h1 className="tituloDocumentacion">Mis documentos</h1>
               <hr />
-              {/* <h3 className="subtitulo">Tus documentos:</h3> */}
                 {userss.map((usuario, index) => (
-                  // <tr key={index}>
-                  //   <td>{usuario.documentNumber}</td>
                   <div key={index}>
                     {usuario.avalsData.map((aval, idx) => (
                       <div>
@@ -278,18 +266,18 @@ const Documentacion = () => {
                             <li>
                               <div className="uploads">
                                 <div className="labelsUploads">
-                                  <p>RUT:</p>
+                                  <p>RUT</p>
                                 </div>
                                 <div className="docdivDoc">
                                   <div className="doc">
-                                    <a  
+                                    <a className="docLink" 
                                       style={{ cursor: 'pointer'}}
                                       onClick={(e) => {
                                         e.preventDefault(); // Evitar que el enlace redireccione
                                         mostrarPdf(aval.rut);
                                       }}
                                     >
-                                      <p>Ver </p>
+                                      <p>Ver Documento</p>
                                     </a>
                                   </div>
                                 </div>
@@ -299,18 +287,18 @@ const Documentacion = () => {
                             <li>
                               <div className="uploads">
                                 <div className="labelsUploads">
-                                  <p>Certificado Bancario:</p>
+                                  <p>Certificado Bancario</p>
                                 </div>
                                 <div className="docdivDoc">
                                   <div className="doc">
-                                    <a 
+                                    <a className="docLink" 
                                       style={{ cursor: 'pointer' }}
                                       onClick={(e) => {
                                         e.preventDefault(); // Evitar que el enlace redireccione
                                         mostrarPdf(aval.certificado);
                                       }}
                                     >
-                                      <p>Ver </p>
+                                      <p>Ver Documento</p>
                                     </a>
                                   </div>
                                 </div>
@@ -320,18 +308,18 @@ const Documentacion = () => {
                             <li>
                               <div className="uploads">
                                 <div className="labelsUploads">
-                                  <p>Promedio:</p>
+                                  <p>Promedio</p>
                                 </div>
                                 <div className="docdivDoc">
                                   <div className="doc">
-                                    <a  
+                                    <a  className="docLink" 
                                       style={{ cursor: 'pointer'}}
                                       onClick={(e) => {
                                         e.preventDefault(); // Evitar que el enlace redireccione
                                         mostrarImagen(aval.promedio);
                                       }}
                                     >
-                                      <p>Ver </p>
+                                      <p>Ver Documento</p>
                                     </a>
                                   </div>
                                 </div>
@@ -345,7 +333,6 @@ const Documentacion = () => {
                   </div>
                 ))}
             </div>
-          // </div>
         )}
 
 
@@ -357,7 +344,7 @@ const Documentacion = () => {
               <form onSubmit={handleSubmit}>
                 <div className="uploads">
                   <label htmlFor="fileInput2" className="labelsUploads">
-                    RUT:
+                    RUT
                   </label>
                   <div className="inputFile">
                     <input
@@ -372,7 +359,7 @@ const Documentacion = () => {
 
                 <div className="uploads">
                   <label htmlFor="fileInput1" className="labelsUploads">
-                    Promedio:{" "}
+                    Promedio
                   </label>
                   <div className="inputFile">
                     <input
@@ -387,7 +374,7 @@ const Documentacion = () => {
 
                 <div className="uploads">
                   <label htmlFor="fileInput3" className="labelsUploads">
-                    Certificado Bancario:
+                    Certificado Bancario
                   </label>
                   <div className="inputFile">
                     <input
@@ -401,7 +388,7 @@ const Documentacion = () => {
                 </div>
 
                 <div className="btn-uploads">
-                  <button type="submit" className="btn">
+                  <button type="submit" className="btnSubmit">
                     Subir Documentos
                   </button>
                 </div>
