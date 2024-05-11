@@ -29,26 +29,19 @@
   width: 700px;
   flex-direction: column;
   align-items: center;
-  /* background-color: #fff; */
-  /* border: 2px solid rgba(0, 0, 0, 0.973); */
   border-radius: 15px;
-
-
   background-color: #f4d73b;
-  /* border: 2px solid rgba(0, 0, 0, 0.973); */
-  /* border-radius: 15px; */
   margin-left: auto;
   margin-right: auto;
   box-shadow: 0 3px 6px #0000004d;
-  /* width: auto; */
   padding-left: 50px;
   padding-right: 50px;
+  border:2px solid rgba(0, 0, 0, 0.973);
 }
 
 .inputFileMonitor {
   display: flex;
   flex-direction: row;
-  /* flex-wrap: wrap; */
   gap: 10px;
   align-items: center;
   width: 95%;
@@ -69,22 +62,13 @@
   margin-top: 10px;
 }
 
-/* .inputsAvales {
-  width: 200px;
-  display: grid;
-  align-items: center;
-  border-radius: 5px;
-  width: auto;
-  margin: 10px;
-} */
-
-
 .labelsMonitor {
   font-weight: 700;
   color: #0069a3;
   width: 100%;
   font-weight: 500;
   font-size: 1.071em;
+  text-align: center;
 }
 
 .btn-buscar {
