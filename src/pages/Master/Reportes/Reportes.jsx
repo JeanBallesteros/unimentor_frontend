@@ -1,9 +1,16 @@
+import React, { useState, useEffect } from "react";
 import Navbar from "../../../Components/Navbar/Navbar";
 import "./Reportes.css";
-import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
+import Swal from "sweetalert2";
+import "react-datepicker/dist/react-datepicker.css";
+import { MdCheckCircle } from "react-icons/md";
+import { MdCancel } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
+import ExcelDownloader from '../../../Components/ExcelDownloader/ExcelDownloader';
 
 
 const Reportes = () => {
@@ -83,14 +90,23 @@ const Reportes = () => {
       });
     
   
+      const data = [
+        { name: 'John', age: 30 },
+        { name: 'Jane', age: 25 },
+        { name: 'Doe', age: 40 }
+      ];
+
     return (
-      <div className="fondoReportes">
-        <Navbar />
-        <div className="reportes">
-          <div>
-            <h1 className="titulo">Reporte de Horas</h1>
+      <div className='fondoReportes'>
+        <Navbar/>
+          <div className='reportes'>
+            <div className='table-container'>
+              <div>
+                {/* <h1>Descargar Excel</h1> */}
+                <ExcelDownloader data={data} fileName="usuarios" />
+              </div>
+            </div>
           </div>
-        </div>
       </div>
     );
   };
