@@ -6,9 +6,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
 import Navbar from "../../Components/Navbar/Navbar";
+import Card from "../../Components/Card/Card";
 
 const MonitorHome = () => {
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,7 +32,6 @@ const MonitorHome = () => {
       const newAccessToken = response.data.accessToken;
       await AsyncStorage.setItem("accessToken", newAccessToken);
     } catch (error) {
-    
       console.error("Error al renovar el accessToken:", error);
     }
   };
@@ -86,9 +85,26 @@ const MonitorHome = () => {
   return (
     <div className="fondoHome">
       <Navbar />
-      <div className="home">
-        <div>
-          <h1 className="titulo">Home</h1>
+      <div className="home-container">
+        <div className="titulo-home">
+          <h1>Nuestros Tecnicos</h1>
+        </div>
+        <div className="cards">
+          <Card
+            title="Técnico Profesional en Control Industrial"
+            imageUrl="https://www.se.com/co/es/assets/v2/613/media/233545/G9A5739-IC-1920x1080.jpg"
+            href="https://www.autonoma.edu.co/utc/tecnico-profesional-en-mantenimiento-mecanico"
+            />
+          <Card
+            title="Técnico Profesional en Mantenimiento Mecánico"
+            imageUrl="https://www.unicontrol.com.pe/wp-content/uploads/2021/07/mantenimientos-mecanicos-2.jpg"
+            href="https://www.autonoma.edu.co/utc/tecnico-profesional-en-control-industrial"
+            />
+          <Card
+            title="Técnico Profesional en Programación de Computadores"
+            imageUrl="https://www.cbtis236.edu.mx/storage/pages/programacion.jpg"
+            href="https://www.autonoma.edu.co/utc/tecnico-profesional-en-programacion-de-computadores"
+          />
         </div>
       </div>
     </div>
