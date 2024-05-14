@@ -39,7 +39,7 @@ const Avales = () => {
   const handleRefreshToken = async (refreshToken) => {
     try {
       const response = await axios.post(
-        "${URL}/api/v1/auth/refresh-token",
+        `${URL}/api/v1/auth/refresh-token`,
         { refreshToken }
       );
 
@@ -114,7 +114,7 @@ const Avales = () => {
     const handleShowSubjects = async () => {
       setLoading(true);
       const response = await axios.get(
-        "${URL}/api/v1/asignaturas"
+        `${URL}/api/v1/asignaturas`
       );
 
       setSubjects(response.data);
@@ -187,7 +187,7 @@ const Avales = () => {
     };
 
     const response = await axios.patch(
-      '${URL}/api/v1/users/update/' + userId,
+      `${URL}/api/v1/users/update/` + userId,
       { role: "monitor" }
     );
 
@@ -235,7 +235,7 @@ const Avales = () => {
       if (result.isConfirmed) {
         const aval = userss[index].avalsData[0]._id;
         const response = await axios.delete(
-          "${URL}/api/v1/avales/delete/" + aval
+          `${URL}/api/v1/avales/delete/` + aval
         );
         if (response.status === 200) {
           sendEmail();
