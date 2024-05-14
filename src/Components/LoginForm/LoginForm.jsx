@@ -15,6 +15,7 @@ const LoginForm = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const navigate = useNavigate();
+  const URL = import.meta.env.VITE_BACKEND_URL;
 
 
   useEffect(() => {
@@ -40,7 +41,7 @@ const LoginForm = () => {
   const login = async () => {
     try {
       const response = await axios.post(
-        'https://unimentor-fqz8.onrender.com/api/v1/auth/login',
+        '${URL}/api/v1/auth/login',
         new URLSearchParams({
           email: email,
           current_password: password

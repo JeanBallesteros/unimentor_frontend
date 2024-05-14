@@ -15,6 +15,7 @@ const Documentacion = () => {
   const [userss, setUserss] = useState([]);
   const [userId, setUserId] = useState();
   const [loading, setLoading] = useState(true);
+  const URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -40,7 +41,7 @@ const Documentacion = () => {
         // await new Promise(resolve => setTimeout(resolve, 50));
 
         const response = await axios.get(
-          `https://unimentor-fqz8.onrender.com/api/v1/avales/user/${userId}`, 
+          `${URL}/api/v1/avales/user/${userId}`, 
         );
 
         console.log(response.data.message)
@@ -67,7 +68,7 @@ const Documentacion = () => {
   const handleRefreshToken = async (refreshToken) => {
     try {
       const response = await axios.post(
-        "https://unimentor-fqz8.onrender.com/api/v1/auth/refresh-token",
+        "${URL}/api/v1/auth/refresh-token",
         { refreshToken }
       );
 
@@ -177,7 +178,7 @@ const Documentacion = () => {
 
         // console.log(response.data);
 
-        const response = await axios.post(`https://unimentor-fqz8.onrender.com/api/v1/avales/new-aval`, {
+        const response = await axios.post(`${URL}/api/v1/avales/new-aval`, {
           idUsuario: userId, 
           promedio: base64Promedio,
           rut: base64Rut,
@@ -207,7 +208,7 @@ const Documentacion = () => {
 
   useEffect(() => {
     const handleShowUsers = async () => {
-      const response = await axios.get(`https://unimentor-fqz8.onrender.com/api/v1/avales`);
+      const response = await axios.get(`${URL}/api/v1/avales`);
 
       setUserss(response.data);
       console.log(response.data)

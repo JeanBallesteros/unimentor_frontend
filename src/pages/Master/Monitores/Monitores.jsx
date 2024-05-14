@@ -21,6 +21,7 @@ const Monitores = () => {
   const [selectedGroups, setSelectedGroups] = useState({});
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -37,7 +38,7 @@ const Monitores = () => {
   const handleRefreshToken = async (refreshToken) => {
     try {
       const response = await axios.post(
-        "https://unimentor-fqz8.onrender.com/api/v1/auth/refresh-token",
+        "${URL}/api/v1/auth/refresh-token",
         { refreshToken }
       );
 
@@ -98,7 +99,7 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowUsers = async () => {
       const response = await axios.get(
-        `https://unimentor-fqz8.onrender.com/api/v1/avales/monitor`
+        `${URL}/api/v1/avales/monitor`
       );
 
       setUserss(response.data);
@@ -111,7 +112,7 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        `https://unimentor-fqz8.onrender.com/api/v1/grupos/monitorempty/c0d1g0`
+        `${URL}/api/v1/grupos/monitorempty/c0d1g0`
       );
 
       setGroupsMonitorEmpty(response.data);
@@ -124,7 +125,7 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        `https://unimentor-fqz8.onrender.com/api/v1/grupos/monitornotempty/c0d1g0`
+        `${URL}/api/v1/grupos/monitornotempty/c0d1g0`
       );
 
       setGroupsMonitorNotEmpty(response.data);
@@ -137,7 +138,7 @@ const Monitores = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
       const response = await axios.get(
-        `https://unimentor-fqz8.onrender.com/api/v1/grupos`
+        `${URL}/api/v1/grupos`
       );
 
       setGroups(response.data);
@@ -165,7 +166,7 @@ const Monitores = () => {
 
         try {
           const response = await axios.post(
-            `https://unimentor-fqz8.onrender.com/send-email-denied`,
+            `${URL}/send-email-denied`,
             emailData
           );
           console.log(response.data);
@@ -222,16 +223,16 @@ const Monitores = () => {
 
         if(contadorGruposMonitor === 1){
           const response = await axios.delete(
-            `https://unimentor-fqz8.onrender.com/api/v1/avales/delete/`+ filteredArray[0]
+            `${URL}/api/v1/avales/delete/`+ filteredArray[0]
           );
 
           const response2 = await axios.patch(
-            `https://unimentor-fqz8.onrender.com/api/v1/users/update/` + userId,
+            `${URL}/api/v1/users/update/` + userId,
             { role: "user" }
           );
 
           const response3 = await axios.patch(
-            `https://unimentor-fqz8.onrender.com/api/v1/grupos/updatetonull/` + groupId,
+            `${URL}/api/v1/grupos/updatetonull/` + groupId,
             { monitor: null }
           );
 
@@ -253,7 +254,7 @@ const Monitores = () => {
 
 
           const response3 = await axios.patch(
-            `https://unimentor-fqz8.onrender.com/api/v1/grupos/updatetonull/` + groupId,
+            `${URL}/api/v1/grupos/updatetonull/` + groupId,
             { monitor: null }
           );
 

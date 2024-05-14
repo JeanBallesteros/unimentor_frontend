@@ -23,6 +23,7 @@ const Reportes = () => {
   const [search, setSearch] = useState("");
   const [editable, setEditable] = useState(true);
   const [loading, setLoading] = useState(true);
+  const URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -39,7 +40,7 @@ const Reportes = () => {
   useEffect(() => {
     const showUsers = async () => {
       const response = await axios.get(
-        `https://unimentor-fqz8.onrender.com/api/v1/users/monitors`
+        `${URL}/api/v1/users/monitors`
       );
 
       setUsers(response.data);
@@ -52,7 +53,7 @@ const Reportes = () => {
   const handleRefreshToken = async (refreshToken) => {
     try {
       const response = await axios.post(
-        "https://unimentor-fqz8.onrender.com/api/v1/auth/refresh-token",
+        "${URL}/api/v1/auth/refresh-token",
         { refreshToken }
       );
 
@@ -120,12 +121,12 @@ const Reportes = () => {
     const fetchUserMonths = async (userId) => {
       try {
         const response = await axios.get(
-          `https://unimentor-fqz8.onrender.com/api/v1/hourlog/monitormonth/${userId}`
+          `${URL}/api/v1/hourlog/monitormonth/${userId}`
         );
         // console.log(response.data);
 
         const response2 = await axios.get(
-          `https://unimentor-fqz8.onrender.com/api/v1/hourlog/monitor/${userId}`
+          `${URL}/api/v1/hourlog/monitor/${userId}`
         );
         setHourLog(response2.data);
         // Actualizar el estado userMonths con los datos obtenidos para el usuario actual
@@ -205,7 +206,7 @@ const Reportes = () => {
   useEffect(() => {
     const showPrice = async () => {
       const response = await axios.get(
-        `https://unimentor-fqz8.onrender.com/api/v1/reports`
+        `${URL}/api/v1/reports`
       );
     
       setPricePerHour(response.data[0].pricePerHour);
