@@ -28,7 +28,7 @@ function ExcelDownloader({ data, fileName, usuario, registro, month, price }) {
     const worksheet = workbook.addWorksheet("Reporte Horas");
     const userId = usuario._id;
 
-    if (!price || price.includes("e")) {
+    if (!price) {
       Swal.fire({
         title: "¡Ingresa un precio!",
         text: "Debes agregar un precio antes de descargar el reporte.",
@@ -57,7 +57,7 @@ function ExcelDownloader({ data, fileName, usuario, registro, month, price }) {
 
     console.log(idArray)
 
-    const response2 = await axios.post(`http://192.168.0.15:3000/api/v1/reports/new-report`, {
+    const response2 = await axios.post(`https://unimentor-fqz8.onrender.com/api/v1/reports/new-report`, {
       hoursLog: idArray, 
       pricePerHour: price,
       date: new Date(),

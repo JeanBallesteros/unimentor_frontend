@@ -205,7 +205,7 @@ const Reportes = () => {
   useEffect(() => {
     const showPrice = async () => {
       const response = await axios.get(
-        `http://192.168.0.15:3000/api/v1/reports`
+        `https://unimentor-fqz8.onrender.com/api/v1/reports`
       );
     
       setPricePerHour(response.data[0].pricePerHour);
@@ -355,19 +355,37 @@ const Reportes = () => {
                       </td>
                       <td>
                         <div>
-                          <ExcelDownloader
-                            data={data}
-                            fileName={
-                              "Reporte Horas " +
-                              user.fullname +
-                              " | " +
-                              selectedMonths[user._id]
-                            }
-                            usuario={user}
-                            registro={hourLog}
-                            month={selectedMonths[user._id]}
-                            price={price}
-                          />
+                          {
+                            !pricePerHour ? (
+                              <ExcelDownloader
+                                data={data}
+                                fileName={
+                                  "Reporte Horas " +
+                                  user.fullname +
+                                  " | " +
+                                  selectedMonths[user._id]
+                                }
+                                usuario={user}
+                                registro={hourLog}
+                                month={selectedMonths[user._id]}
+                                price={price}
+                              />
+                            ):(
+                              <ExcelDownloader
+                                data={data}
+                                fileName={
+                                  "Reporte Horas " +
+                                  user.fullname +
+                                  " | " +
+                                  selectedMonths[user._id]
+                                }
+                                usuario={user}
+                                registro={hourLog}
+                                month={selectedMonths[user._id]}
+                                price={pricePerHour}
+                              />
+                            )
+                          }
                         </div>
                       </td>
                     </tr>
