@@ -20,6 +20,46 @@
     /* top:0; */
     overflow-y: auto;
 }
+
+.tablaReportes {
+    width: auto;
+    margin-top: 20px;
+    border: #000000 1px solid;
+    background-color: #ddd;
+    margin-left: auto; /* Centra el elemento a la derecha */
+    margin-right: auto; /* Centra el elemento a la izquierda */
+}
+
+.table-container-reportes{
+    overflow-x: auto; /* Permite el desplazamiento horizontal */
+    overflow-y: auto;
+    height: 300px;
+    margin-top: 50px;
+    /* width: auto; */
+}
+
+.tablaReportes th {
+    padding: 8px;
+    border: #5d5a5a 1px solid;
+    background-color: #f2f2f2;
+    color: #000000;
+}
+
+.tablaReportes td {
+    padding: 3px;
+    border: #5d5a5a 1px solid;
+    color: #000000;
+    gap: 5px;
+    /* text-align: center; */
+}
+
+.tablaReportes button {
+    margin: 0 auto; /* Centra horizontalmente el botón dentro del td */
+}
+
+.tablaReportes tbody {
+    text-align: center;
+}
   
 /* Media query para pantallas más pequeñas */
 @media screen and (max-width: 600px) {
