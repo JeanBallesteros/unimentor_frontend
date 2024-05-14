@@ -183,7 +183,7 @@ const Horas = () => {
   useEffect(() => {
     const handleShowGroups = async () => {
 
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // await new Promise(resolve => setTimeout(resolve, 100));
 
 
       const accessToken = await AsyncStorage.getItem("accessToken");
@@ -198,9 +198,9 @@ const Horas = () => {
       );
 
       setGroupsMonitor(response.data);
-      setTimeout(() => {
+      // setTimeout(() => {
         setLoading(false);
-      }, 100);
+      // }, 100);
     };
 
     handleShowGroups();
@@ -209,8 +209,7 @@ const Horas = () => {
   useEffect(() => {
     const handleShowHoursLog = async () => {
 
-      await new Promise(resolve => setTimeout(resolve, 100));
-
+      // await new Promise(resolve => setTimeout(resolve, 100));
 
       const accessToken = await AsyncStorage.getItem("accessToken");
 
@@ -225,9 +224,9 @@ const Horas = () => {
 
       setHoursLogMonitor(response.data);
 
-      setTimeout(() => {
+      // setTimeout(() => {
         setLoading(false);
-      }, 100);
+      // }, 100);
       // console.log(response.data[0].program[0].name);
       
     };

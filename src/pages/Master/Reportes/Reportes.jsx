@@ -8,6 +8,7 @@ import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
 import "react-datepicker/dist/react-datepicker.css";
 import ExcelDownloader from "../../../Components/ExcelDownloader/ExcelDownloader";
+import Loader from '../../../Components/Loader/Loader';
 
 const Reportes = () => {
   const navigate = useNavigate();
@@ -18,8 +19,10 @@ const Reportes = () => {
   const [userMonths, setUserMonths] = useState({});
   const [hourLog, setHourLog] = useState({});
   const [price, setPrice] = useState("");
+  const [pricePerHour, setPricePerHour] = useState([]);
   const [search, setSearch] = useState("");
   const [editable, setEditable] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -40,6 +43,7 @@ const Reportes = () => {
       );
 
       setUsers(response.data);
+      setLoading(false);
     };
 
     showUsers();
@@ -129,6 +133,8 @@ const Reportes = () => {
           ...prevUserMonths,
           [userId]: response.data,
         }));
+
+        setLoading(false);
       } catch (error) {
         console.error("Error al consultar el endpoint:", error);
       }
@@ -149,6 +155,10 @@ const Reportes = () => {
 
   const handlePriceChange = (e) => {
     setPrice(e.target.value);
+  };
+
+  const handlePricePerHourChange = (e) => {
+    setPricePerHour(e.target.value);
   };
 
   const handleDefineClick = () => {
@@ -192,143 +202,181 @@ const Reportes = () => {
     }
   }, [search, filteredUsers]);
 
+  useEffect(() => {
+    const showPrice = async () => {
+      const response = await axios.get(
+        `http://192.168.0.15:3000/api/v1/reports`
+      );
+    
+      setPricePerHour(response.data[0].pricePerHour);
+      setLoading(false);
+    };
+
+    showPrice();
+  }, []);
+
+
   return (
     <div className="fondoReportes">
       <Navbar />
-      <div className="reportes">
-        <h1 className="tituloAvales">Reporte de Horas</h1>
-        <div className="filtroReportes">
-          <h2 className="subtituloReportes">Busqueda Filtrada</h2>
-          <div className="inputFileReportes">
-            <div className="inputsReportes">
-              <div className="labelsReportes">
-                <p>Documento</p>
-              </div>
-              <input
-                type="number"
-                name="monitorId"
-                id=""
-                placeholder="Buscar por documento"
-                onChange={(e) => setSearch(e.target.value)}
-                min={0}
-              />
-            </div>
-            <div className="inputsReportes">
-              <div className="labelsReportes">
-                <p>Nombre</p>
-              </div>
-              <input
-                type="text"
-                name="monitorName"
-                id=""
-                placeholder="Buscar por nombre"
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
+      {loading ? (
+        // Mostrar la pantalla de carga mientras loading sea true
+        <div className='horasLoader'>
+          <div className='containerHorasLoader'>
+            <Loader />
           </div>
         </div>
-        <div className="precioHoraContainer">
-          <h2 className="subtituloReportes">Precio Hora: </h2>
-          <div className="precioHora">
-            <input
-              className="inputPrecio"
-              type="number"
-              value={price}
-              onChange={handlePriceChange}
-              disabled={!editable}
-              min={0}
-            />
-          </div>
-        </div>
-        <div className="botonesContainer">
-          {editable ? (
-            <button className="botonDefinir" onClick={handleDefineClick}>
-              Definir
-            </button>
-          ) : (
-            <button className="botonEditar" onClick={handleEditClick}>
-              Editar
-            </button>
-          )}
-        </div>
+      ) : (
+        <div className="reportes">
+          <h1 className="tituloAvales">Reporte de Horas</h1>
+          <div className="filtroReportes">
+            <h2 className="subtituloReportes">Busqueda Filtrada</h2>
+            <div className="inputFileReportes">
+              <div className="inputsReportes">
+                <div className="labelsReportes">
+                  <p>Documento</p>
+                </div>
+                <input
+                  type="number"
+                  name="monitorId"
+                  id=""
+                  placeholder="Buscar por documento"
+                  onChange={(e) => setSearch(e.target.value)}
+                  min={0}
+                />
+              </div>
+              <div className="inputsReportes">
+                <div className="labelsReportes">
+                  <p>Nombre</p>
+                </div>
+                
+                <input
+                  type="text"
+                  name="monitorName"
+                  id=""
+                  placeholder="Buscar por nombre"
+                  onChange={(e) => setSearch(e.target.value)}
+                />
 
-        <div className="table-container-reportes">
-          <table className="tablaReportes">
-            <thead>
-              <tr>
-                <th>Número de documento</th>
-                <th>Nombre completo</th>
-                {/* <th>Correo Institucional</th> */}
-                <th>Mes de Corte</th>
-                <th>Opciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users
-                .filter((usuario) => {
-                  const documentNumber = (
-                    usuario.documentNumber || ""
-                  ).toString();
-                  if (search === "") {
-                    return true;
-                  } else if (
-                    documentNumber
-                      .toLowerCase()
-                      .includes(search.toLowerCase()) ||
-                    usuario.fullname
-                      .toLowerCase()
-                      .includes(search.toLowerCase())
-                  ) {
-                    return true;
-                  } else {
-                    return false;
-                  }
-                })
-                .map((user) => (
-                  <tr key={user._id}>
-                    <td>{user.documentNumber}</td>
-                    <td>{user.fullname}</td>
-                    {/* <td>{user.email}</td> */}
-                    <td>
-                      <select
-                        value={selectedMonths[user._id] || ""}
-                        onChange={(e) =>
-                          handleMonthChange(user._id, e.target.value)
-                        }
-                        required
-                      >
-                        <option value="">Selecciona un mes</option>
-                        {userMonths[user._id] &&
-                          userMonths[user._id].map((month, index) => (
-                            <option key={index} value={month}>
-                              {month}
-                            </option>
-                          ))}
-                      </select>
-                    </td>
-                    <td>
-                      <div>
-                        <ExcelDownloader
-                          data={data}
-                          fileName={
-                            "Reporte Horas " +
-                            user.fullname +
-                            " | " +
-                            selectedMonths[user._id]
+              </div>
+            </div>
+          </div>
+          <div className="precioHoraContainer">
+            <p className="subtituloReportes">Precio Hora: </p>
+            <div className="precioHora">
+              {
+                !pricePerHour ? (
+                  <input
+                    className="inputPrecio"
+                    type="number"
+                    value={price}
+                    onChange={handlePriceChange}
+                    disabled={!editable}
+                    min={0}
+                  />
+                ):(
+                  <input
+                    className="inputPrecio"
+                    type="number"
+                    value={pricePerHour}
+                    onChange={handlePricePerHourChange}
+                    disabled={!editable}
+                    min={0}
+                  />
+                )
+              }
+            </div>
+            <div className="botonesContainer">
+              {editable ? (
+                <button className="botonDefinir" onClick={handleDefineClick}>
+                  Definir
+                </button>
+              ) : (
+                <button className="botonEditar" onClick={handleEditClick}>
+                  Editar
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="table-container-reportes">
+            <table className="tablaReportes">
+              <thead>
+                <tr>
+                  <th>Número de documento</th>
+                  <th>Nombre completo</th>
+                  {/* <th>Correo Institucional</th> */}
+                  <th>Mes de Corte</th>
+                  <th>Opciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users
+                  .filter((usuario) => {
+                    const documentNumber = (
+                      usuario.documentNumber || ""
+                    ).toString();
+                    if (search === "") {
+                      return true;
+                    } else if (
+                      documentNumber
+                        .toLowerCase()
+                        .includes(search.toLowerCase()) ||
+                      usuario.fullname
+                        .toLowerCase()
+                        .includes(search.toLowerCase())
+                    ) {
+                      return true;
+                    } else {
+                      return false;
+                    }
+                  })
+                  .map((user) => (
+                    <tr key={user._id}>
+                      <td>{user.documentNumber}</td>
+                      <td>{user.fullname}</td>
+                      {/* <td>{user.email}</td> */}
+                      <td>
+                        <select
+                          value={selectedMonths[user._id] || ""}
+                          onChange={(e) =>
+                            handleMonthChange(user._id, e.target.value)
                           }
-                          usuario={user}
-                          registro={hourLog}
-                          month={selectedMonths[user._id]}
-                          price={price}
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+                          required
+                        >
+                          <option value="">Selecciona un mes</option>
+                          {userMonths[user._id] &&
+                            userMonths[user._id].map((month, index) => (
+                              <option key={index} value={month}>
+                                {month}
+                              </option>
+                            ))}
+                        </select>
+                      </td>
+                      <td>
+                        <div>
+                          <ExcelDownloader
+                            data={data}
+                            fileName={
+                              "Reporte Horas " +
+                              user.fullname +
+                              " | " +
+                              selectedMonths[user._id]
+                            }
+                            usuario={user}
+                            registro={hourLog}
+                            month={selectedMonths[user._id]}
+                            price={price}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
