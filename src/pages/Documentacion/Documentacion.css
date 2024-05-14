@@ -59,7 +59,7 @@ hr{
 .uploads {
   display: flex;
   flex-direction: column;
-  border:2px solid rgba(0, 0, 0, 0.973);
+  /* border:2px solid rgba(0, 0, 0, 0.973); */
   border-radius: 10px;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -144,7 +144,7 @@ hr{
   box-shadow: 0 3px 6px #0000004d;
   padding-left: 50px;
   padding-right: 50px;
-  border:2px solid rgba(0, 0, 0, 0.973);
+  /* border:2px solid rgba(0, 0, 0, 0.973); */
   width: 500px;
 }
 
@@ -154,7 +154,7 @@ hr{
   box-shadow: 0 3px 6px #0000004d;
   padding-left: 50px;
   padding-right: 50px;
-  border:2px solid rgba(0, 0, 0, 0.973);
+  /* border:2px solid rgba(0, 0, 0, 0.973); */
   height: auto;
   padding-bottom: 30px;
   width: 500px;
@@ -295,7 +295,7 @@ hr{
     /* margin-left: auto;
     margin-right: auto; */
     justify-content:flex-start;
-    border:2px solid rgba(0, 0, 0, 0.973);
+    /* border:2px solid rgba(0, 0, 0, 0.973); */
     border-radius: 10px;
     width: 100%;
     padding-top: 10px;
@@ -370,7 +370,7 @@ hr{
     box-shadow: 0 3px 6px #0000004d;
     padding-left: 50px;
     padding-right: 50px;
-    border:2px solid rgba(0, 0, 0, 0.973);
+    /* border:2px solid rgba(0, 0, 0, 0.973); */
     height: auto;
     padding-bottom: 30px;
     width: 300px;

@@ -6,11 +6,12 @@
 
 .home-container{
   width: 100vw;
-  height: 80%;
+  height: 80vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 
 .titulo-home {
@@ -18,17 +19,27 @@
   margin-bottom: 60px;
   font-size: 2rem;
   font-weight: bold;
+  text-align: center;
+  padding-top: 50px;
 }
 
 .cards{
   display: flex;
+  height: 100%;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  width: auto;
+
   gap: 3rem;
 }
 
-@media screen and (max-width: 600px) {
+.card-container{
+  height: auto;
+  width: auto;
+}
+
+@media screen and (max-width: 1200px) {
   .wrapper-button {
     width: 80%;
     background: transparent;
@@ -42,8 +53,21 @@
     margin-right: 10%;
   }
 
-  .cards {
+  .cards{
+    display:block;
+    height: 80%;
     flex-direction: column;
-    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    /* width: 1000px; */
+  
+    gap: 10rem;
+  }
+  
+  .card-container{
+    display: flex;
+    direction: row;
+    height: auto;
+    /* width: 700px; */
   }
 }

@@ -10,6 +10,7 @@ import Card from "../../Components/Card/Card";
 
 const MonitorHome = () => {
   const navigate = useNavigate();
+  
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -87,7 +88,7 @@ const MonitorHome = () => {
       <Navbar />
       <div className="home-container">
         <div className="titulo-home">
-          <h1>Nuestros Tecnicos</h1>
+          <h1>Nuestros Técnicos</h1>
         </div>
         <div className="cards">
           <Card

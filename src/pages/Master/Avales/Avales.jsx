@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import "./Avales.css";
 import { MdCheckCircle } from "react-icons/md";
 import { MdCancel } from "react-icons/md";
+import Loader from '../../../Components/Loader/Loader';
 
 const Avales = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const Avales = () => {
   const [selectedSubjects, setSelectedSubjects] = useState({});
   const [selectedGroups, setSelectedGroups] = useState({});
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Verificar si el usuario está autenticado y si es master
@@ -99,18 +101,24 @@ const Avales = () => {
       const response = await axios.get(`https://unimentor-fqz8.onrender.com/api/v1/avales`);
 
       setUserss(response.data);
+
+      setLoading(false);
     };
 
     handleShowUsers();
+
   }, []);
 
   useEffect(() => {
     const handleShowSubjects = async () => {
+      setLoading(true);
       const response = await axios.get(
         "https://unimentor-fqz8.onrender.com/api/v1/asignaturas"
       );
 
       setSubjects(response.data);
+
+      setLoading(false);
     };
 
     handleShowSubjects();
@@ -118,12 +126,14 @@ const Avales = () => {
 
   useEffect(() => {
     const handleShowGroups = async () => {
+      setLoading(true);
       const response = await axios.get(
         `https://unimentor-fqz8.onrender.com/api/v1/grupos/monitorempty/c0d1g0`
       );
 
       
       setGroupsMonitorEmpty(response.data);
+      setLoading(false);
     };
 
     handleShowGroups();
@@ -340,159 +350,168 @@ const Avales = () => {
   return (
     <div className="fondoAvales">
       <Navbar />
-      <div className="avales">
-        <div className="containerAvales">
-          <h1 className="tituloAvales">Avales</h1>
-          <div className="filtroAvales">
-            <h2 className="subtituloAvales">Búsqueda Filtrada</h2>
-            <div className="inputFileAvales">
-              <div className="inputsAvales">
-                <div className="labelsAvales">
-                  <p>Documento</p>
+      {loading ? (
+        // Mostrar la pantalla de carga mientras loading sea true
+        <div className='horasLoader'>
+          <div className='containerHorasLoader'>
+            <Loader />
+          </div>
+        </div>
+      ) : (
+        <div className="avales">
+          <div className="containerAvales">
+            <h1 className="tituloAvales">Avales</h1>
+            <div className="filtroAvales">
+              <h2 className="subtituloAvales">Búsqueda Filtrada</h2>
+              <div className="inputFileAvales">
+                <div className="inputsAvales">
+                  <div className="labelsAvales">
+                    <p>Documento</p>
+                  </div>
+                  <input
+                    type="number"
+                    name="monitorId"
+                    id=""
+                    placeholder="Buscar por documento"
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
                 </div>
-                <input
-                  type="number"
-                  name="monitorId"
-                  id=""
-                  placeholder="Buscar por documento"
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
 
-              <div className="inputsAvales">
-                <div className="labelsAvales">
-                  <p>Nombre</p>
+                <div className="inputsAvales">
+                  <div className="labelsAvales">
+                    <p>Nombre</p>
+                  </div>
+                  <input
+                    type="text"
+                    name="monitorName"
+                    id=""
+                    placeholder="Buscar por nombre"
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
                 </div>
-                <input
-                  type="text"
-                  name="monitorName"
-                  id=""
-                  placeholder="Buscar por nombre"
-                  onChange={(e) => setSearch(e.target.value)}
-                />
               </div>
             </div>
           </div>
-        </div>
-        <div className="table-container-avales">
-            <table className="tablaAvales">
-              <thead>
-                <tr>
-                  <th>Número de documento</th>
-                  <th>Nombre completo</th>
-                  <th>Promedio</th>
-                  <th>RUT</th>
-                  <th>Certificado</th>
-                  <th>Asignatura</th>
-                  <th>Opciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {userss
-                  .filter((usuario) => {
-                    const documentNumber = (
-                      usuario.documentNumber || ""
-                    ).toString();
-                    if (search === "") {
-                      return true;
-                    } else if (
-                      documentNumber.toLowerCase().includes(search.toLowerCase()) ||
-                      usuario.fullname.toLowerCase().includes(search.toLowerCase())
-                    ) {
-                      return true;
-                    } else {
-                      return false;
-                    }
-                  })
-                  .map((usuario, index) => (
-                    <tr key={index}>
-                      <td>{usuario.documentNumber}</td>
-                      <td>{usuario.fullname}</td>
-                      <td>
+          <div className="table-container-avales">
+              <table className="tablaAvales">
+                <thead>
+                  <tr>
+                    <th>Número de documento</th>
+                    <th>Nombre completo</th>
+                    <th>Promedio</th>
+                    <th>RUT</th>
+                    <th>Certificado</th>
+                    <th>Asignatura</th>
+                    <th>Opciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {userss
+                    .filter((usuario) => {
+                      const documentNumber = (
+                        usuario.documentNumber || ""
+                      ).toString();
+                      if (search === "") {
+                        return true;
+                      } else if (
+                        documentNumber.toLowerCase().includes(search.toLowerCase()) ||
+                        usuario.fullname.toLowerCase().includes(search.toLowerCase())
+                      ) {
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    })
+                    .map((usuario, index) => (
+                      <tr key={index}>
+                        <td>{usuario.documentNumber}</td>
+                        <td>{usuario.fullname}</td>
+                        <td>
+                            {usuario.avalsData.map((aval, idx) => (
+                              <div key={idx}>
+                                <a  
+                                  style={{ cursor: 'pointer', color: 'blue' }}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    mostrarImagen(aval.promedio);
+                                  }}
+                                >
+                                  <p>Ver </p>
+                                </a>
+                              </div>
+                            ))}
+                        </td>
+                        <td>
                           {usuario.avalsData.map((aval, idx) => (
                             <div key={idx}>
                               <a  
                                 style={{ cursor: 'pointer', color: 'blue' }}
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  mostrarImagen(aval.promedio);
+                                  mostrarPdf(aval.rut);
                                 }}
                               >
                                 <p>Ver </p>
                               </a>
                             </div>
                           ))}
-                      </td>
-                      <td>
-                        {usuario.avalsData.map((aval, idx) => (
-                          <div key={idx}>
-                            <a  
-                              style={{ cursor: 'pointer', color: 'blue' }}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                mostrarPdf(aval.rut);
-                              }}
-                            >
-                              <p>Ver </p>
-                            </a>
-                          </div>
-                        ))}
-                      </td>
-                      <td>
-                        {usuario.avalsData.map((aval, idx) => (
-                          <div key={idx}>
-                            <a  
-                              style={{ cursor: 'pointer', color: 'blue' }}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                mostrarPdf(aval.certificado);
-                              }}
-                            >
-                              <p>Ver </p>
-                            </a>
-                          </div>
-                        ))}
-                      </td>
-                      <td>
-                        <select
-                          value={selectedGroups[index] || ""}
-                          onChange={(e) =>
-                            handleGroupChange(index, e.target.value)
-                          }
-                          required
-                        >
-                          <option value="">Selecciona una asignatura</option>
-                          {groupsMonitorEmpty.map((group) => (
-                            group.subject.map((subject) => (
-                              <option key={`${group._id}-${subject}`} value={`${group._id}-${subject}`}>
-                                {`${subject.name} - ${group.name}`}
-                              </option>
-                            ))
+                        </td>
+                        <td>
+                          {usuario.avalsData.map((aval, idx) => (
+                            <div key={idx}>
+                              <a  
+                                style={{ cursor: 'pointer', color: 'blue' }}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  mostrarPdf(aval.certificado);
+                                }}
+                              >
+                                <p>Ver </p>
+                              </a>
+                            </div>
                           ))}
-                        </select>
-                      </td>
-                      <td>
-                        <div className="btn-avales">
-                          <button
-                            className="btn-aceptar-m"
-                            onClick={() => handleButtonAceptar(index)}
+                        </td>
+                        <td>
+                          <select
+                            value={selectedGroups[index] || ""}
+                            onChange={(e) =>
+                              handleGroupChange(index, e.target.value)
+                            }
+                            required
                           >
-                            <MdCheckCircle className="icon" />
-                          </button>
-                          <button
-                            className="btn-denegar-m"
-                            onClick={() => handleButtonDenegar(index)}
-                          >
-                            <MdCancel className="icon" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-      </div>
+                            <option value="">Selecciona una asignatura</option>
+                            {groupsMonitorEmpty.map((group) => (
+                              group.subject.map((subject) => (
+                                <option key={`${group._id}-${subject}`} value={`${group._id}-${subject}`}>
+                                  {`${subject.name} - ${group.name}`}
+                                </option>
+                              ))
+                            ))}
+                          </select>
+                        </td>
+                        <td>
+                          <div className="btn-avales">
+                            <button
+                              className="btn-aceptar-m"
+                              onClick={() => handleButtonAceptar(index)}
+                            >
+                              <MdCheckCircle className="icon" />
+                            </button>
+                            <button
+                              className="btn-denegar-m"
+                              onClick={() => handleButtonDenegar(index)}
+                            >
+                              <MdCancel className="icon" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -27,25 +27,16 @@ function ExcelDownloader({ data, fileName, usuario, registro, month, price }) {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Reporte Horas");
     const userId = usuario._id;
-    const response = await axios.get(
-      `https://unimentor-fqz8.onrender.com/api/v1/hourlog/monitormonthsemester/${userId}?month=${month}`
-    );
 
-    const globalStyle = {
-      font: { name: "Arial", size: 12 },
-      alignment: { horizontal: "center", vertical: "middle" },
-    };
-
-    const boldStyle = {
-      font: { name: "Arial", size: 12, bold: true },
-      alignment: { horizontal: "center", vertical: "middle" },
-    };
-
-    const currencyStyle = {
-      font: { name: "Arial", size: 12, bold: true },
-      alignment: { horizontal: "center", vertical: "middle" },
-      numFmt: "$#,##0.00",
-    };
+    if (!price || price.includes("e")) {
+      Swal.fire({
+        title: "¡Ingresa un precio!",
+        text: "Debes agregar un precio antes de descargar el reporte.",
+        icon: "info",
+        confirmButtonText: "Aceptar",
+      });
+      return;
+    }
 
     if (!month) {
       Swal.fire({
@@ -54,7 +45,100 @@ function ExcelDownloader({ data, fileName, usuario, registro, month, price }) {
         icon: "info",
         confirmButtonText: "Aceptar",
       });
+
+      return;
     }
+
+    const response = await axios.get(
+      `https://unimentor-fqz8.onrender.com/api/v1/hourlog/monitormonthsemester/${userId}?month=${month}`
+    );
+
+    const idArray = response.data.hoursLog.map(entry => entry._id);
+
+    console.log(idArray)
+
+    const response2 = await axios.post(`http://192.168.0.15:3000/api/v1/reports/new-report`, {
+      hoursLog: idArray, 
+      pricePerHour: price,
+      date: new Date(),
+    });
+
+    console.log(response2);
+
+
+
+    const globalStyle = {
+      font: { name: "Arial", size: 12 },
+      alignment: { horizontal: "center", vertical: "middle" },
+
+      border: {
+        left: {
+          style: "thin",  // Se puede especificar el grosor
+          color: { rgb: "FF0000" }, // Se puede especificar el color
+        },
+        right: {
+          style: "thin",
+          color: { rgb: "FF0000" },
+        },
+        top: {
+          style: "thin",
+          color: { rgb: "FF0000" },
+        },
+        bottom: {
+          style: "thin",
+          color: { rgb: "FF0000" },
+        }
+      },
+    };
+
+    const boldStyle = {
+      font: { name: "Arial", size: 12, bold: true },
+      alignment: { horizontal: "center", vertical: "middle" },
+
+      border: {
+        left: {
+          style: "thin",
+          color: { rgb: "FF0000" }, 
+        },
+        right: {
+          style: "thin",
+          color: { rgb: "FF0000" },
+        },
+        top: {
+          style: "thin",
+          color: { rgb: "FF0000" },
+        },
+        bottom: {
+          style: "thin",
+          color: { rgb: "FF0000" },
+        }
+      },
+    };
+
+    const currencyStyle = {
+      font: { name: "Arial", size: 12, bold: true },
+      alignment: { horizontal: "center", vertical: "middle" },
+      numFmt: "$#,##0.00",
+
+      border: {
+        left: {
+          style: "thin",
+          color: { rgb: "FF0000" },
+        },
+        right: {
+          style: "thin",
+          color: { rgb: "FF0000" },
+        },
+        top: {
+          style: "thin",
+          color: { rgb: "FF0000" },
+        },
+        bottom: {
+          style: "thin",
+          color: { rgb: "FF0000" },
+        }
+      },
+    };
 
     worksheet.addRow(["Nombre", usuario.fullname]).eachCell((cell) => {
       cell.style = boldStyle;

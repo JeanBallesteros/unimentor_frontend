@@ -6,6 +6,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
+import Loader from '../../Components/Loader/Loader';
 
 const Documentacion = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const Documentacion = () => {
   const [hasCheckedDoc, setHasCheckedDoc] = useState(false);
   const [userss, setUserss] = useState([]);
   const [userId, setUserId] = useState();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -35,6 +37,8 @@ const Documentacion = () => {
         const decodedToken = jwtDecode(accessToken);
         const userId = decodedToken.user._id;
 
+        // await new Promise(resolve => setTimeout(resolve, 50));
+
         const response = await axios.get(
           `https://unimentor-fqz8.onrender.com/api/v1/avales/user/${userId}`, 
         );
@@ -46,6 +50,10 @@ const Documentacion = () => {
         }else{
           setCheckDoc(false)
         }
+
+        // setTimeout(() => {
+          setLoading(false);
+        // }, 50);
     
       } catch (error) {
         console.error("Error", error);
@@ -256,157 +264,166 @@ const Documentacion = () => {
   return (
     <div className='fondoDocumentacion'>
       <Navbar />
-      <div className="documentacion">
-        {checkDoc && (
-            <div className="containerDocumentacionOk">
-              <h1 className="tituloDocumentacion">Mis documentos</h1>
-              <hr />
-                {userss.map((usuario, index) => (
-                  <div key={index}>
-                    {usuario.avalsData.map((aval, idx) => (
-                      <div>
-                        {usuario._id === userId && (
-                          <ul key={idx} className="listaAval">
-                            <li>
-                              <div className="labelsUploads">
-                                <p>RUT:</p>
-                              </div>
-                              <div className="uploads">
-                                <div className="docdivDoc">
-                                  <div className="doc">
-                                    <a className="docLink" 
-                                      style={{ cursor: 'pointer'}}
-                                      onClick={(e) => {
-                                        e.preventDefault(); // Evitar que el enlace redireccione
-                                        mostrarPdf(aval.rut);
-                                      }}
-                                    >
-                                      <p>Ver Documento</p>
-                                    </a>
-                                  </div>
-                                </div>
-                                
-                              </div>
-                            </li>
-                            <li>
-                              <div className="labelsUploads">
-                                <p>Certificado Bancario:</p>
-                              </div>
-                              <div className="uploads">
-                                <div className="docdivDoc">
-                                  <div className="doc">
-                                    <a className="docLink" 
-                                      style={{ cursor: 'pointer' }}
-                                      onClick={(e) => {
-                                        e.preventDefault(); // Evitar que el enlace redireccione
-                                        mostrarPdf(aval.certificado);
-                                      }}
-                                    >
-                                      <p>Ver Documento</p>
-                                    </a>
-                                  </div>
-                                </div>
-                              
-                              </div>
-                            </li>
-                            <li>
-                              <div className="labelsUploads">
-                                <p>Promedio:</p>
-                              </div>
-                              <div className="uploads">
-                                <div className="docdivDoc">
-                                  <div className="doc">
-                                    <a  className="docLink" 
-                                      style={{ cursor: 'pointer'}}
-                                      onClick={(e) => {
-                                        e.preventDefault(); // Evitar que el enlace redireccione
-                                        mostrarImagen(aval.promedio);
-                                      }}
-                                    >
-                                      <p>Ver Documento</p>
-                                    </a>
-                                  </div>
-                                </div>
-                          
-                              </div>
-                            </li>
-                          </ul>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                ))}
-            </div>
-        )}
-
-
-        {!checkDoc && (
-          <div>
-            <div className="containerDocumentacion">
-              <h1 className="tituloDocumentacion">Subir documentos</h1>
-              <hr />
-              <form onSubmit={handleSubmit}>
-                <div className="style1">
-                  <label htmlFor="fileInput2" className="labelsUploads">
-                    RUT:
-                  </label>
-                  <div className="uploads">
-                    <div className="inputFile">
-                      <input
-                        type="file"
-                        id="fileInput2"
-                        accept=".pdf"
-                        required
-                        onChange={(event) => handleFileChange(event, 1)}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="style1">
-                  <label htmlFor="fileInput1" className="labelsUploads">
-                    Promedio:
-                  </label>
-                  <div className="uploads">
-                    <div className="inputFile">
-                      <input
-                        type="file"
-                        id="fileInput1"
-                        accept="image/*"
-                        required
-                        onChange={(event) => handleFileChange(event, 0)}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="style1">
-                  <label htmlFor="fileInput3" className="labelsUploads">
-                    Certificado Bancario:
-                  </label>
-                  <div className="uploads">
-                    <div className="inputFile">
-                      <input
-                        type="file"
-                        id="fileInput3"
-                        accept=".pdf"
-                        required
-                        onChange={(event) => handleFileChange(event, 2)}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="btn-uploads">
-                  <button type="submit" className="btnSubmitDocs">
-                    Subir Documentos
-                  </button>
-                </div>
-              </form>
-            </div>
+      {loading ? (
+        // Mostrar la pantalla de carga mientras loading sea true
+        <div className='horasLoader'>
+          <div className='containerHorasLoader'>
+            <Loader />
           </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="documentacion">
+          {checkDoc && (
+              <div className="containerDocumentacionOk">
+                <h1 className="tituloDocumentacion">Mis documentos</h1>
+                <hr />
+                  {userss.map((usuario, index) => (
+                    <div key={index}>
+                      {usuario.avalsData.map((aval, idx) => (
+                        <div>
+                          {usuario._id === userId && (
+                            <ul key={idx} className="listaAval">
+                              <li>
+                                <div className="labelsUploads">
+                                  <p>RUT:</p>
+                                </div>
+                                <div className="uploads">
+                                  <div className="docdivDoc">
+                                    <div className="doc">
+                                      <a className="docLink" 
+                                        style={{ cursor: 'pointer'}}
+                                        onClick={(e) => {
+                                          e.preventDefault(); // Evitar que el enlace redireccione
+                                          mostrarPdf(aval.rut);
+                                        }}
+                                      >
+                                        <p>Ver Documento</p>
+                                      </a>
+                                    </div>
+                                  </div>
+                                  
+                                </div>
+                              </li>
+                              <li>
+                                <div className="labelsUploads">
+                                  <p>Certificado Bancario:</p>
+                                </div>
+                                <div className="uploads">
+                                  <div className="docdivDoc">
+                                    <div className="doc">
+                                      <a className="docLink" 
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={(e) => {
+                                          e.preventDefault(); // Evitar que el enlace redireccione
+                                          mostrarPdf(aval.certificado);
+                                        }}
+                                      >
+                                        <p>Ver Documento</p>
+                                      </a>
+                                    </div>
+                                  </div>
+                                
+                                </div>
+                              </li>
+                              <li>
+                                <div className="labelsUploads">
+                                  <p>Promedio:</p>
+                                </div>
+                                <div className="uploads">
+                                  <div className="docdivDoc">
+                                    <div className="doc">
+                                      <a  className="docLink" 
+                                        style={{ cursor: 'pointer'}}
+                                        onClick={(e) => {
+                                          e.preventDefault(); // Evitar que el enlace redireccione
+                                          mostrarImagen(aval.promedio);
+                                        }}
+                                      >
+                                        <p>Ver Documento</p>
+                                      </a>
+                                    </div>
+                                  </div>
+                            
+                                </div>
+                              </li>
+                            </ul>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+              </div>
+          )}
+
+
+          {!checkDoc && (
+            <div>
+              <div className="containerDocumentacion">
+                <h1 className="tituloDocumentacion">Subir documentos</h1>
+                <hr />
+                <form onSubmit={handleSubmit}>
+                  <div className="style1">
+                    <label htmlFor="fileInput2" className="labelsUploads">
+                      RUT:
+                    </label>
+                    <div className="uploads">
+                      <div className="inputFile">
+                        <input
+                          type="file"
+                          id="fileInput2"
+                          accept=".pdf"
+                          required
+                          onChange={(event) => handleFileChange(event, 1)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="style1">
+                    <label htmlFor="fileInput1" className="labelsUploads">
+                      Promedio:
+                    </label>
+                    <div className="uploads">
+                      <div className="inputFile">
+                        <input
+                          type="file"
+                          id="fileInput1"
+                          accept="image/*"
+                          required
+                          onChange={(event) => handleFileChange(event, 0)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="style1">
+                    <label htmlFor="fileInput3" className="labelsUploads">
+                      Certificado Bancario:
+                    </label>
+                    <div className="uploads">
+                      <div className="inputFile">
+                        <input
+                          type="file"
+                          id="fileInput3"
+                          accept=".pdf"
+                          required
+                          onChange={(event) => handleFileChange(event, 2)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="btn-uploads">
+                    <button type="submit" className="btnSubmitDocs">
+                      Subir Documentos
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
     
   );

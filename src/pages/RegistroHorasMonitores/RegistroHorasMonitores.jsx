@@ -10,6 +10,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { MdCheckCircle } from "react-icons/md";
 import { MdCancel } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
+import Loader from '../../Components/Loader/Loader';
 
 const RegistroHorasMonitores = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const RegistroHorasMonitores = () => {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   let urlPath = "192.168.0.15:3000";
+  
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -109,6 +111,7 @@ const RegistroHorasMonitores = () => {
         `https://unimentor-fqz8.onrender.com/api/v1/hourlog/teacher/${userId}`
       );
       setHoursLogProfessor(response.data);
+      setLoading(false);
     };
 
     handleShowHoursLog();
@@ -209,107 +212,116 @@ const RegistroHorasMonitores = () => {
   return (
     <div className="fondoTeacher">
       <Navbar />
-      <div className="teacher">
-        <div className="containerTeacher">
-          <h1 className="tituloTeacher">Verificar Registro de Horas</h1>
-          <div className="filtroTeacher">
-            <h2 className="subtituloTeacher">Búsqueda Filtrada de Registro de Horas</h2>
-            <div className="inputFileTeacher">
-              <div className="inputsTeacher">
-                <div className="labelsTeacher">
-                  <p>Fecha</p>
+      {loading ? (
+        // Mostrar la pantalla de carga mientras loading sea true
+        <div className='horasLoader'>
+          <div className='containerHorasLoader'>
+            <Loader />
+          </div>
+        </div>
+      ) : (
+        <div className="teacher">
+          <div className="containerTeacher">
+            <h1 className="tituloTeacher">Verificar Registro de Horas</h1>
+            <div className="filtroTeacher">
+              <h2 className="subtituloTeacher">Búsqueda Filtrada de Registro de Horas</h2>
+              <div className="inputFileTeacher">
+                <div className="inputsTeacher">
+                  <div className="labelsTeacher">
+                    <p>Fecha</p>
+                  </div>
+                  <input
+                    type="text"
+                    name="monitorDate"
+                    id=""
+                    placeholder="Buscar por fecha"
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
                 </div>
-                <input
-                  type="text"
-                  name="monitorDate"
-                  id=""
-                  placeholder="Buscar por fecha"
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
 
-              <div className="inputsTeacher">
-                <div className="labelsTeacher">
-                  <p>Nombre</p>
+                <div className="inputsTeacher">
+                  <div className="labelsTeacher">
+                    <p>Nombre</p>
+                  </div>
+                  <input
+                    type="text"
+                    name="monitorName"
+                    id=""
+                    placeholder="Buscar por nombre"
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
                 </div>
-                <input
-                  type="text"
-                  name="monitorName"
-                  id=""
-                  placeholder="Buscar por nombre"
-                  onChange={(e) => setSearch(e.target.value)}
-                />
               </div>
             </div>
           </div>
-        </div>
-        <div className="table-container-teacher">
-          <table className="tablaHoras">
-            <thead>
-              <tr>
-                <th>Programa</th>
-                <th>Asignatura</th>
-                <th>Grupo</th>
-                <th>Monitor</th>
-                <th>Fecha</th>
-                <th>Cantidad de Horas</th>
-                <th>¿Aceptado?</th>
-                <th>Opciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {hoursLogProfessor.filter((hourlog) => {
-                    const date = (
-                      hourlog.date.slice(0, 10) || ""
-                    ).toString();
-                    if (search === "") {
-                      return true;
-                    } else if (
-                      date.toLowerCase().includes(search.toLowerCase()) ||
-                      hourlog.monitor[0].fullname.toLowerCase().includes(search.toLowerCase())
-                    ) {
-                      return true;
-                    } else {
-                      return false;
-                    }
-                  }).map((hourlog, index) => (
-                <tr key={index}>
-                  <td>{hourlog.program[0].name}</td>
-                  <td>{hourlog.subject[0].name}</td>
-                  <td>{hourlog.group[0].name}</td>
-                  <td>{hourlog.monitor[0].fullname}</td>
-                  <td>{hourlog.date.slice(0, 10)}</td>
-                  <td>{hourlog.hours}</td>
-                  <td>{hourlog.active ? "Sí" : "No"}</td>
-                  {hourlog.active ? (
-                    <td>
-                      <div className="btn-registroT">
-                        <button
-                          className="btn-denegar-t"
-                          onClick={() => handleButtonDenegar(index)}
-                        >
-                          <MdCancel className="icon" />
-                        </button>
-                      </div>
-                    </td>
-                  ) : (
-                    <td>
-                      <div className="btn-registroT">
-                        <button
-                          className="btn-aceptar-t"
-                          onClick={() => handleButtonAceptar(index)}
-                        >
-                          <MdCheckCircle className="icon" />
-                        </button>
-                      </div>
-                    </td>
-                  )}
+          <div className="table-container-teacher">
+            <table className="tablaHoras">
+              <thead>
+                <tr>
+                  <th>Programa</th>
+                  <th>Asignatura</th>
+                  <th>Grupo</th>
+                  <th>Monitor</th>
+                  <th>Fecha</th>
+                  <th>Cantidad de Horas</th>
+                  <th>¿Aceptado?</th>
+                  <th>Opciones</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {hoursLogProfessor.filter((hourlog) => {
+                      const date = (
+                        hourlog.date.slice(0, 10) || ""
+                      ).toString();
+                      if (search === "") {
+                        return true;
+                      } else if (
+                        date.toLowerCase().includes(search.toLowerCase()) ||
+                        hourlog.monitor[0].fullname.toLowerCase().includes(search.toLowerCase())
+                      ) {
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    }).map((hourlog, index) => (
+                  <tr key={index}>
+                    <td>{hourlog.program[0].name}</td>
+                    <td>{hourlog.subject[0].name}</td>
+                    <td>{hourlog.group[0].name}</td>
+                    <td>{hourlog.monitor[0].fullname}</td>
+                    <td>{hourlog.date.slice(0, 10)}</td>
+                    <td>{hourlog.hours}</td>
+                    <td>{hourlog.active ? "Sí" : "No"}</td>
+                    {hourlog.active ? (
+                      <td>
+                        <div className="btn-registroT">
+                          <button
+                            className="btn-denegar-t"
+                            onClick={() => handleButtonDenegar(index)}
+                          >
+                            <MdCancel className="icon" />
+                          </button>
+                        </div>
+                      </td>
+                    ) : (
+                      <td>
+                        <div className="btn-registroT">
+                          <button
+                            className="btn-aceptar-t"
+                            onClick={() => handleButtonAceptar(index)}
+                          >
+                            <MdCheckCircle className="icon" />
+                          </button>
+                        </div>
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

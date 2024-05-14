@@ -36,7 +36,7 @@
   box-shadow: 0 3px 6px #0000004d;
   padding-left: 50px;
   padding-right: 50px;
-  border:2px solid rgba(0, 0, 0, 0.973);
+  /* border:2px solid rgba(0, 0, 0, 0.973); */
 }
 
 .inputFileMonitor {

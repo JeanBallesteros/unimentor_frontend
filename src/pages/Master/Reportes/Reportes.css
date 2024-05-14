@@ -11,7 +11,7 @@
   display: grid;
   justify-content: center;
   align-items: flex-start;
-  overflow-y: auto;
+  /* overflow-y: auto; */
 }
 
 .subtituloReportes {
@@ -38,7 +38,7 @@
   box-shadow: 0 3px 6px #0000004d;
   padding-left: 50px;
   padding-right: 50px;
-  border: 2px solid rgba(0, 0, 0, 0.973);
+  /* border:2px solid rgba(0, 0, 0, 0.973); */
 }
 
 .inputFileReportes {
@@ -89,7 +89,7 @@
   width: 100px;
   height: 30px;
   padding: 10px;
-  border: 2px solid #000000;
+  box-shadow: 0 3px 6px #0000004d;
   border-radius: 5px;
   font-size: 16px;
 }
@@ -104,13 +104,13 @@
 
 .botonDefinir,
 .botonEditar {
-  padding: 10px 20px;
+  padding: 2px 20px;
   border: none;
   border-radius: 5px;
-  background-color: #007bff;
+  background-color: #0069a3;
   color: #fff;
   cursor: pointer;
-  border: 2px solid #000000;
+  box-shadow: 0 3px 6px #0000004d;
 }
 
 .botonDefinir:hover,
@@ -127,7 +127,7 @@
 }
 
 .table-container-reportes {
-  overflow-x: auto;
+  overflow-x: auto; 
   overflow-y: auto;
   height: 300px;
   margin-top: 50px;
@@ -155,7 +155,7 @@
   text-align: center;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 700px) {
   .wrapper-button {
     width: 80%;
     background: transparent;
@@ -167,5 +167,133 @@
     padding: 30px 40px;
     margin-left: 10%;
     margin-right: 10%;
+  }
+
+  .filtroReportes {
+    margin: auto;
+    display: flex;
+    height: auto;
+    width: 400px;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px;background-color: #f4d73b;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 3px 6px #0000004d;
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+
+  .inputFileReportes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    width: 95%;
+    height: 90%;
+    margin: 10px 0;
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .inputFileReportes .inputsReportes input {
+    width: 100%;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid #5d5a5a;
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+}
+
+
+@media screen and (max-width: 500px) {
+  .wrapper-button {
+    width: 80%;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(30px);
+    color: #fff;
+    border-radius: 10px;
+    padding: 30px 40px;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+
+  .filtroReportes {
+    margin: auto;
+    display: flex;
+    height: auto;
+    width: 70vw;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px;background-color: #f4d73b;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 3px 6px #0000004d;
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+
+  .inputFileReportes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    width: 95%;
+    height: 90%;
+    margin: 10px 0;
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .inputFileReportes .inputsReportes input {
+    width: 100%;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid #5d5a5a;
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  .precioHoraContainer {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+  }
+
+
+  .botonesContainer {
+    margin-top: 10px;
+    justify-content: center;
+    display: flex;
+    gap: 10px;
+    font-weight: bold;
+    flex-direction: column;
+  }
+
+  .botonDefinir,
+  .botonEditar {
+    padding: 2px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #0069a3;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 3px 6px #0000004d;
+  }
+
+  .botonDefinir:hover,
+  .botonEditar:hover {
+    color: #f4d73b;
   }
 }
