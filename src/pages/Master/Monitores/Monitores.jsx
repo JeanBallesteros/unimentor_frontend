@@ -38,7 +38,7 @@ const Monitores = () => {
   const handleRefreshToken = async (refreshToken) => {
     try {
       const response = await axios.post(
-        "${URL}/api/v1/auth/refresh-token",
+        `${URL}/api/v1/auth/refresh-token`,
         { refreshToken }
       );
 
