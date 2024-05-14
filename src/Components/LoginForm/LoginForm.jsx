@@ -41,7 +41,7 @@ const LoginForm = () => {
   const login = async () => {
     try {
       const response = await axios.post(
-        '${URL}/api/v1/auth/login',
+        `${URL}/api/v1/auth/login`,
         new URLSearchParams({
           email: email,
           current_password: password
