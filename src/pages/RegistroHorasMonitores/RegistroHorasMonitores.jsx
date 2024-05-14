@@ -217,7 +217,7 @@ const RegistroHorasMonitores = () => {
             <div className="inputFileTeacher">
               <div className="inputsTeacher">
                 <div className="labelsTeacher">
-                  <p>Fecha:</p>
+                  <p>Fecha</p>
                 </div>
                 <input
                   type="text"
@@ -230,7 +230,7 @@ const RegistroHorasMonitores = () => {
 
               <div className="inputsTeacher">
                 <div className="labelsTeacher">
-                  <p>Nombre:</p>
+                  <p>Nombre</p>
                 </div>
                 <input
                   type="text"
