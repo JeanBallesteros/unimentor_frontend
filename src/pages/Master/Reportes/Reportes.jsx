@@ -14,7 +14,14 @@ import ExcelDownloader from '../../../Components/ExcelDownloader/ExcelDownloader
 
 
 const Reportes = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [users, setUsers] = useState([]);
+  const [selectedMonths, setSelectedMonths] = useState({});
+  const [months, setMonths] = useState([]);
+  const [userId, setUserId] = useState();
+  const [userMonths, setUserMonths] = useState({});
+  const [hourLog, setHourLog] = useState({});
+  const [price, setPrice] = useState('');
 
     useEffect(() => {
       const checkAuthentication = async () => {
@@ -26,6 +33,16 @@ const Reportes = () => {
       };
   
       checkAuthentication();
+    }, []);
+
+    useEffect(() => {
+      const showUsers = async () => {
+        const response = await axios.get(`https://unimentor-fqz8.onrender.com/api/v1/users/monitors`);
+  
+        setUsers(response.data);
+      };
+  
+      showUsers();
     }, []);
 
     const handleRefreshToken = async (refreshToken) => {
@@ -88,6 +105,8 @@ const Reportes = () => {
     
         return () => clearInterval(intervalId);
       });
+
+
     
   
       const data = [
@@ -96,15 +115,100 @@ const Reportes = () => {
         { name: 'Doe', age: 40 }
       ];
 
+
+      useEffect(() => {
+        const fetchUserMonths = async (userId) => {
+          try {
+
+            console.log(userId);
+            const response = await axios.get(`https://unimentor-fqz8.onrender.com/api/v1/hourlog/monitormonth/${userId}`);
+            // console.log(response.data);
+
+
+            const response2 = await axios.get(`https://unimentor-fqz8.onrender.com/api/v1/hourlog/monitor/${userId}`);
+            setHourLog(response2.data)
+            // Actualizar el estado userMonths con los datos obtenidos para el usuario actual
+            setUserMonths(prevUserMonths => ({
+              ...prevUserMonths,
+              [userId]: response.data
+            }));
+          } catch (error) {
+            console.error("Error al consultar el endpoint:", error);
+          }
+        };
+    
+        // Iterar sobre la lista de usuarios y realizar la consulta para cada uno
+        users.forEach(user => {
+          fetchUserMonths(user._id); // Pasar el _id del usuario como parámetro
+        });
+      }, [users]);
+
+
+      const handleMonthChange = (index, value) => {
+        setSelectedMonths((prevState) => ({
+          ...prevState,
+          [index]: value,
+        }));
+      };
+
+      const handlePriceChange = (e) => {
+        setPrice(e.target.value);
+      };
+
+
+
     return (
       <div className='fondoReportes'>
         <Navbar/>
           <div className='reportes'>
-            <div className='table-container'>
-              <div>
-                {/* <h1>Descargar Excel</h1> */}
-                <ExcelDownloader data={data} fileName="usuarios" />
-              </div>
+            {/* <div className='table-container'>
+            </div> */}
+            <input
+              type="number"
+              value={price}
+              onChange={handlePriceChange}
+              placeholder="Ingrese Precio de la hora"
+            />
+            <div className="table-container-reportes">
+              <table className="tablaReportes">
+                <thead>
+                  <tr>
+                    <th>Número de documento</th>
+                    <th>Nombre completo</th>
+                    <th>Correo Institucional</th>
+                    <th>Mes</th>
+                    <th>Opciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map(user => (
+                    <tr key={user._id}>
+                      <td>{user.documentNumber}</td>
+                      <td>{user.fullname}</td>
+                      <td>{user.email}</td>
+                      <td>
+                      <select
+                        value={selectedMonths[user._id] || ""}
+                        onChange={(e) => handleMonthChange(user._id, e.target.value)}
+                        required
+                      >
+                        <option value="">Selecciona un mes</option>
+                        {userMonths[user._id] && userMonths[user._id].map((month, index) => (
+                          <option key={index} value={month}>
+                            {month}
+                          </option>
+                        ))}
+                      </select>
+                      </td>
+                      <td>
+                        <div>
+                          <ExcelDownloader data={data} fileName="reporte" usuario={user} registro={hourLog} month={selectedMonths[user._id]} price={price}/>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
       </div>

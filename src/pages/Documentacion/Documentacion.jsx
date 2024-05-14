@@ -167,12 +167,16 @@ const Documentacion = () => {
 
         }
 
+        // console.log(response.data);
+
         const response = await axios.post(`https://unimentor-fqz8.onrender.com/api/v1/avales/new-aval`, {
           idUsuario: userId, 
           promedio: base64Promedio,
           rut: base64Rut,
           certificado: base64Certificado 
         });
+
+        console.log(response.data);
 
         if (response.data.message === "Aval creado") {
             Swal.fire({
