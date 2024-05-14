@@ -10,6 +10,7 @@ import Card from "../../Components/Card/Card";
 
 const MonitorHome = () => {
   const navigate = useNavigate();
+  const URL = import.meta.env.VITE_BACKEND_URL;
   
 
   useEffect(() => {
@@ -26,7 +27,7 @@ const MonitorHome = () => {
   const handleRefreshToken = async (refreshToken) => {
     try {
       const response = await axios.post(
-        "https://unimentor-fqz8.onrender.com/api/v1/auth/refresh-token",
+        "${URL}/api/v1/auth/refresh-token",
         { refreshToken }
       );
 

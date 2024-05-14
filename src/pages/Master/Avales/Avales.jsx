@@ -20,6 +20,7 @@ const Avales = () => {
   const [selectedGroups, setSelectedGroups] = useState({});
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     // Verificar si el usuario está autenticado y si es master
@@ -38,7 +39,7 @@ const Avales = () => {
   const handleRefreshToken = async (refreshToken) => {
     try {
       const response = await axios.post(
-        "https://unimentor-fqz8.onrender.com/api/v1/auth/refresh-token",
+        "${URL}/api/v1/auth/refresh-token",
         { refreshToken }
       );
 
@@ -98,7 +99,7 @@ const Avales = () => {
 
   useEffect(() => {
     const handleShowUsers = async () => {
-      const response = await axios.get(`https://unimentor-fqz8.onrender.com/api/v1/avales`);
+      const response = await axios.get(`${URL}/api/v1/avales`);
 
       setUserss(response.data);
 
@@ -113,7 +114,7 @@ const Avales = () => {
     const handleShowSubjects = async () => {
       setLoading(true);
       const response = await axios.get(
-        "https://unimentor-fqz8.onrender.com/api/v1/asignaturas"
+        "${URL}/api/v1/asignaturas"
       );
 
       setSubjects(response.data);
@@ -128,7 +129,7 @@ const Avales = () => {
     const handleShowGroups = async () => {
       setLoading(true);
       const response = await axios.get(
-        `https://unimentor-fqz8.onrender.com/api/v1/grupos/monitorempty/c0d1g0`
+        `${URL}/api/v1/grupos/monitorempty/c0d1g0`
       );
 
       
@@ -160,7 +161,7 @@ const Avales = () => {
     console.log(groupId)
 
     const responsee = await axios.patch(
-      `https://unimentor-fqz8.onrender.com/api/v1/grupos/update/` + groupId,
+      `${URL}/api/v1/grupos/update/` + groupId,
       { monitor: userId }
     );
 
@@ -175,7 +176,7 @@ const Avales = () => {
 
       try {
         const response = await axios.post(
-          `https://unimentor-fqz8.onrender.com/send-email-approved`,
+          `${URL}/send-email-approved`,
           emailData
         );
         console.log(response.data);
@@ -186,7 +187,7 @@ const Avales = () => {
     };
 
     const response = await axios.patch(
-      'https://unimentor-fqz8.onrender.com/api/v1/users/update/' + userId,
+      '${URL}/api/v1/users/update/' + userId,
       { role: "monitor" }
     );
 
@@ -234,7 +235,7 @@ const Avales = () => {
       if (result.isConfirmed) {
         const aval = userss[index].avalsData[0]._id;
         const response = await axios.delete(
-          "https://unimentor-fqz8.onrender.com/api/v1/avales/delete/" + aval
+          "${URL}/api/v1/avales/delete/" + aval
         );
         if (response.status === 200) {
           sendEmail();

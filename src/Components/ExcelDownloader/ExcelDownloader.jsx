@@ -10,6 +10,7 @@ import "./ExcelDownloader.css";
 
 function ExcelDownloader({ data, fileName, usuario, registro, month, price }) {
   const navigate = useNavigate();
+  const URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -50,14 +51,14 @@ function ExcelDownloader({ data, fileName, usuario, registro, month, price }) {
     }
 
     const response = await axios.get(
-      `https://unimentor-fqz8.onrender.com/api/v1/hourlog/monitormonthsemester/${userId}?month=${month}`
+      `${URL}/api/v1/hourlog/monitormonthsemester/${userId}?month=${month}`
     );
 
     const idArray = response.data.hoursLog.map(entry => entry._id);
 
     console.log(idArray)
 
-    const response2 = await axios.post(`https://unimentor-fqz8.onrender.com/api/v1/reports/new-report`, {
+    const response2 = await axios.post(`${URL}/api/v1/reports/new-report`, {
       hoursLog: idArray, 
       pricePerHour: price,
       date: new Date(),
