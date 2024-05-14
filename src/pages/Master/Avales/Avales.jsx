@@ -18,7 +18,6 @@ const Avales = () => {
   const [selectedSubjects, setSelectedSubjects] = useState({});
   const [selectedGroups, setSelectedGroups] = useState({});
   const [search, setSearch] = useState("");
-  let urlPath = "192.168.0.15:3000";
 
   useEffect(() => {
     // Verificar si el usuario está autenticado y si es master

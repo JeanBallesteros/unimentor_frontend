@@ -1,85 +1,171 @@
-.fondoReportes{
-    /* background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='100%25' width='100%25'%3E%3Cdefs%3E%3Cpattern id='doodad' width='47' height='47' viewBox='0 0 40 40' patternUnits='userSpaceOnUse' patternTransform='rotate(61)'%3E%3Crect width='100%25' height='100%25' fill='rgba(42, 67, 101,1)'/%3E%3Cpath d='M-10 10h60v3h-60z' fill='rgba(26, 32, 44,1)'/%3E%3Cpath d='M-30 10h3l-1 3h-3zM10 10h3l-1 3h-3zM50 10h3l-1 3h-3z' stroke-miterlimit='99' fill='rgba(236, 201, 75,1)'/%3E%3C/pattern%3E%3C/defs%3E%3Crect fill='url(%23doodad)' height='200%25' width='200%25'/%3E%3C/svg%3E "); */
-    background-color: #ffffff;
-    width: 100vw;
-    height: 100vh;
-    background-attachment: fixed;
-    /* background-repeat:repeat; */
+.fondoReportes {
+  background-color: #ffffff;
+  width: 100vw;
+  height: 100vh;
+  background-attachment: fixed;
 }
 
-.reportes{
-    /* padding-top: 5%; */
-    /* margin-top: 20%; */
-    width: 100vw;
-    height: 80%;
-    display: grid;
-    justify-content: center;
-    align-items: flex-start;
+.reportes {
+  width: 100vw;
+  height: 80%;
+  display: grid;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-y: auto;
+}
 
-    /* position: relative; */
-    /* top:0; */
-    overflow-y: auto;
+.subtituloReportes {
+  color: #0069a3;
+  display: flex;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  padding-top: 10px;
+  text-align: center;
+}
+
+.filtroReportes {
+  margin: auto;
+  display: flex;
+  height: auto;
+  width: 700px;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 15px;
+  background-color: #f4d73b;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 3px 6px #0000004d;
+  padding-left: 50px;
+  padding-right: 50px;
+  border: 2px solid rgba(0, 0, 0, 0.973);
+}
+
+.inputFileReportes {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  width: 95%;
+  height: 90%;
+  margin: 10px 0;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.inputFileReportes .inputsReportes input {
+  width: 100%;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #5d5a5a;
+  padding: 10px;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.labelsReportes {
+  font-weight: 700;
+  color: #0069a3;
+  width: 100%;
+  font-weight: 500;
+  font-size: 1.071em;
+  text-align: center;
+}
+
+.precioHoraContainer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 30px;
+  align-items: baseline;
+}
+
+.precioHora {
+  position: relative;
+}
+
+.inputPrecio {
+  width: 100px;
+  height: 30px;
+  padding: 10px;
+  border: 2px solid #000000;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.botonesContainer {
+    margin-top: 10px;
+  justify-content: center;
+  display: flex;
+  gap: 10px;
+  font-weight: bold;
+}
+
+.botonDefinir,
+.botonEditar {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  border: 2px solid #000000;
+}
+
+.botonDefinir:hover,
+.botonEditar:hover {
+  color: #f4d73b;
 }
 
 .tablaReportes {
-    width: auto;
-    margin-top: 20px;
-    border: #000000 1px solid;
-    background-color: #ddd;
-    margin-left: auto; /* Centra el elemento a la derecha */
-    margin-right: auto; /* Centra el elemento a la izquierda */
+  width: auto;
+  border: #000000 1px solid;
+  background-color: #ddd;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.table-container-reportes{
-    overflow-x: auto; /* Permite el desplazamiento horizontal */
-    overflow-y: auto;
-    height: 300px;
-    margin-top: 50px;
-    /* width: auto; */
+.table-container-reportes {
+  overflow-x: auto;
+  overflow-y: auto;
+  height: 300px;
+  margin-top: 50px;
 }
 
 .tablaReportes th {
-    padding: 8px;
-    border: #5d5a5a 1px solid;
-    background-color: #f2f2f2;
-    color: #000000;
+  padding: 8px;
+  border: #5d5a5a 1px solid;
+  background-color: #f2f2f2;
+  color: #000000;
 }
 
 .tablaReportes td {
-    padding: 3px;
-    border: #5d5a5a 1px solid;
-    color: #000000;
-    gap: 5px;
-    /* text-align: center; */
+  padding: 3px;
+  border: #5d5a5a 1px solid;
+  color: #000000;
+  gap: 5px;
 }
 
 .tablaReportes button {
-    margin: 0 auto; /* Centra horizontalmente el botón dentro del td */
+  margin: 0 auto;
 }
 
 .tablaReportes tbody {
-    text-align: center;
+  text-align: center;
 }
-  
-/* Media query para pantallas más pequeñas */
-@media screen and (max-width: 600px) {
-    .wrapper-button {
-        width: 80%;
-        background: transparent;
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(30px);
-        color: #fff;
-        border-radius: 10px;
-        padding: 30px 40px;
-        margin-left: 10%;
-        margin-right: 10%;
-    }
 
-    /* body {
-        align-items: center;
-        text-align: center;
-        justify-content: center;
-    } */
+@media screen and (max-width: 600px) {
+  .wrapper-button {
+    width: 80%;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(30px);
+    color: #fff;
+    border-radius: 10px;
+    padding: 30px 40px;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
 }
-  

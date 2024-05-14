@@ -1,93 +1,134 @@
 import React, { useState, useEffect } from "react";
-import ExcelJS from 'exceljs/dist/exceljs.min.js';
+import ExcelJS from "exceljs/dist/exceljs.min.js";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
-import "react-datepicker/dist/react-datepicker.css";
-import { MdCheckCircle } from "react-icons/md";
-import { MdCancel } from "react-icons/md";
-import { MdDelete } from "react-icons/md";
+import { MdDownloadForOffline } from "react-icons/md";
+import "./ExcelDownloader.css";
 
-function ExcelDownloader({ data, fileName, usuario, registro, month, price}) {
+function ExcelDownloader({ data, fileName, usuario, registro, month, price }) {
   const navigate = useNavigate();
 
-    useEffect(() => {
-      const checkAuthentication = async () => {
-        const accessToken = await AsyncStorage.getItem("accessToken");
-        const role = jwtDecode(accessToken).user.role;
-        if (!accessToken || role != "master") {
-          navigate("/");
-        }
-      };
-  
-      checkAuthentication();
-    }, []);
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      const accessToken = await AsyncStorage.getItem("accessToken");
+      const role = jwtDecode(accessToken).user.role;
+      if (!accessToken || role != "master") {
+        navigate("/");
+      }
+    };
 
+    checkAuthentication();
+  }, []);
 
   const handleDownload = async () => {
-    // Crear un nuevo libro de Excel
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Reporte');
+    const worksheet = workbook.addWorksheet("Reporte Horas");
+    const userId = usuario._id;
+    const response = await axios.get(
+      `https://unimentor-fqz8.onrender.com/api/v1/hourlog/monitormonthsemester/${userId}?month=${month}`
+    );
 
+    const globalStyle = {
+      font: { name: "Arial", size: 12 },
+      alignment: { horizontal: "center", vertical: "middle" },
+    };
 
-    console.log(data)
-    console.log(month)
+    const boldStyle = {
+      font: { name: "Arial", size: 12, bold: true },
+      alignment: { horizontal: "center", vertical: "middle" },
+    };
 
-    const userId = usuario._id
+    const currencyStyle = {
+      font: { name: "Arial", size: 12, bold: true },
+      alignment: { horizontal: "center", vertical: "middle" },
+      numFmt: "$#,##0.00",
+    };
 
+    if (!month) {
+      Swal.fire({
+        title: "Selecciona un mes",
+        text: "Debes seleccionar un mes antes de descargar el reporte.",
+        icon: "info",
+        confirmButtonText: "Aceptar",
+      });
+    }
 
-    const response = await axios.get(`https://unimentor-fqz8.onrender.com/api/v1/hourlog/monitormonthsemester/${userId}?month=${month}`);
-
-    console.log(response.data)
-    // Agregar encabezados
-    // worksheet.addRow(['Nombre', 'Edad']);
-
-    // Agregar datos
-    // usuario.forEach(({ fullname, email }) => {
-    //   worksheet.addRow([usuario.fullname, usuario.email]);
-    // });
-    worksheet.addRow(["NOMBRE COMPLETO MONITOR", usuario.fullname]);
-    worksheet.addRow(["C.C", usuario.documentNumber]);
-    worksheet.addRow(["Email UAM", usuario.email]);
-    worksheet.addRow([]);
-    // worksheet.mergeCells('A4:E4');
-    worksheet.addRow(["Asignatura", "Fecha de la Clase", "Docente a Cargo", "Programa y Grupo", "Cantidad de Horas"]);
-    response.data.hoursLog.forEach(({ subject, date, teacher, program, group, hours  }) => {
-      worksheet.addRow([subject[0].name, date.slice(0, 10), teacher[0].fullname, `${program[0].name} - ${group[0].name}`, hours]);
+    worksheet.addRow(["Nombre", usuario.fullname]).eachCell((cell) => {
+      cell.style = boldStyle;
+    });
+    worksheet.addRow(["C.C", usuario.documentNumber]).eachCell((cell) => {
+      cell.style = boldStyle;
+    });
+    worksheet.addRow(["Email UAM", usuario.email]).eachCell((cell) => {
+      cell.style = boldStyle;
     });
     worksheet.addRow([]);
-    worksheet.addRow(["Total Horas", response.data.sum[0].totalHours]);
+    worksheet
+      .addRow([
+        "Asignatura",
+        "Fecha de la Clase",
+        "Docente a Cargo",
+        "Programa y Grupo",
+        "Cantidad de Horas",
+      ])
+      .eachCell((cell) => {
+        cell.style = boldStyle;
+      });
+    response.data.hoursLog.forEach(
+      ({ subject, date, teacher, program, group, hours }) => {
+        worksheet
+          .addRow([
+            subject[0].name,
+            date.slice(0, 10),
+            teacher[0].fullname,
+            group[0].name,
+            hours,
+          ])
+          .eachCell((cell) => {
+            cell.style = globalStyle;
+          });
+      }
+    );
     worksheet.addRow([]);
-    worksheet.addRow(["Total a Pagar", price*response.data.sum[0].totalHours]);
-    // worksheet.addRow(["Total a Pagar", price*response.data.sum[0].totalHours]);
+    worksheet
+      .addRow(["Total Horas", response.data.sum[0].totalHours])
+      .eachCell((cell) => {
+        cell.style = boldStyle;
+      });
+    worksheet.addRow([]);
+    const row = worksheet.addRow([
+      "Total a Pagar",
+      price * response.data.sum[0].totalHours,
+    ]);
+    row.getCell(1).style = boldStyle;
+    row.getCell(2).style = currencyStyle;
 
-    // worksheet.addRow(["Mes"]);
-    // worksheet.addRow([usuario.fullname]).getCell('C').alignment = { vertical: 'middle', horizontal: 'center' };
+    worksheet.columns.forEach((column) => {
+      let maxLength = 0;
+      column.eachCell({ includeEmpty: true }, (cell) => {
+        maxLength = Math.max(
+          maxLength,
+          cell.value ? cell.value.toString().length : 0
+        );
+      });
+      column.width = maxLength < 10 ? 10 : maxLength + 10;
+    });
 
-    // Aplicar estilos
-    // worksheet.eachRow((row) => {
-    //   row.eachCell((cell) => {
-    //     cell.border = { top: { style: 'thin' }/* , bottom: { style: 'thin' } */, left: { style: 'thin' }, right: { style: 'thin' } };
-    //     cell.font = { size: 12 };
-    //     if (cell.address === 'B2') {
-    //       cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFF00' } }; // Color de fondo para B2
-    //     }
-    //     if (cell.address === 'A1') {
-    //       cell.font = { color: { argb: 'FF0000' } }; // Color de texto para A1
-    //     }
-    //   });
-    // });
+    // Combinar celdas de Nombre, C.C y Email
 
-    // Combinar celdas (por ejemplo, de C1 a Y1)
-    // worksheet.mergeCells('C1:Y4');
+    worksheet.mergeCells("B1:E1");
+    worksheet.mergeCells("B2:E2");
+    worksheet.mergeCells("B3:E3");
 
-    // Guardar el libro de Excel como un archivo
     const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = `${fileName}.xlsx`;
     document.body.appendChild(a);
@@ -97,7 +138,11 @@ function ExcelDownloader({ data, fileName, usuario, registro, month, price}) {
   };
 
   return (
-    <button onClick={handleDownload}>Descargar Excel</button>
+    <button 
+      className="btn-excel-download"
+      onClick={handleDownload}>
+      <MdDownloadForOffline className="icon"/>
+    </button>
   );
 }
 
