@@ -79,7 +79,7 @@ const LoginForm = () => {
   return (
     <div className="wrapper">
       <div className="header">
-        <img src="src\assets\unimentor_icon.png" alt="" />
+        <img src="T\unimentor_icon.png" alt="" />
         <div className="header_titles">
           <h1>UniMentor</h1>
           <p>Llevando la Claridad a Cada Sesión de Estudio</p>
