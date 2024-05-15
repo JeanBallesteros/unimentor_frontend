@@ -9,7 +9,7 @@
 
 
 body{
-  background: url(../public/img/unimentorIcon.png) no-repeat;
+  background: url(/img/unimentorIcon.png) no-repeat;
   background-size: cover;
   background-position: center;
   justify-content: center;
