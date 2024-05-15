@@ -64,7 +64,7 @@ const Navbar = () => {
   return (
     <nav>
       <div className="top-bar">
-        <img src="src\assets\unimentor_icon.png" alt="" />
+        <img src="T\unimentor_icon.png" alt="" />
         <Link className="title" to="/dashboard">UniMentor</Link>
       </div>
       <div className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>
