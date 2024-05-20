@@ -122,7 +122,6 @@ const RegistroHorasMonitores = () => {
 
     const decodedToken = jwtDecode(accessToken);
     const userId = decodedToken.user._id;
-    console.log(userId);
 
     const hlog = hoursLogProfessor[index]._id;
 
@@ -149,7 +148,6 @@ const RegistroHorasMonitores = () => {
     const accessToken = await AsyncStorage.getItem("accessToken");
     const decodedToken = jwtDecode(accessToken);
     const userId = decodedToken.user._id;
-    console.log(userId);
 
     const hlog = hoursLogProfessor[index]._id;
     const response = await axios.patch(

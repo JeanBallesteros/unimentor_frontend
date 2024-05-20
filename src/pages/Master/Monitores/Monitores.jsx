@@ -169,7 +169,6 @@ const Monitores = () => {
             `${URL}/send-email-denied`,
             emailData
           );
-          console.log(response.data);
           console.log("Correo enviado correctamente");
         } catch (error) {
           console.error("Error al enviar el correo:", error);
@@ -181,7 +180,6 @@ const Monitores = () => {
         const avalId = userss.map((user) => {
           // return user.avalsData[0]._id
           if(user._id == groupsMonitorNotEmpty[index].monitor[0]._id){
-            console.log("JAJAJA",user.avalsData[0]._id);
             return user.avalsData[0]._id;
             // return;
           }
@@ -191,16 +189,8 @@ const Monitores = () => {
           return element !== undefined;
         });
 
-        console.log("ffgh", filteredArray[0])
-
         const userId = groupsMonitorNotEmpty[index].monitor[0]._id;
 
-        console.log("dfgdfg2",userId)
-
-
-        console.log(groupsMonitorNotEmpty[index]);
-        // const userId = userss[index]._id;
-        // console.log(userId);
         let groupId = "";
         let contadorGruposMonitor = 0;
 
@@ -210,14 +200,6 @@ const Monitores = () => {
             contadorGruposMonitor++;
           }
         }
-
-        // console.log(userId);
-
-
-        // const groupId = groups[index]._id;
-        // console.log(groupId,'---------');
-
-
 
         //ESTOS ENDPOINTS SE DEBEN CORRER CUANDO EL MONITOR HAGA PARTE DE SOLO UN GRUPO
 

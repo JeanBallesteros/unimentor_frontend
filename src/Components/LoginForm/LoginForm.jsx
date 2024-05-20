@@ -54,8 +54,6 @@ const LoginForm = () => {
         }
       );
   
-      console.log(response.data);
-  
       const { message, accessToken, refreshToken } = response.data;
   
       await AsyncStorage.setItem("accessToken", accessToken);
