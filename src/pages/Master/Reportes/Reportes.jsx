@@ -123,7 +123,6 @@ const Reportes = () => {
         const response = await axios.get(
           `${URL}/api/v1/hourlog/monitormonth/${userId}`
         );
-        // console.log(response.data);
 
         const response2 = await axios.get(
           `${URL}/api/v1/hourlog/monitor/${userId}`

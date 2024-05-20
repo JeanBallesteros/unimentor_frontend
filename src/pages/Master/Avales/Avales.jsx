@@ -157,15 +157,11 @@ const Avales = () => {
     const groupIdWithObject = selectedGroups[index];
     const groupId = groupIdWithObject.split("-")[0];
     const userId = userss[index]._id;
-
-    console.log(groupId)
-
+    
     const responsee = await axios.patch(
       `${URL}/api/v1/grupos/update/` + groupId,
       { monitor: userId }
     );
-
-    console.log(responsee.data);
 
     const sendEmail = async () => {
       const emailData = {
@@ -179,7 +175,6 @@ const Avales = () => {
           `${URL}/send-email-approved`,
           emailData
         );
-        console.log(response.data);
         console.log("Correo enviado correctamente");
       } catch (error) {
         console.error("Error al enviar el correo:", error);
@@ -226,7 +221,6 @@ const Avales = () => {
             `https://${urlPath}/send-email-denied`,
             emailData
           );
-          console.log(response.data);
           console.log("Correo enviado correctamente");
         } catch (error) {
           console.error("Error al enviar el correo:", error);

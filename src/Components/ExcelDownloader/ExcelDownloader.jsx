@@ -56,17 +56,11 @@ function ExcelDownloader({ data, fileName, usuario, registro, month, price }) {
 
     const idArray = response.data.hoursLog.map(entry => entry._id);
 
-    console.log(idArray)
-
     const response2 = await axios.post(`${URL}/api/v1/reports/new-report`, {
       hoursLog: idArray, 
       pricePerHour: price,
       date: new Date(),
     });
-
-    console.log(response2);
-
-
 
     const globalStyle = {
       font: { name: "Arial", size: 12 },

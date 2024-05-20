@@ -44,8 +44,6 @@ const Documentacion = () => {
           `${URL}/api/v1/avales/user/${userId}`, 
         );
 
-        console.log(response.data.message)
-
         if(response.data.message === "userId presente"){
           setCheckDoc(true)
         }else{
@@ -176,16 +174,12 @@ const Documentacion = () => {
 
         }
 
-        // console.log(response.data);
-
         const response = await axios.post(`${URL}/api/v1/avales/new-aval`, {
           idUsuario: userId, 
           promedio: base64Promedio,
           rut: base64Rut,
           certificado: base64Certificado 
         });
-
-        console.log(response.data);
 
         if (response.data.message === "Aval creado") {
             Swal.fire({
@@ -211,12 +205,10 @@ const Documentacion = () => {
       const response = await axios.get(`${URL}/api/v1/avales`);
 
       setUserss(response.data);
-      console.log(response.data)
 
       const accessTokenTemp = await AsyncStorage.getItem("accessToken");
       setUserId(jwtDecode(accessTokenTemp).user._id);
 
-      console.log(userId)
     };
 
     handleShowUsers();

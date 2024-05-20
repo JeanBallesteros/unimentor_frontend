@@ -109,29 +109,18 @@ const Horas = () => {
       `${URL}/api/v1/grupos/${selectedGroups.name.split("-")[0]}`
     );
 
-    console.log(response.data)
-
-
     const response2 = await axios.get(
       `${URL}/api/v1/programas/asignatura/${response.data[0].subject[0]._id}`
     );
-
-    console.log(response2.data.program._id)
-
-
-
 
     const response4 = await axios.get(
       `${URL}/api/v1/hourlog/group/${response.data[0]._id}`
     );
 
-    // console.log(response4.data.dates);
     const formattedDates = response4.data.dates.map(date => date.slice(0, 10));
 
     const formattedDate = fecha.toISOString().slice(0, 10);
 
-    console.log(formattedDates);
-    console.log(formattedDate.toString());
 
     if(formattedDates.includes(formattedDate.toString())){
       Swal.fire({
@@ -156,8 +145,6 @@ const Horas = () => {
 
       );
 
-      // console.log(response3);
-
       Swal.fire({
         title: "¡Registro creado con éxito!",
         text: "Ten en cuenta que una vez el profesor encargado haya confirmado tu registro, no podrás eliminarlo.",
@@ -176,8 +163,6 @@ const Horas = () => {
       horas: horas
     };
 
-    // Aquí puedes hacer lo que necesites con los datos del formulario
-    console.log(formData);
   };
 
   useEffect(() => {
@@ -190,7 +175,6 @@ const Horas = () => {
 
       const decodedToken = jwtDecode(accessToken);
       const userId = decodedToken.user._id;
-      console.log(userId);
 
 
       const response = await axios.get(
@@ -215,8 +199,6 @@ const Horas = () => {
 
       const decodedToken = jwtDecode(accessToken);
       const userId = decodedToken.user._id;
-      // console.log(userId);
-
 
       const response = await axios.get(
         `${URL}/api/v1/hourlog/monitor/${userId}`
@@ -227,7 +209,6 @@ const Horas = () => {
       // setTimeout(() => {
         setLoading(false);
       // }, 100);
-      // console.log(response.data[0].program[0].name);
       
     };
 
@@ -238,8 +219,6 @@ const Horas = () => {
     setSelectedGroups(() => {
       const newState = {};
       newState["name"] = index; // Asignar el nuevo valor en la posición index
-
-      // console.log(newState[index])
 
       // Obtener la parte antes del guion de value
       return newState; // Devolver el nuevo estado
@@ -259,8 +238,6 @@ const Horas = () => {
       if (result.isConfirmed) {
         
         const hourLogId = hoursLogMonitor[index]._id
-
-        // console.log(hourLogId);
 
         const response = await axios.delete(
           `${URL}/api/v1/hourlog/delete/`+ hourLogId
