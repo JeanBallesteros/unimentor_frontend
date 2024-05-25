@@ -9,6 +9,48 @@ import "./Monitores.css";
 import { MdDelete } from "react-icons/md";
 import Loader from '../../../Components/Loader/Loader';
 
+
+
+/**
+ * Componente Monitores
+ * 
+ * Este componente muestra una lista de monitores y permite buscarlos y eliminarlos.
+ * Requiere autenticación como usuario maestro para acceder.
+ * 
+ * Props:
+ *   Ninguna
+ * 
+ * Estado:
+ *   userss: Lista de usuarios (monitores) obtenidos del backend.
+ *   subjects: Lista de asignaturas obtenidas del backend.
+ *   groups: Lista de grupos obtenidos del backend.
+ *   groupsMonitorEmpty: Lista de grupos sin monitores obtenidos del backend.
+ *   groupsMonitorNotEmpty: Lista de grupos con monitores obtenidos del backend.
+ *   selectedSubject: Asignatura seleccionada por el usuario.
+ *   selectedSubjects: Asignaturas seleccionadas por el usuario.
+ *   selectedGroups: Grupos seleccionados por el usuario.
+ *   search: Término de búsqueda introducido por el usuario.
+ *   loading: Indica si se está cargando la información del backend.
+ *   URL: URL del backend.
+ * 
+ * useEffects:
+ *   1. Comprueba la autenticación del usuario al cargar el componente.
+ *   2. Refresca el token de acceso automáticamente cada cierto tiempo.
+ *   3. Obtiene la lista de usuarios (monitores) del backend.
+ *   4. Obtiene la lista de grupos sin monitores del backend.
+ *   5. Obtiene la lista de grupos con monitores del backend.
+ *   6. Obtiene la lista de todos los grupos del backend.
+ * 
+ * Funciones:
+ *   - handleButtonDenegar: Maneja la eliminación de un monitor seleccionado.
+ *   - handleSubjectChange: Maneja el cambio de asignatura seleccionada.
+ *   - handleGroupChange: Maneja el cambio de grupo seleccionado.
+ *   - showNoResultsAlert: Muestra una alerta cuando no se encuentran resultados de búsqueda.
+ *   - filteredUsers: Filtra la lista de monitores según los criterios de búsqueda introducidos.
+ * 
+ * @returns {JSX.Element} Componente Monitores.
+ */
+
 const Monitores = () => {
   const navigate = useNavigate();
   const [userss, setUserss] = useState([]);

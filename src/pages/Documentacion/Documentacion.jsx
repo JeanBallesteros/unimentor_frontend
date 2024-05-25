@@ -8,6 +8,11 @@ import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
 import Loader from '../../Components/Loader/Loader';
 
+
+/**
+ * Componente funcional que representa la página de documentación.
+ * Permite a los usuarios subir documentos y ver los documentos subidos previamente.
+ */
 const Documentacion = () => {
   const navigate = useNavigate();
   const [checkDoc, setCheckDoc] = useState(false);

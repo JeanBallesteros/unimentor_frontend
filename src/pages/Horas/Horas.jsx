@@ -14,6 +14,12 @@ import { MdDelete } from "react-icons/md";
 import moment from 'moment';
 import Loader from '../../Components/Loader/Loader';
 
+
+/**
+ * Componente funcional para la gestión de registro de horas.
+ * Este componente permite a los monitores registrar las horas que él hizo en una monitoría.
+ */
+
 const Horas = () => {
   const navigate = useNavigate();
   const [asignatura, setAsignatura] = useState('');

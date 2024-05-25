@@ -8,6 +8,8 @@ import Swal from "sweetalert2";
 import Navbar from "../../Components/Navbar/Navbar";
 import Card from "../../Components/Card/Card";
 
+
+// Componente principal de la página de inicio
 const MonitorHome = () => {
   const navigate = useNavigate();
   const URL = import.meta.env.VITE_BACKEND_URL;

@@ -1,3 +1,17 @@
+
+/**
+ * Componente para descargar un archivo de Excel con datos específicos.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {Array} props.data - Datos que se utilizarán para generar el archivo de Excel.
+ * @param {string} props.fileName - Nombre del archivo de Excel a descargar.
+ * @param {Object} props.usuario - Objeto que representa al usuario.
+ * @param {Object} props.registro - Objeto de registro.
+ * @param {string} props.month - Mes seleccionado para el reporte.
+ * @param {number} props.price - Precio por hora para el cálculo del total a pagar.
+ * @returns {JSX.Element} Componente de botón para descargar el archivo de Excel.
+ */
+
 import React, { useState, useEffect } from "react";
 import ExcelJS from "exceljs/dist/exceljs.min.js";
 import { useNavigate } from "react-router-dom";

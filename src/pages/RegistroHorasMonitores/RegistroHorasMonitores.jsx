@@ -12,6 +12,9 @@ import { MdCancel } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import Loader from '../../Components/Loader/Loader';
 
+
+// Componente principal para registrar y verificar horas de monitores
+
 const RegistroHorasMonitores = () => {
   const navigate = useNavigate();
   const [asignatura, setAsignatura] = useState("");

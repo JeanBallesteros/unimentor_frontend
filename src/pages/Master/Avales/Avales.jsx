@@ -10,6 +10,12 @@ import { MdCheckCircle } from "react-icons/md";
 import { MdCancel } from "react-icons/md";
 import Loader from '../../../Components/Loader/Loader';
 
+
+/**
+ * Componente funcional para la gestión de avales.
+ * Este componente permite a los administradores del sistema gestionar los avales de monitores.
+ */
+
 const Avales = () => {
   const navigate = useNavigate();
   const [userss, setUserss] = useState([]);

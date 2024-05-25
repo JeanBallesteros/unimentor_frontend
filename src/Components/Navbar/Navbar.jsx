@@ -6,6 +6,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
 
+
+/**
+ * Componente funcional que representa la barra de navegación de la aplicación.
+ * Proporciona enlaces y opciones de navegación para diferentes roles de usuario.
+ */
+
 const Navbar = () => {
   const navigate = useNavigate();
   const [master, setMaster] = useState(false);

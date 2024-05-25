@@ -10,6 +10,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import ExcelDownloader from "../../../Components/ExcelDownloader/ExcelDownloader";
 import Loader from '../../../Components/Loader/Loader';
 
+
+/**
+ * Componente funcional para la gestión de reportes.
+ * Este componente permite a los administradores descargar todos los registros de horas de cada uno de los monitores.
+ */
+
 const Reportes = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
