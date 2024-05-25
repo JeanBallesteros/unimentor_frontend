@@ -139,55 +139,32 @@ const Monitores = () => {
   });
 
   useEffect(() => {
-    const handleShowUsers = async () => {
-      const response = await axios.get(
-        `${URL}/api/v1/avales/monitor`
-      );
+    const fetchData = async () => {
+      try {
+        const [
+          usersResponse,
+          groupsMonitorEmptyResponse,
+          groupsMonitorNotEmptyResponse,
+          groupsResponse
+        ] = await Promise.all([
+          axios.get(`${URL}/api/v1/avales/monitor`),
+          axios.get(`${URL}/api/v1/grupos/monitorempty/c0d1g0`),
+          axios.get(`${URL}/api/v1/grupos/monitornotempty/c0d1g0`),
+          axios.get(`${URL}/api/v1/grupos`)
+        ]);
 
-      setUserss(response.data);
-      setLoading(false);
+        setUserss(usersResponse.data);
+        setGroupsMonitorEmpty(groupsMonitorEmptyResponse.data);
+        setGroupsMonitorNotEmpty(groupsMonitorNotEmptyResponse.data);
+        setGroups(groupsResponse.data);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    handleShowUsers();
-  }, []);
-
-  useEffect(() => {
-    const handleShowGroups = async () => {
-      const response = await axios.get(
-        `${URL}/api/v1/grupos/monitorempty/c0d1g0`
-      );
-
-      setGroupsMonitorEmpty(response.data);
-      setLoading(false);
-    };
-
-    handleShowGroups();
-  }, []);
-
-  useEffect(() => {
-    const handleShowGroups = async () => {
-      const response = await axios.get(
-        `${URL}/api/v1/grupos/monitornotempty/c0d1g0`
-      );
-
-      setGroupsMonitorNotEmpty(response.data);
-      setLoading(false);
-    };
-
-    handleShowGroups();
-  }, []);
-
-  useEffect(() => {
-    const handleShowGroups = async () => {
-      const response = await axios.get(
-        `${URL}/api/v1/grupos`
-      );
-
-      setGroups(response.data);
-      setLoading(false);
-    };
-
-    handleShowGroups();
+    fetchData();
   }, []);
 
   const handleButtonDenegar = async (index) => {

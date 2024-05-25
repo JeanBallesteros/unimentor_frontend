@@ -172,53 +172,30 @@ const Horas = () => {
   };
 
   useEffect(() => {
-    const handleShowGroups = async () => {
+    const fetchData = async () => {
+      try {
+        // Obtener el accessToken del almacenamiento
+        const accessToken = await AsyncStorage.getItem("accessToken");
 
-      // await new Promise(resolve => setTimeout(resolve, 100));
+        // Decodificar el token para obtener el userId
+        const decodedToken = jwtDecode(accessToken);
+        const userId = decodedToken.user._id;
 
+        // Obtener los grupos del monitor
+        const groupsResponse = await axios.get(`${URL}/api/v1/grupos/monitor/${userId}`);
+        setGroupsMonitor(groupsResponse.data);
 
-      const accessToken = await AsyncStorage.getItem("accessToken");
-
-      const decodedToken = jwtDecode(accessToken);
-      const userId = decodedToken.user._id;
-
-
-      const response = await axios.get(
-        `${URL}/api/v1/grupos/monitor/${userId}`
-      );
-
-      setGroupsMonitor(response.data);
-      // setTimeout(() => {
+        // Obtener el registro de horas del monitor
+        const hoursLogResponse = await axios.get(`${URL}/api/v1/hourlog/monitor/${userId}`);
+        setHoursLogMonitor(hoursLogResponse.data);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      } finally {
         setLoading(false);
-      // }, 100);
+      }
     };
 
-    handleShowGroups();
-  }, []);
-
-  useEffect(() => {
-    const handleShowHoursLog = async () => {
-
-      // await new Promise(resolve => setTimeout(resolve, 100));
-
-      const accessToken = await AsyncStorage.getItem("accessToken");
-
-      const decodedToken = jwtDecode(accessToken);
-      const userId = decodedToken.user._id;
-
-      const response = await axios.get(
-        `${URL}/api/v1/hourlog/monitor/${userId}`
-      );
-
-      setHoursLogMonitor(response.data);
-
-      // setTimeout(() => {
-        setLoading(false);
-      // }, 100);
-      
-    };
-
-    handleShowHoursLog();
+    fetchData();
   }, []);
 
   const handleGroupChange = (index, value) => {

@@ -35,37 +35,33 @@ const Documentacion = () => {
 
 
   useEffect(() => {
-    const checkDocumentation = async () => {
+    const fetchData = async () => {
       try {
+        // Obtener tokens del almacenamiento
         const accessToken = await AsyncStorage.getItem("accessToken");
         const refreshToken = await AsyncStorage.getItem("refreshToken");
 
+        // Decodificar el token para obtener el userId
         const decodedToken = jwtDecode(accessToken);
         const userId = decodedToken.user._id;
+        setUserId(userId);
 
-        // await new Promise(resolve => setTimeout(resolve, 50));
+        // Verificar documentación del usuario
+        const docResponse = await axios.get(`${URL}/api/v1/avales/user/${userId}`);
+        setCheckDoc(docResponse.data.message === "userId presente");
 
-        const response = await axios.get(
-          `${URL}/api/v1/avales/user/${userId}`, 
-        );
-
-        if(response.data.message === "userId presente"){
-          setCheckDoc(true)
-        }else{
-          setCheckDoc(false)
-        }
-
-        // setTimeout(() => {
-          setLoading(false);
-        // }, 50);
-    
+        // Obtener la lista de usuarios
+        const usersResponse = await axios.get(`${URL}/api/v1/avales`);
+        setUserss(usersResponse.data);
       } catch (error) {
-        console.error("Error", error);
+        console.error("Error fetching data", error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    checkDocumentation();
-  }) 
+    fetchData();
+  }, []);
 
 
   const handleRefreshToken = async (refreshToken) => {
@@ -205,19 +201,6 @@ const Documentacion = () => {
     }
 };
 
-  useEffect(() => {
-    const handleShowUsers = async () => {
-      const response = await axios.get(`${URL}/api/v1/avales`);
-
-      setUserss(response.data);
-
-      const accessTokenTemp = await AsyncStorage.getItem("accessToken");
-      setUserId(jwtDecode(accessTokenTemp).user._id);
-
-    };
-
-    handleShowUsers();
-  }, []);
 
   const mostrarImagen = (imagenBase64) => {
     Swal.fire({

@@ -43,19 +43,6 @@ const Reportes = () => {
     checkAuthentication();
   }, []);
 
-  useEffect(() => {
-    const showUsers = async () => {
-      const response = await axios.get(
-        `${URL}/api/v1/users/monitors`
-      );
-
-      setUsers(response.data);
-      setLoading(false);
-    };
-
-    showUsers();
-  }, []);
-
   const handleRefreshToken = async (refreshToken) => {
     try {
       const response = await axios.post(
@@ -123,35 +110,6 @@ const Reportes = () => {
     { name: "Doe", age: 40 },
   ];
 
-  useEffect(() => {
-    const fetchUserMonths = async (userId) => {
-      try {
-        const response = await axios.get(
-          `${URL}/api/v1/hourlog/monitormonth/${userId}`
-        );
-
-        const response2 = await axios.get(
-          `${URL}/api/v1/hourlog/monitor/${userId}`
-        );
-        setHourLog(response2.data);
-        // Actualizar el estado userMonths con los datos obtenidos para el usuario actual
-        setUserMonths((prevUserMonths) => ({
-          ...prevUserMonths,
-          [userId]: response.data,
-        }));
-
-        setLoading(false);
-      } catch (error) {
-        console.error("Error al consultar el endpoint:", error);
-      }
-    };
-
-    // Iterar sobre la lista de usuarios y realizar la consulta para cada uno
-    users.forEach((user) => {
-      fetchUserMonths(user._id); // Pasar el _id del usuario como parámetro
-    });
-  }, [users]);
-
   const handleMonthChange = (index, value) => {
     setSelectedMonths((prevState) => ({
       ...prevState,
@@ -209,16 +167,44 @@ const Reportes = () => {
   }, [search, filteredUsers]);
 
   useEffect(() => {
-    const showPrice = async () => {
-      const response = await axios.get(
-        `${URL}/api/v1/reports`
-      );
-    
-      setPricePerHour(response.data[0].pricePerHour);
-      setLoading(false);
+    const fetchData = async () => {
+      try {
+        // Obtener el precio por hora
+        const priceResponse = await axios.get(`${URL}/api/v1/reports`);
+        setPricePerHour(priceResponse.data[0].pricePerHour);
+
+        // Obtener la lista de usuarios
+        const usersResponse = await axios.get(`${URL}/api/v1/users/monitors`);
+        const fetchedUsers = usersResponse.data;
+        setUsers(fetchedUsers);
+
+        // Obtener datos adicionales para cada usuario
+        const userResponses = await Promise.all(
+          fetchedUsers.map(async (user) => {
+            const response1 = await axios.get(`${URL}/api/v1/hourlog/monitormonth/${user._id}`);
+            const response2 = await axios.get(`${URL}/api/v1/hourlog/monitor/${user._id}`);
+            return { userId: user._id, response1Data: response1.data, response2Data: response2.data };
+          })
+        );
+
+        const newUserMonths = {};
+        const newHourLog = [];
+
+        userResponses.forEach(({ userId, response1Data, response2Data }) => {
+          newUserMonths[userId] = response1Data;
+          newHourLog.push(...response2Data);
+        });
+
+        setUserMonths(newUserMonths);
+        setHourLog(newHourLog);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    showPrice();
+    fetchData();
   }, []);
 
 

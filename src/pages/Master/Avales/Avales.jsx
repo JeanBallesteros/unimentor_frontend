@@ -104,46 +104,25 @@ const Avales = () => {
   });
 
   useEffect(() => {
-    const handleShowUsers = async () => {
-      const response = await axios.get(`${URL}/api/v1/avales`);
+    const fetchData = async () => {
+      try {
+        const [usersResponse, subjectsResponse, groupsResponse] = await Promise.all([
+          axios.get(`${URL}/api/v1/avales`),
+          axios.get(`${URL}/api/v1/asignaturas`),
+          axios.get(`${URL}/api/v1/grupos/monitorempty/c0d1g0`)
+        ]);
 
-      setUserss(response.data);
-
-      setLoading(false);
+        setUserss(usersResponse.data);
+        setSubjects(subjectsResponse.data);
+        setGroupsMonitorEmpty(groupsResponse.data);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    handleShowUsers();
-
-  }, []);
-
-  useEffect(() => {
-    const handleShowSubjects = async () => {
-      setLoading(true);
-      const response = await axios.get(
-        `${URL}/api/v1/asignaturas`
-      );
-
-      setSubjects(response.data);
-
-      setLoading(false);
-    };
-
-    handleShowSubjects();
-  }, []);
-
-  useEffect(() => {
-    const handleShowGroups = async () => {
-      setLoading(true);
-      const response = await axios.get(
-        `${URL}/api/v1/grupos/monitorempty/c0d1g0`
-      );
-
-      
-      setGroupsMonitorEmpty(response.data);
-      setLoading(false);
-    };
-
-    handleShowGroups();
+    fetchData();
   }, []);
 
   const handleButtonAceptar = async (index) => {
