@@ -8,6 +8,11 @@ import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
 import Loader from '../../Components/Loader/Loader';
 
+
+/**
+ * Componente funcional que representa la página de documentación.
+ * Permite a los usuarios subir documentos y ver los documentos subidos previamente.
+ */
 const Documentacion = () => {
   const navigate = useNavigate();
   const [checkDoc, setCheckDoc] = useState(false);
@@ -30,37 +35,33 @@ const Documentacion = () => {
 
 
   useEffect(() => {
-    const checkDocumentation = async () => {
+    const fetchData = async () => {
       try {
+        // Obtener tokens del almacenamiento
         const accessToken = await AsyncStorage.getItem("accessToken");
         const refreshToken = await AsyncStorage.getItem("refreshToken");
 
+        // Decodificar el token para obtener el userId
         const decodedToken = jwtDecode(accessToken);
         const userId = decodedToken.user._id;
+        setUserId(userId);
 
-        // await new Promise(resolve => setTimeout(resolve, 50));
+        // Verificar documentación del usuario
+        const docResponse = await axios.get(`${URL}/api/v1/avales/user/${userId}`);
+        setCheckDoc(docResponse.data.message === "userId presente");
 
-        const response = await axios.get(
-          `${URL}/api/v1/avales/user/${userId}`, 
-        );
-
-        if(response.data.message === "userId presente"){
-          setCheckDoc(true)
-        }else{
-          setCheckDoc(false)
-        }
-
-        // setTimeout(() => {
-          setLoading(false);
-        // }, 50);
-    
+        // Obtener la lista de usuarios
+        const usersResponse = await axios.get(`${URL}/api/v1/avales`);
+        setUserss(usersResponse.data);
       } catch (error) {
-        console.error("Error", error);
+        console.error("Error fetching data", error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    checkDocumentation();
-  }) 
+    fetchData();
+  }, []);
 
 
   const handleRefreshToken = async (refreshToken) => {
@@ -93,8 +94,12 @@ const Documentacion = () => {
         const expiracion = decodedToken.exp * 1000;
 
         const ahora = Date.now();
+        const veinteMinutos = 20 * 60 * 1000; // 20 minutos en milisegundos
+        const expiracionConGracia = expiracion + veinteMinutos;
 
-        if (ahora >= expiracion) {
+        if (ahora >= expiracionConGracia) {
+          logout();
+        }else if (ahora >= expiracion) {
           console.log("El AccessToken ha expirado");
           Swal.fire({
             title: "¡Tu sesión está a punto de caducar!",
@@ -104,10 +109,10 @@ const Documentacion = () => {
             confirmButtonText: "OK",
           }).then((result) => {
             if (result.isConfirmed) {
-              console.log("El usuario hizo clic en OK");
+               
               handleRefreshToken(refreshToken);
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-              console.log("El usuario hizo clic en Cancelar o cerró la alerta");
+               
               logout();
             }
           });
@@ -119,7 +124,7 @@ const Documentacion = () => {
       }
     };
 
-    const intervalId = setInterval(expireToken, 20000);
+    const intervalId = setInterval(expireToken, 320000);
 
     return () => clearInterval(intervalId);
   });
@@ -200,19 +205,6 @@ const Documentacion = () => {
     }
 };
 
-  useEffect(() => {
-    const handleShowUsers = async () => {
-      const response = await axios.get(`${URL}/api/v1/avales`);
-
-      setUserss(response.data);
-
-      const accessTokenTemp = await AsyncStorage.getItem("accessToken");
-      setUserId(jwtDecode(accessTokenTemp).user._id);
-
-    };
-
-    handleShowUsers();
-  }, []);
 
   const mostrarImagen = (imagenBase64) => {
     Swal.fire({

@@ -9,6 +9,12 @@ import { jwtDecode } from "jwt-decode";
 import Swal from 'sweetalert2';
 
 
+
+/**
+ * Componente funcional que representa un formulario de inicio de sesión.
+ * Permite a los usuarios iniciar sesión proporcionando su correo electrónico y contraseña.
+ */
+
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

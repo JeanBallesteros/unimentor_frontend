@@ -14,6 +14,12 @@ import { MdDelete } from "react-icons/md";
 import moment from 'moment';
 import Loader from '../../Components/Loader/Loader';
 
+
+/**
+ * Componente funcional para la gestión de registro de horas.
+ * Este componente permite a los monitores registrar las horas que él hizo en una monitoría.
+ */
+
 const Horas = () => {
   const navigate = useNavigate();
   const [asignatura, setAsignatura] = useState('');
@@ -70,8 +76,12 @@ const Horas = () => {
         const expiracion = decodedToken.exp * 1000; 
 
         const ahora = Date.now();
+        const veinteMinutos = 20 * 60 * 1000; // 20 minutos en milisegundos
+        const expiracionConGracia = expiracion + veinteMinutos;
 
-        if (ahora >= expiracion) {
+        if (ahora >= expiracionConGracia) {
+          logout();
+        }else if (ahora >= expiracion) {
           console.log("El AccessToken ha expirado");
           Swal.fire({
             title: "¡Tu sesión está a punto de caducar!",
@@ -81,10 +91,10 @@ const Horas = () => {
             confirmButtonText: "OK",
           }).then((result) => {
             if (result.isConfirmed) {
-              console.log("El usuario hizo clic en OK");
+               
               handleRefreshToken(refreshToken);
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-              console.log("El usuario hizo clic en Cancelar o cerró la alerta");
+               
               logout();
             }
           });
@@ -96,7 +106,7 @@ const Horas = () => {
       }
     };
 
-    const intervalId = setInterval(expireToken, 20000); 
+    const intervalId = setInterval(expireToken, 320000); 
 
     return () => clearInterval(intervalId);
   });
@@ -104,6 +114,31 @@ const Horas = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Obtener tokens del almacenamiento
+    const accessToken = await AsyncStorage.getItem("accessToken");
+    const refreshToken = await AsyncStorage.getItem("refreshToken");
+
+    // Decodificar el token para obtener el userId
+    const decodedToken = jwtDecode(accessToken);
+    const userId = decodedToken.user._id;
+
+    const responsee = await axios.get(
+      `${URL}/api/v1/hourlog/monitorinmonth/${userId}`
+    );
+
+    console.log(responsee.data.sumHours[0].totalHours)
+    console.log(horas)
+
+    if(responsee.data.sumHours[0].totalHours+Number(horas) > 50){
+      Swal.fire({
+        title: "¡No se puede crear el registro!",
+        text: "Estás sobrepasando las horas límite del mes que son 50.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
 
     const response = await axios.get(
       `${URL}/api/v1/grupos/${selectedGroups.name.split("-")[0]}`
@@ -166,53 +201,30 @@ const Horas = () => {
   };
 
   useEffect(() => {
-    const handleShowGroups = async () => {
+    const fetchData = async () => {
+      try {
+        // Obtener el accessToken del almacenamiento
+        const accessToken = await AsyncStorage.getItem("accessToken");
 
-      // await new Promise(resolve => setTimeout(resolve, 100));
+        // Decodificar el token para obtener el userId
+        const decodedToken = jwtDecode(accessToken);
+        const userId = decodedToken.user._id;
 
+        // Obtener los grupos del monitor
+        const groupsResponse = await axios.get(`${URL}/api/v1/grupos/monitor/${userId}`);
+        setGroupsMonitor(groupsResponse.data);
 
-      const accessToken = await AsyncStorage.getItem("accessToken");
-
-      const decodedToken = jwtDecode(accessToken);
-      const userId = decodedToken.user._id;
-
-
-      const response = await axios.get(
-        `${URL}/api/v1/grupos/monitor/${userId}`
-      );
-
-      setGroupsMonitor(response.data);
-      // setTimeout(() => {
+        // Obtener el registro de horas del monitor
+        const hoursLogResponse = await axios.get(`${URL}/api/v1/hourlog/monitor/${userId}`);
+        setHoursLogMonitor(hoursLogResponse.data);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      } finally {
         setLoading(false);
-      // }, 100);
+      }
     };
 
-    handleShowGroups();
-  }, []);
-
-  useEffect(() => {
-    const handleShowHoursLog = async () => {
-
-      // await new Promise(resolve => setTimeout(resolve, 100));
-
-      const accessToken = await AsyncStorage.getItem("accessToken");
-
-      const decodedToken = jwtDecode(accessToken);
-      const userId = decodedToken.user._id;
-
-      const response = await axios.get(
-        `${URL}/api/v1/hourlog/monitor/${userId}`
-      );
-
-      setHoursLogMonitor(response.data);
-
-      // setTimeout(() => {
-        setLoading(false);
-      // }, 100);
-      
-    };
-
-    handleShowHoursLog();
+    fetchData();
   }, []);
 
   const handleGroupChange = (index, value) => {
@@ -336,7 +348,7 @@ const Horas = () => {
                   value={horas}
                   onChange={(e) => setHoras(e.target.value)}
                   min={0}
-                  max={20}
+                  max={50}
                 />
               </div>
               <div className="btn-submit">

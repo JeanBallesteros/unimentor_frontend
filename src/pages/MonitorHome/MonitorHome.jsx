@@ -8,6 +8,8 @@ import Swal from "sweetalert2";
 import Navbar from "../../Components/Navbar/Navbar";
 import Card from "../../Components/Card/Card";
 
+
+// Componente principal de la página de inicio
 const MonitorHome = () => {
   const navigate = useNavigate();
   const URL = import.meta.env.VITE_BACKEND_URL;
@@ -53,8 +55,12 @@ const MonitorHome = () => {
         const decodedToken = jwtDecode(accessToken);
         const expiracion = decodedToken.exp * 1000;
         const ahora = Date.now();
+        const veinteMinutos = 20 * 60 * 1000; // 20 minutos en milisegundos
+        const expiracionConGracia = expiracion + veinteMinutos;
 
-        if (ahora >= expiracion) {
+        if (ahora >= expiracionConGracia) {
+          logout();
+        }else if (ahora >= expiracion) {
           console.log("El AccessToken ha expirado");
           Swal.fire({
             title: "¡Tu sesión está a punto de caducar!",
@@ -64,10 +70,10 @@ const MonitorHome = () => {
             confirmButtonText: "OK",
           }).then((result) => {
             if (result.isConfirmed) {
-              console.log("El usuario hizo clic en OK");
+               
               handleRefreshToken(refreshToken);
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-              console.log("El usuario hizo clic en Cancelar o cerró la alerta");
+               
               logout();
             }
           });
@@ -79,7 +85,7 @@ const MonitorHome = () => {
       }
     };
 
-    const intervalId = setInterval(expireToken, 20000);
+    const intervalId = setInterval(expireToken, 320000);
 
     return () => clearInterval(intervalId);
   });
