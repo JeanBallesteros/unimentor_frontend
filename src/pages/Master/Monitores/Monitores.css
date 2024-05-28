@@ -11,6 +11,46 @@
   margin-left: auto;
   margin-right: auto;
 }
+
+.botonesMonitores{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.botonesMonitores .button-container-A{
+  width: auto;
+  height: 20%;
+  padding: 10px;
+  margin: 10px;
+  background: #ff1919;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+  font-size: 1em;
+  font-weight: 500;
+  padding: 5px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.botonesMonitores .button-container-N{
+  width: auto;
+  height: 20%;
+  padding: 10px;
+  margin: 10px;
+  background: #0069a3;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+  font-size: 1em;
+  font-weight: 500;
+  padding: 5px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
   
 .subtituloMonitor {
   color: #0069a3;

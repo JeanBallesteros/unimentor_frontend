@@ -81,7 +81,7 @@ const MonitorHome = () => {
       }
     };
 
-    const intervalId = setInterval(expireToken, 20000);
+    const intervalId = setInterval(expireToken, 320000);
 
     return () => clearInterval(intervalId);
   });

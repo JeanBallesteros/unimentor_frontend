@@ -98,7 +98,7 @@ const Avales = () => {
       }
     };
 
-    const intervalId = setInterval(expireToken, 20000);
+    const intervalId = setInterval(expireToken, 320000);
 
     return () => clearInterval(intervalId);
   });
@@ -138,21 +138,11 @@ const Avales = () => {
       return;
     }
 
-
-    const groupIdWithObject = selectedGroups[index];
-    const groupId = groupIdWithObject.split("-")[0];
-    const userId = userss[index]._id;
-    
-    const responsee = await axios.patch(
-      `${URL}/api/v1/grupos/update/` + groupId,
-      { monitor: userId }
-    );
-
     const sendEmail = async () => {
       const emailData = {
         to: userss[index].email,
-        subject: "¡Su aval ha sido aceptado!",
-        text: `Hola ${userss[index].fullname},\n\nTu aval ha sido aceptado. ¡Bienvenido a UniMentor!\n\nSaludos,\nEquipo de Unimentor`,
+        subject: "¡Tu Aval ha sido Aceptado!",
+        text: `Hola, ${userss[index].fullname}.\n\n¡Tu aval ha sido aceptado! Ahora eres monitor del grupo ${response2.data[0].name} de ${response2.data[0].subject[0].name}\n\nSaludos.\nEquipo de Unimentor`,
       };
 
       try {
@@ -166,15 +156,29 @@ const Avales = () => {
       }
     };
 
+
+    const groupIdWithObject = selectedGroups[index];
+    const groupId = groupIdWithObject.split("-")[0];
+    const userId = userss[index]._id;
+    
+    const responsee = await axios.patch(
+      `${URL}/api/v1/grupos/update/` + groupId,
+      { monitor: userId }
+    );
+
+    const response2 = await axios.get(
+      `${URL}/api/v1/grupos/` + groupId
+    );
+
     const response = await axios.patch(
       `${URL}/api/v1/users/update/` + userId,
       { role: "monitor" }
     );
 
-    if (response.status === 200) {
+    if (response.status === 200 && response2.status === 200 && responsee.status === 200) {
       sendEmail();
       Swal.fire({
-        title: "Aval aceptado",
+        title: "¡Aval aceptado!",
         text: "El aval ha sido aceptado correctamente.",
         icon: "success",
         confirmButtonText: "Aceptar",
@@ -187,18 +191,18 @@ const Avales = () => {
 
   const handleButtonDenegar = async (index) => {
     Swal.fire({
-      title: "¿Estás seguro?",
-      text: "Una vez denegado, no se podrá recuperar el aval.",
+      title: "¿Estás seguro/a?",
+      text: "Una vez denegado, el usuario tendrá que volver a subir los documentos.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Sí, eliminar el aval",
+      confirmButtonText: "Sí, eliminar aval",
       cancelButtonText: "Cancelar",
     }).then(async (result) => {
       const sendEmail = async () => {
         const emailData = {
           to: userss[index].email,
-          subject: "Aval denegado",
-          text: `Hola ${userss[index].fullname},\n\nTu aval ha sido denegado. Si tienes alguna duda, por favor contacta a la coordinadora de UTC.\n\nSaludos,\nEquipo de Unimentor`,
+          subject: "¡Tu Aval ha sido Denegado!",
+          text: `Hola, ${userss[index].fullname}.\n\nTu aval ha sido denegado. Si tienes alguna duda comunícate con la coordinadora de UTC.\n\nSaludos.\nEquipo de Unimentor`,
         };
 
         try {
@@ -211,16 +215,26 @@ const Avales = () => {
           console.error("Error al enviar el correo:", error);
         }
       };
+
+
+      const groupIdWithObject = selectedGroups[index];
+      const groupId = groupIdWithObject.split("-")[0];
+
+      const response2 = await axios.patch(
+        `${URL}/api/v1/grupos/` + groupId
+      );
+
+
       if (result.isConfirmed) {
         const aval = userss[index].avalsData[0]._id;
         const response = await axios.delete(
           `${URL}/api/v1/avales/delete/` + aval
         );
-        if (response.status === 200) {
+        if (response.status === 200 && response2.status === 200) {
           sendEmail();
           Swal.fire({
-            title: "Aval eliminado",
-            text: "El aval ha sido eliminado correctamente.",
+            title: "¡Aval denegado!",
+            text: "El aval ha sido denegado correctamente.",
             icon: "success",
             confirmButtonText: "Aceptar",
           })

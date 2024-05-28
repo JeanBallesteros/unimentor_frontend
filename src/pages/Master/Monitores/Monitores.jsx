@@ -63,6 +63,8 @@ const Monitores = () => {
   const [selectedGroups, setSelectedGroups] = useState({});
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [selectedIndices, setSelectedIndices] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
@@ -133,7 +135,7 @@ const Monitores = () => {
       }
     };
 
-    const intervalId = setInterval(expireToken, 20000);
+    const intervalId = setInterval(expireToken, 320000);
 
     return () => clearInterval(intervalId);
   });
@@ -167,9 +169,10 @@ const Monitores = () => {
     fetchData();
   }, []);
 
+
   const handleButtonDenegar = async (index) => {
     Swal.fire({
-      title: "¿Estás seguro?",
+      title: "¿Estás seguro/a?",
       text: "Estás intentando eliminar al monitor de su rol. Tendrá que volver a subir documentos",
       icon: "warning",
       showCancelButton: true,
@@ -178,9 +181,9 @@ const Monitores = () => {
     }).then(async (result) => {
       const sendEmail = async () => {
         const emailData = {
-          to: userss[index].email,
-          subject: "¡Has sido eliminado de la lista de monitores!",
-          text: `Hola, ${userss[index].fullname}.\n\nHas sido eliminado de la lista de monitores. Si tienes alguna duda, por favor contacta a la coordinadora de UTC.\n\nSaludos,\nEquipo de UniMentor`,
+          to: groupsMonitorNotEmpty[index].monitor[0].email,
+          subject: `¡Has sido eliminado de la lista de monitores!`,
+          text: `¡Hola, ${groupsMonitorNotEmpty[index].monitor[0].fullname}!\n\nHas sido eliminado/a como monitor/ra del grupo ${groupsMonitorNotEmpty[index].name} de la asignatura ${groupsMonitorNotEmpty[index].subject[0].name}. Si tienes alguna duda, por favor contacta a la coordinadora de UTC.\n\nSaludos,\nEquipo de UniMentor`,
         };
 
         try {
@@ -215,10 +218,12 @@ const Monitores = () => {
 
         for (let i = 0; i < groups.length; i++) {
           if(groups[i].monitor ==  userId){
-            groupId = groups[i]._id
+            // groupId = groups[i]._id
             contadorGruposMonitor++;
           }
         }
+
+        groupId = groupsMonitorNotEmpty[index]._id
 
         //ESTOS ENDPOINTS SE DEBEN CORRER CUANDO EL MONITOR HAGA PARTE DE SOLO UN GRUPO
 
@@ -252,8 +257,6 @@ const Monitores = () => {
         }else if(contadorGruposMonitor > 1){
           // EN CASO DE QUE EL MONITOR ESTÉ EN MUCHOS GRUPOS
 
-
-
           const response3 = await axios.patch(
             `${URL}/api/v1/grupos/updatetonull/` + groupId,
             { monitor: null }
@@ -284,6 +287,85 @@ const Monitores = () => {
         });
       }
     });
+  };
+  
+  
+  const handleButtonDenegarM = async (index) => {
+
+
+    const sendEmail = async () => {
+      const emailData = {
+        to: groupsMonitorNotEmpty[index].monitor[0].email,
+        subject: "¡Has sido eliminado de la lista de monitores!",
+        text: `Hola, ${groupsMonitorNotEmpty[index].monitor[0].fullname}.\n\nHas sido eliminado/a como monitor/ra del grupo ${groupsMonitorNotEmpty[index].name} de la asignatura ${groupsMonitorNotEmpty[index].subject[0].name}. Si tienes alguna duda, por favor contacta a la coordinadora de UTC.\n\nSaludos.\nEquipo de UniMentor`,
+      };
+
+      try {
+        const response = await axios.post(
+          `${URL}/send-email-denied`,
+          emailData
+        );
+        console.log("Correo enviado correctamente");
+      } catch (error) {
+        console.error("Error al enviar el correo:", error);
+      }
+    };
+
+    const avalId = userss.map((user) => {
+      if(user._id == groupsMonitorNotEmpty[index].monitor[0]._id){
+        return user.avalsData[0]._id;
+      }
+    });
+
+    const filteredArray = avalId.filter((element) => {
+      return element !== undefined;
+    });
+
+    const userId = groupsMonitorNotEmpty[index].monitor[0]._id;
+
+    let groupId = "";
+    let contadorGruposMonitor = 0;
+
+    for (let i = 0; i < groups.length; i++) {
+      if(groups[i].monitor ==  userId){
+        // groupId = groups[i]._id
+        contadorGruposMonitor++;
+      }
+    }
+
+    groupId = groupsMonitorNotEmpty[index]._id
+
+    //ESTOS ENDPOINTS SE DEBEN CORRER CUANDO EL MONITOR HAGA PARTE DE SOLO UN GRUPO
+
+    if(contadorGruposMonitor === 1){
+      const response = await axios.delete(
+        `${URL}/api/v1/avales/delete/`+ filteredArray[0]
+      );
+
+      const response2 = await axios.patch(
+        `${URL}/api/v1/users/update/` + userId,
+        { role: "user" }
+      );
+
+      const response3 = await axios.patch(
+        `${URL}/api/v1/grupos/updatetonull/` + groupId,
+        { monitor: null }
+      );
+
+      if (response.status === 200 && response2.status === 200 && response3.status === 200) {
+        sendEmail();
+      }
+    }else if(contadorGruposMonitor > 1){
+      // EN CASO DE QUE EL MONITOR ESTÉ EN MUCHOS GRUPOS
+      const response3 = await axios.patch(
+        `${URL}/api/v1/grupos/updatetonull/` + groupId,
+        { monitor: null }
+      );
+
+      if (response3.status === 200) {
+        sendEmail();
+      }
+    }
   };
 
   const handleSubjectChange = (index, value) => {
@@ -338,6 +420,49 @@ const Monitores = () => {
     }
   }, [search, filteredUsers]);
 
+  const handleCheckboxChange = (index) => {
+    setSelectedIndices((prevSelected) => {
+      if (prevSelected.includes(index)) {
+        return prevSelected.filter((i) => i !== index);
+      } else {
+        return [...prevSelected, index];
+      }
+    });
+  };
+
+  const handleProcessSelected = async () => {
+    setLoading(true);
+
+    Swal.fire({
+      title: "¿Estás seguro/a?",
+      text: "Estás intentando eliminar al monitor de su rol.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar monitor",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        // Itera sobre los índices seleccionados
+        for (const index of selectedIndices) {
+          await handleButtonDenegarM(index);
+        }
+
+        // sendEmail();
+        window.location.reload();
+
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: "¡Cancelado!",
+          text: "El monitor no ha sido eliminado del grupo.",
+          icon: "info",
+          confirmButtonText: "Aceptar",
+        });
+      }
+    })
+    
+    setLoading(false);
+  };
+
   return (
     <div className="fondoMonitor">
       <Navbar />
@@ -361,7 +486,6 @@ const Monitores = () => {
                 <input
                   type="number"
                   name="monitorId"
-                  id=""
                   placeholder="Por Documento"
                   onChange={(e) => setSearch(e.target.value)}
                 />
@@ -373,23 +497,23 @@ const Monitores = () => {
                 <input
                   type="text"
                   name="monitorName"
-                  id=""
                   placeholder="Por Nombre Monitor"
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </div>
-              {/* <div className="inputsMonitor">
+              {/* 
+              <div className="inputsMonitor">
                 <div className="labelsMonitor">
                   <p>Correo</p>
                 </div>
                 <input
                   type="text"
                   name="monitorEmail"
-                  id=""
                   placeholder="Por Correo"
                   onChange={(e) => setSearch(e.target.value)}
                 />
-              </div> */}
+              </div>
+              */}
               <div className="inputsMonitor">
                 <div className="labelsMonitor">
                   <p>Asignatura</p>
@@ -397,7 +521,6 @@ const Monitores = () => {
                 <input
                   type="text"
                   name="subjectName"
-                  id=""
                   placeholder="Por Asignatura"
                   onChange={(e) => setSearch(e.target.value)}
                 />
@@ -409,7 +532,6 @@ const Monitores = () => {
                 <input
                   type="text"
                   name="teacherName"
-                  id=""
                   placeholder="Por Docente"
                   onChange={(e) => setSearch(e.target.value)}
                 />
@@ -427,12 +549,12 @@ const Monitores = () => {
                   <th>Grupo</th>
                   <th>Docente</th>
                   <th>Opciones</th>
+                  <th>Seleccionar</th> 
                 </tr>
               </thead>
               <tbody>
                 {groupsMonitorNotEmpty
                   .filter((group) => {
-
                     const documentNumber = (group.monitor[0].documentNumber || "").toString();
 
                     if (search === "") {
@@ -443,11 +565,10 @@ const Monitores = () => {
                       group.monitor[0].email.toLowerCase().includes(search.toLowerCase()) ||
                       group.subject[0].name.toLowerCase().includes(search.toLowerCase()) ||
                       group.teacher[0].fullname.toLowerCase().includes(search.toLowerCase())) {
-                        return true;
+                      return true;
                     } else {
                       return false;
                     }
-
                   })
                   .map((groupsMonitor, index) => (
                     <tr key={index}>
@@ -467,10 +588,22 @@ const Monitores = () => {
                           </button>
                         </div>
                       </td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedIndices.includes(index)}
+                          onChange={() => handleCheckboxChange(index)}
+                        />
+                      </td> {/* Checkbox en cada fila */}
                     </tr>
                   ))}
               </tbody>
             </table>
+          </div>
+          <div className="botonesMonitores">
+            <div className="button-container-A">
+              <button onClick={handleProcessSelected}>Eliminar Monitores Seleccionados</button>
+            </div>
           </div>
         </div>
       )}

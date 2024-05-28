@@ -102,7 +102,7 @@ const Horas = () => {
       }
     };
 
-    const intervalId = setInterval(expireToken, 20000); 
+    const intervalId = setInterval(expireToken, 320000); 
 
     return () => clearInterval(intervalId);
   });
@@ -110,6 +110,31 @@ const Horas = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Obtener tokens del almacenamiento
+    const accessToken = await AsyncStorage.getItem("accessToken");
+    const refreshToken = await AsyncStorage.getItem("refreshToken");
+
+    // Decodificar el token para obtener el userId
+    const decodedToken = jwtDecode(accessToken);
+    const userId = decodedToken.user._id;
+
+    const responsee = await axios.get(
+      `${URL}/api/v1/hourlog/monitorinmonth/${userId}`
+    );
+
+    console.log(responsee.data.sumHours[0].totalHours)
+    console.log(horas)
+
+    if(responsee.data.sumHours[0].totalHours+Number(horas) > 50){
+      Swal.fire({
+        title: "¡No se puede crear el registro!",
+        text: "Estás sobrepasando las horas límite del mes que son 50.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
 
     const response = await axios.get(
       `${URL}/api/v1/grupos/${selectedGroups.name.split("-")[0]}`
@@ -319,7 +344,7 @@ const Horas = () => {
                   value={horas}
                   onChange={(e) => setHoras(e.target.value)}
                   min={0}
-                  max={20}
+                  max={50}
                 />
               </div>
               <div className="btn-submit">

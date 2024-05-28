@@ -27,6 +27,13 @@ const RegistroHorasMonitores = () => {
   const [userss, setUserss] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [selectedIndices, setSelectedIndices] = useState([]);
+  const [activeCheckbox, setActiveCheckbox] = useState(false);
+  const [active, setActive] = useState(false);
+  const [igual, setIgual] = useState(false);
+  const [numTemp, setNumTemp] = useState();
+  // const [arrayIndices, setArrayIndices] = useState([]);
+  
   const URL = import.meta.env.VITE_BACKEND_URL;
   
 
@@ -98,7 +105,7 @@ const RegistroHorasMonitores = () => {
       }
     };
 
-    const intervalId = setInterval(expireToken, 20000);
+    const intervalId = setInterval(expireToken, 320000);
 
     return () => clearInterval(intervalId);
   });
@@ -147,6 +154,20 @@ const RegistroHorasMonitores = () => {
     }
   };
 
+  const handleButtonAceptarM = async (index) => {
+    const accessToken = await AsyncStorage.getItem("accessToken");
+
+    const decodedToken = jwtDecode(accessToken);
+    const userId = decodedToken.user._id;
+
+    const hlog = hoursLogProfessor[index]._id;
+
+    const response = await axios.patch(
+      `${URL}/api/v1/hourlog/update/` + hlog,
+      { active: false }
+    );
+  };
+
   const handleButtonDenegar = async (index) => {
     const accessToken = await AsyncStorage.getItem("accessToken");
     const decodedToken = jwtDecode(accessToken);
@@ -166,13 +187,26 @@ const RegistroHorasMonitores = () => {
         } en ${hoursLogProfessor[index].date.slice(
           0,
           10
-        )} ha sido neutralizado.`,
+        )} ha sido denegado.`,
         icon: "success",
         confirmButtonText: "OK",
       }).then(() => {
         window.location.reload();
       });
     }
+  };
+
+  const handleButtonDenegarM = async (index) => {
+    const accessToken = await AsyncStorage.getItem("accessToken");
+    const decodedToken = jwtDecode(accessToken);
+    const userId = decodedToken.user._id;
+
+    const hlog = hoursLogProfessor[index]._id;
+
+    const response = await axios.patch(
+      `${URL}/api/v1/hourlog/update/` + hlog,
+      { active: true }
+    );
   };
 
 
@@ -209,6 +243,106 @@ const RegistroHorasMonitores = () => {
       showNoResultsAlert();
     }
   }, [search, filteredUsers]);
+
+
+  const handleCheckboxChange = (index, num) => {
+    let arrayIndices = new Array();
+    arrayIndices.push(index)
+
+    for (let i = 0; i < 1; i++) {
+      if(selectedIndices[i] === arrayIndices[i]){
+        setActiveCheckbox(false);
+        if(num === 2){
+          setActive(false);
+        }
+        setNumTemp(0);
+      }else if(arrayIndices.length > 0){
+        setActiveCheckbox(true);
+        if(num === 2){
+          setActive(true);
+        }
+        setNumTemp(num);
+      }
+    }
+
+    if(selectedIndices.length !== arrayIndices.length){
+      setActiveCheckbox(true);
+      if(num === 2){
+        setActive(true);
+      }
+      setNumTemp(num);
+    }
+
+
+    setSelectedIndices((prevSelected) => {
+      if (prevSelected.includes(index)) {
+        return prevSelected.filter((i) => i !== index);
+      } else {
+        return [...prevSelected, index];
+      }
+    });
+  };
+
+
+  const handleProcessSelectedA = async () => {
+    Swal.fire({
+      title: "¿Quieres Aceptar estos Registros?",
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonText: "Sí, aceptar",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        // Itera sobre los índices seleccionados
+        for (const index of selectedIndices) {
+          await handleButtonAceptarM(index);
+        }
+
+
+        window.location.reload();
+
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: "¡Cancelado!",
+          text: "Los registros seleccionados no han sido aceptados",
+          icon: "error",
+          confirmButtonText: "Aceptar",
+        });
+      }
+    })
+  };
+
+  const handleProcessSelectedN = async () => {
+    Swal.fire({
+      title: "¿Quieres Denegar estos Registros?",
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonText: "Sí, denegar",
+      cancelButtonText: "Cancelar",
+    }).then( async (result) => {
+      if (result.isConfirmed) {
+        // Itera sobre los índices seleccionados
+        for (const index of selectedIndices) {
+          await handleButtonDenegarM(index);
+        }
+
+
+        window.location.reload();
+
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: "¡Cancelado!",
+          text: "Los registros seleccionados no han sido aceptados",
+          icon: "error",
+          confirmButtonText: "Aceptar",
+        });
+      }
+    })
+  }
+
+    
+
+
 
   return (
     <div className="fondoTeacher">
@@ -267,6 +401,7 @@ const RegistroHorasMonitores = () => {
                   <th>Cantidad de Horas</th>
                   <th>¿Aceptado?</th>
                   <th>Opciones</th>
+                  <th>Seleccionar</th> 
                 </tr>
               </thead>
               <tbody>
@@ -316,10 +451,82 @@ const RegistroHorasMonitores = () => {
                         </div>
                       </td>
                     )}
+                    {activeCheckbox ? (
+                      active ? (
+                        hourlog.active ? (
+                          <td>
+                            <input
+                              disabled
+                              type="checkbox"
+                              checked={selectedIndices.includes(index)}
+                              onChange={() => handleCheckboxChange(index, 1)}
+                            />
+                          </td>
+                        ) : (
+                          <td>
+                            <input
+                              type="checkbox"
+                              checked={selectedIndices.includes(index)}
+                              onChange={() => handleCheckboxChange(index, 2)}
+                            />
+                          </td>
+                        )
+                      ) : (
+                        hourlog.active ? (
+                          <td>
+                            <input
+                              type="checkbox"
+                              checked={selectedIndices.includes(index)}
+                              onChange={() => handleCheckboxChange(index, 1)}
+                            />
+                          </td>
+                        ) : (
+                          <td>
+                            <input
+                              disabled
+                              type="checkbox"
+                              checked={selectedIndices.includes(index)}
+                              onChange={() => handleCheckboxChange(index, 2)}
+                            />
+                          </td>
+                        )
+                      )
+                    ):(
+                      hourlog.active ? (
+                        <td>
+                          <input
+                            type="checkbox"
+                            checked={selectedIndices.includes(index)}
+                            onChange={() => handleCheckboxChange(index, 1)}
+                          />
+                        </td>
+                      ) : (
+                        <td>
+                          <input
+                            type="checkbox"
+                            checked={selectedIndices.includes(index)}
+                            onChange={() => handleCheckboxChange(index, 2)}
+                          />
+                        </td>
+                      )
+                    )}
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+          <div className="botonesRegistro">
+            <>
+              {numTemp === 1 ? (
+                <div className="button-container-A" color="red">
+                  <button onClick={handleProcessSelectedA}>Denegar Seleccionados</button>
+                </div>
+              ) : numTemp === 2 ? (
+                <div className="button-container-N" color="blue">
+                  <button onClick={handleProcessSelectedN}>Aceptar Seleccionados</button>
+                </div>
+              ): null}
+            </>
           </div>
         </div>
       )}
